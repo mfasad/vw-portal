@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>Прошивка для Teyes CC3: обновление, установка и ошибки — VW-portal</title>
+    <meta name="description" content="Полный гайд по прошивке Teyes CC3. Как обновить ПО через USB, где скачать файлы, устранение зависаний и настройка CAN-bus. Инструкция для магнитол.">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/p/pr/proshivka-dlya-teyes-cc3.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Прошивка для Teyes CC3: обновление, установка и ошибки">
+    <meta property="og:description" content="Полный гайд по прошивке Teyes CC3. Как обновить ПО через USB, где скачать файлы, устранение зависаний и настройка CAN-bus. Инструкция для магнитол.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Прошивка для Teyes CC3: обновление, установка и ошибки</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Прошивка для Teyes CC3: полное руководство по обновлению и установке</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#подготовка-к-обновлению-инструменты-и-файлы">Подготовка к обновлению: инструменты и файлы</a></li><li><a href="#пошаговая-инструкция-установки-прошивки">Пошаговая инструкция установки прошивки</a></li><li><a href="#обновление-mcu-тонкости-процесса">Обновление MCU: тонкости процесса</a></li><li><a href="#настройка-заводских-параметров-после-прошивки">Настройка заводских параметров после прошивки</a></li><li><a href="#диагностика-и-устранение常见-ошибок">Диагностика и устранение常见 ошибок</a></li><li><a href="#где-искать-актуальные-версии-и-поддержка">Где искать актуальные версии и поддержка</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Владельцы мультимедийных систем <em>Teyes CC3</em> часто сталкиваются с необходимостью обновить программное обеспечение для улучшения стабильности работы устройства. Современные головные устройства на базе Android требуют регулярного внимания, так как разработчики постоянно выпускают патчи, исправляющие ошибки в работе <strong>CAN-bus</strong>, Bluetooth-модуля и экрана. Игнорирование этих обновлений может привести к некорректному отображению климат-контроля или периодическим зависаниям интерфейса.</p>
+
+<p>Процесс обновления прошивки для <em>Teyes CC3</em> не является сложной инженерной задачей, но требует строгого соблюдения последовательности действий. Любое отклонение от алгоритма, например, извлечение флешки раньше времени или использование несовместимого файла, может превратить устройство в «кирпич». Важно понимать, что существует два основных типа обновлений: системные (System Update) и обновления микроконтроллера (MCU), и путать их нельзя.</p>
+
+<p>В этой статье мы детально разберем, как правильно подготовить носитель, где найти актуальные файлы для вашей конкретной модели автомобиля и как избежать критических ошибок в процессе перепрошивки. Мы также обсудим нюансы работы с файловой системой и важность проверки хеш-сумм скачанных архивов перед началом процедуры.</p>
+
+<h2 id="подготовка-к-обновлению-инструменты-и-файлы">Подготовка к обновлению: инструменты и файлы</h2>
+
+<p>Первым шагом является поиск корректного файла прошивки. Официальный сайт производителя <em>Teyes</em> предоставляет доступ к архивам, однако важно выбрать именно ту версию, которая соответствует вашей аппаратной платформе. Обычно это файлы с расширением <code>.zip</code>, содержащие внутри образ системы и скрипты установки. Неправильный выбор версии, например, попытка прошить версию для <em>CC3 Lite</em> на полноценный <em>CC3</em>, приведет к неработоспособности тачскрина или звукового тракта.</p>
+
+<p>Для записи образа вам потребуется USB-накопитель. Требования к флешке довольно строгие: объем не должен превышать 32 ГБ, а файловая система обязана быть отформатирована в <strong>FAT32</strong>. Использование накопителей с файловой системой NTFS или exFAT часто приводит к тому, что магнитола просто не видит файл обновления. Также критически важно, чтобы флешка была исправной и не имела битых секторов.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка перед прошивкой</h4><label class="check-item"><input type="checkbox"><span>Флешка отформатирована в FAT32</span></label><label class="check-item"><input type="checkbox"><span>Объем накопителя не более 32 ГБ</span></label><label class="check-item"><input type="checkbox"><span>Файл прошивки не переименован</span></label><label class="check-item"><input type="checkbox"><span>Аккумулятор автомобиля заряжен</span></label><label class="check-item"><input type="checkbox"><span>Двигатель запущен для стабильности напряжения</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 5</div></div>
+
+<blockquote>
+<p>⚠️ Внимание: Перед началом процедуры обязательно запустите двигатель автомобиля. Обновление прошивки — энергоемкий процесс, и падение напряжения в бортовой сети ниже 11.5 Вольт во время записи секторов может необратимо повредить память устройства.</p>
+</blockquote>
+
+<p>После форматирования скопируйте файл прошивки в корень накопителя. Не помещайте его в папки и не изменяйте имя файла, если в инструкции к конкретной версии не указано иное. Чаще всего файл должен называться <code>autoinstall.zip</code> или иметь специфическое имя, указанное в readme-файле от разработчика. Проверка целостности архива через контрольные суммы — это хорошая практика, позволяющая избежать сбоев при распаковке.</p>
+
+<h2 id="пошаговая-инструкция-установки-прошивки">Пошаговая инструкция установки прошивки</h2>
+
+<p>Процесс обновления начинается с подключения подготовленного накопителя к головному устройству. Вставьте флешку в разъем USB, который обычно помечен цветом или подписью <code>USB Update</code>. После этого система должна автоматически определить наличие нового файла прошивки. Если автоматический запуск не произошел, перейдите в меню настроек и найдите раздел <code>Система</code> или <code>Об устройстве</code>, где расположена кнопка «Обновление ПО».</p>
+
+<p>После запуска процесса на экране появится предупреждение о начале установки. Система проверит версию файла и совместимость оборудования. Если все параметры совпадают, начнется распаковка архива и запись новых данных. В этот момент на экране может отображаться логотип <em>Teyes</em> или анимация загрузки. Прерывание процесса на этом этапе категорически запрещено.</p>
+
+<pre><code>Последовательность действий:
+<p>1. Вставить USB в порт с надписью Update.</p>
+<p>2. Дождаться всплывающего окна "Найдено обновление".</p>
+<p>3. Нажать "Update Now".</p>
+<p>4. Дождаться автоматической перезагрузки.</code></pre></p>
+
+<details class="faq-item"><summary>Что делать, если обновление зависло?</summary><div class="faq-answer"><p>Если процесс установки завис на этапе 99% или на логотипе более 15 минут, попробуйте выполнить мягкий сброс (Soft Reset). Для этого нажмите кнопку перезагрузки на лицевой панели или в меню. Если это не помогает, потребуется аппаратный сброс через кнопку RST на задней панели устройства, но это крайняя мера.</p></div></details>
+
+<p>После завершения записи файлов магнитола автоматически перезагрузится. Первая загрузка после прошивки может длиться дольше обычного, иногда до 2-3 минут. Это нормально, так как система проводит оптимизацию приложений и настройку драйверов под новое программное обеспечение. Не пытайтесь сразу же выключать устройство или извлекать ключ зажигания.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой метод обновления вы предпочитаете?</strong><ul><li>Автоматический через Wi-Fi</li><li>Вручную через USB-флешку</li><li>Через сервисный центр</li><li>Я не обновляю прошивку</li></ul></div></div>
+
+<h2 id="обновление-mcu-тонкости-процесса">Обновление MCU: тонкости процесса</h2>
+
+<p>Отдельного внимания заслуживает прошивка микроконтроллера управления (MCU). Этот компонент отвечает за взаимодействие головного устройства с автомобилем: управление кнопками на руле, отображение температуры, работу парктроников и штатных камер. Файлы для MCU часто обновляются отдельно от основной системы Android и имеют формат <code>.bin</code> или <code>.img</code>.</p>
+
+<p>Процесс обновления MCU аналогичен обновлению системы, но имеет свои риски. Если прервать запись MCU, вы можете потерять управление климатом или подсветкой кнопок. Поэтому перед началом процедуры рекомендуется сфотографировать все текущие настройки в разделе <code>Заводские настройки</code> (Factory Settings), чтобы иметь возможность восстановить их вручную в случае сброса.</p>
+
+<table>
+<thead>
+<tr>
+<th>Параметр</th>
+<th>Системное обновление (Android)</th>
+<th>Обновление MCU</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Формат файла</td>
+<td>.zip</td>
+<td>.bin / .img</td>
+</tr>
+<tr>
+<td>Влияние</td>
+<td>Интерфейс, приложения, Bluetooth</td>
+<td>Кнопки руля, CAN-bus, датчики</td>
+</tr>
+<tr>
+<td>Частота</td>
+<td>Редко (раз в полгода-год)</td>
+<td>При проблемах с авто</td>
+</tr>
+<tr>
+<td>Риск сбоя</td>
+<td>Средний</td>
+<td>Высокий (потеря функций авто)</td>
+</tr>
+</tbody>
+</table>
+
+<p>После обновления MCU часто требуется заново настроить тип автомобиля в заводских настройках. Выберите марку и модель вашего авто из списка, чтобы активировать правильный протокол обмена данными. Без этого шага магнитола может не видеть открытые двери или не отображать расход топлива.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Обновление MCU критически важно при замене автомобиля или появлении ошибок в работе штатных систем, но требует максимальной осторожности и стабильного напряжения в сети.</p></div>
+
+<h2 id="настройка-заводских-параметров-после-прошивки">Настройка заводских параметров после прошивки</h2>
+
+<p>Сразу после успешной установки новой прошивки необходимо проверить раздел заводских настроек. Часто новые версии ПО сбрасывают некоторые параметры на дефолтные значения или добавляют новые опции, которые нужно активировать вручную. Для входа в это меню обычно требуется ввести пароль, который зависит от разрешения экрана или модели устройства (часто это <code>8888</code>, <code>1234</code> или <code>0000</code>).</p>
+
+<p>В первую очередь проверьте настройки экрана. Убедитесь, что разрешение и плотность пикселей (<code>DPI</code>) выставлены корректно. Неправильные значения могут привести к тому, что элементы интерфейса будут «уезжать» за пределы видимой области или тачскрин будет реагировать со смещением. Также здесь настраивается логика работы кнопки <code>Reset</code> и поведение при запуске двигателя.</p>
+
+<ul>
+<li>🚗 <strong>CAN-bus настройки:</strong> Выберите производителя автомобиля и конкретную модель. Это обеспечит правильную работу рулевых кнопок и отображение информации о климате.</li>
+<li>📺 <strong>Видео в движении:</strong> Активируйте опцию воспроизведения видео во время движения, если это необходимо, сняв блокировку безопасности.</li>
+<li>🔊 <strong>Звуковые эффекты:</strong> Настройте эквалайзер и баланс, так как новая прошивка может изменить алгоритмы обработки звука.</li>
+</ul>
+
+<p>Не забудьте проверить работу внешних устройств. Подключите телефон через Bluetooth и проверьте телефонную книгу и музыку. Протестируйте навигацию и работу онлайн-сервисов. Если после прошивки пропал звук, проверьте настройки усилителя в заводском меню — иногда сбрасывается тип аудиовыхода (например, с <code>External Amp</code> на <code>Internal</code>).</p>
+
+<blockquote>
+<p>⚠️ Внимание: Не меняйте настройки в разделе «Другое» или «Логика работы», если вы не уверены в их назначении. Неверная конфигурация логических портов может привести к тому, что магнитола перестанет реагировать на поворотник или парковочный сигнал.</p>
+</blockquote>
+
+<h2 id="диагностика-и-устранение常见-ошибок">Диагностика и устранение常见 ошибок</h2>
+
+<p>Даже при соблюдении всех правил могут возникнуть ошибки. Одна из самых частых проблем — «циклическая перезагрузка» (bootloop), когда устройство постоянно перезагружается, не доходя до рабочего стола. Это часто свидетельствует о повреждении системных файлов или несовместимости прошивки с аппаратной ревизией платы. В таких случаях помогает очистка кэша через Recovery Mode.</p>
+
+<p>Для входа в режим восстановления (<em>Recovery</em>) на многих моделях <em>Teyes CC3</em> нужно нажать скрытую кнопку <code>RST</code> тонким предметом (например, скрепкой) в момент включения питания или через специальное меню в настройках. В меню Recovery выберите пункт <code>Wipe Data/Factory Reset</code>, а затем <code>Reboot System Now</code>. Это вернет устройство к заводскому состоянию.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если магнитола после прошивки работает медленно, выполните полный сброс настроек (Factory Reset) через меню Android, а не только через Recovery. Это удалит остатки старых конфигурационных файлов, которые могут конфликтовать с новой версией ПО.</p></div>
+
+<p>Другая распространенная проблема — отсутствие звука после обновления. В этом случае проверьте настройки Mute и состояние провода <code>Mute</code> в разъеме. Иногда новая прошивка меняет логику работы этого контакта. Также стоит проверить, не активировался ли режим «Тихий режим» или «Ночь» в настройках звука.</p>
+
+<h2 id="где-искать-актуальные-версии-и-поддержка">Где искать актуальные версии и поддержка</h2>
+
+<p>Поиск прошивок — задача, требующая внимательности. Официальный форум <em>Teyes</em> и специализированные ресурсы, такие как <code>4pda</code>, являются наиболее надежными источниками. На форумах энтузиастов часто можно найти модифицированные версии прошивок, лишенные региональных ограничений или имеющие расширенный функционал, однако их установка осуществляется на свой страх и риск.</p>
+
+<p>При поиске обращайте внимание на дату выхода файла и комментарии пользователей. Если вы видите множество сообщений о «битом Bluetooth» или «пропадающем звуке» в конкретной версии, лучше воздержаться от её установки и дождаться исправления. Всегда проверяйте, предназначена ли прошивка именно для вашей аппаратной платформы (например, <em>Y6S</em>, <em>Y8</em> и т.д.), так как физически одинаковые магнитолы могут иметь разное «железо».</p>
+
+<ul>
+<li>🌐 <strong>Официальный сайт:</strong> Раздел поддержки с гарантированно рабочими, но не всегда последними версиями.</li>
+<li>💬 <strong>Форумы (4pda, XDA):</strong> Обсуждение багов, ссылки на бета-версии и моды от сообщества.</li>
+<li>📱 <strong>Группы в соцсетях:</strong> Часто владельцы делятся прямыми ссылками на облачные хранилища с проверенными сборками.</li>
+</ul>
+
+<p>Регулярное обновление программного обеспечения позволяет продлить жизнь вашему устройству <em>Teyes CC3</em> и получать новые функции. Однако помните, что прошивка — это вмешательство в программный код, и ответственность за результат лежит на пользователе. Сохраняйте резервные копии важных данных и конфигураций, чтобы в любой момент иметь возможность откатиться назад.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Самый безопасный путь — использовать только официальные прошивки с сайта производителя, если вы не обладаете опытом восстановления Android-устройств через ADB и UART.</p></div>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+
+<details>
+<summary>Сбросится ли лицензия Google и навигация после прошивки?</summary>
+<p>В большинстве случаев системные лицензии, привязанные к аккаунту Google, сохраняются. Однако сертификаты навигационных программ (например, Яндекс.Навигатор или 2ГИС) могут слететь, и потребуется повторная активация или переустановка приложения.</p>
+</details>
+
+<details>
+<summary>Можно ли прошить магнитолу, если она не включается?</summary>
+<p>Если устройство не включается совсем (черный экран, нет реакции на кнопки), обычная прошивка через USB может не помочь. Потребуется разборка устройства и прошивка через UART или использование специального инструмента для восстановления загрузчика, что лучше доверить специалистам.</p>
+</details>
+
+<details>
+<summary>Как узнать текущую версию прошивки?</summary>
+<p>Информация о версии ПО находится в меню <code>Настройки → Об устройстве</code>. Там указаны версия Android, версия ядра и дата сборки прошивки. Сделайте скриншот этой страницы перед обновлением.</p>
+</details>
+
+<details>
+<summary>Нужно ли вынимать SIM-карту и флешки перед обновлением?</summary>
+<p>Рекомендуется извлечь все посторонние USB-устройства и SD-карты, оставив только флешку с прошивкой в нужном порту. Это исключит конфликт драйверов или случайную запись данных не на тот носитель во время процесса.</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#подготовка-к-обновлению-инструменты-и-файлы">Подготовка к обновлению: инструменты и файлы</a></li><li><a href="#пошаговая-инструкция-установки-прошивки">Пошаговая инструкция установки прошивки</a></li><li><a href="#обновление-mcu-тонкости-процесса">Обновление MCU: тонкости процесса</a></li><li><a href="#настройка-заводских-параметров-после-прошивки">Настройка заводских параметров после прошивки</a></li><li><a href="#диагностика-и-устранение常见-ошибок">Диагностика и устранение常见 ошибок</a></li><li><a href="#где-искать-актуальные-версии-и-поддержка">Где искать актуальные версии и поддержка</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/n/na/na-kakoj-vysote-raspolozhit-televizor-v-spalne.html" class="related-card">Оптимальная высота телевизора в спальне: расчёты и советы 2026</a></li><li><a href="/articles/t/te/tekhnicheskie-kharakteristiki-honda-accord.html" class="related-card">Honda Accord: технические характеристики 2023-2026 (10 поколение)</a></li><li><a href="/articles/c/cc/cctv-chto-eto.html" class="related-card">CCTV: что это, как работает и где применяется в 2026 году</a></li><li><a href="/articles/k/ka/kak-zagnut-polosu-iz-metalla-v-krug.html" class="related-card">Как загнуть полосу из металла в круг: технология и инструменты</a></li><li><a href="/articles/p/p1/p1503-oshibka-vw.html" class="related-card">Ошибка P1503 на VW: причины, диагностика, ремонт (2026)</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/n/na/na-kakoj-vysote-raspolozhit-televizor-v-spalne.html" class="related-bottom-card"><span class="related-bottom-title">Оптимальная высота телевизора в спальне: расчёты и советы 2026</span><span class="related-bottom-desc">Как правильно повесить телевизор в спальне: формулы расчёта высоты, ошибки монтажа и эргономичные ст</span></a><a href="/articles/t/te/tekhnicheskie-kharakteristiki-honda-accord.html" class="related-bottom-card"><span class="related-bottom-title">Honda Accord: технические характеристики 2023-2026 (10 поколение)</span><span class="related-bottom-desc">Полный обзор технических параметров Honda Accord: двигатели, трансмиссия, подвеска, габариты и элект</span></a><a href="/articles/c/cc/cctv-chto-eto.html" class="related-bottom-card"><span class="related-bottom-title">CCTV: что это, как работает и где применяется в 2026 году</span><span class="related-bottom-desc">Разбираемся, что такое CCTV-системы, их виды (аналоговые, IP, HD), принципы работы и как выбрать обо</span></a><a href="/articles/k/ka/kak-zagnut-polosu-iz-metalla-v-krug.html" class="related-bottom-card"><span class="related-bottom-title">Как загнуть полосу из металла в круг: технология и инструменты</span><span class="related-bottom-desc">Подробная инструкция: как загнуть полосу из металла в круг своими руками. Выбор станка, расчет длины</span></a><a href="/articles/p/p1/p1503-oshibka-vw.html" class="related-bottom-card"><span class="related-bottom-title">Ошибка P1503 на VW: причины, диагностика, ремонт (2026)</span><span class="related-bottom-desc">Разбираем код ошибки P1503 на Volkswagen: что означает, как устранить своими руками, стоимость ремон</span></a><a href="/articles/r/re/rear-door-exchange-teyes-cc3-chto-eto.html" class="related-bottom-card"><span class="related-bottom-title">Rear Door Exchange Teyes CC3: что это, как работает и стоит ли ставить</span><span class="related-bottom-desc">Узнайте, что такое rear door exchange на Teyes CC3. Инструкция по настройке, список функций и устран</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

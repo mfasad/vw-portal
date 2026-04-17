@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>Полосы на 3D-модели: причины и устранение дефектов печати — VW-portal</title>
+    <meta name="description" content="Появились полосы на 3D-модели? Разбираем причины артефактов, ринггинга и шагов на принтере. Эффективные методы настройки и калибровки.">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/p/po/polosy-na-modeli-3d-pechat.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Полосы на 3D-модели: причины и устранение дефектов печати">
+    <meta property="og:description" content="Появились полосы на 3D-модели? Разбираем причины артефактов, ринггинга и шагов на принтере. Эффективные методы настройки и калибровки.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Полосы на 3D-модели: причины и устранение дефектов печати</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Полосы на 3D-модели: диагностика и устранение</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#вибрационные-артефакты-и-ринггинг">Вибрационные артефакты и ринггинг</a></li><li><a href="#ступенчатость-и-проблемы-экструзии">Ступенчатость и проблемы экструзии</a></li><li><a href="#механические-дефекты-валы-и-подшипники">Механические дефекты: валы и подшипники</a></li><li><a href="#влияние-температуры-и-охлаждения">Влияние температуры и охлаждения</a></li><li><a href="#настройки-слайсера-ретракт-и-скорость">Настройки слайсера: ретракт и скорость</a></li><li><a href="#диагностика-и-чек-лист-устранения">Диагностика и чек-лист устранения</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body">
+<p>Визуальные дефекты на поверхности готового изделия часто становятся неприятным сюрпризом для оператора аддитивной установки. <strong>Полосы на 3D-модели</strong> могут кардинально изменить восприятие качества печати, превращая гладкую поверхность в набор неровных линий или ступеней. Понимание природы возникновения этих артефактов является первым шагом к их полному устранению.</p>
+<p>Причин появления нежелательных линий существует множество: от механических проблем с ремнями до программных настроек слайсера. <em>FDM-принтеры</em> особенно чувствительны к вибрациям и резонансу, которые часто проявляются именно в виде горизонтальных или вертикальных полос. В этой статье мы детально разберем основные типы дефектов и способы их коррекции.</p>
+<p>Не стоит игнорировать даже малозаметные искажения, так как они могут сигнализировать о более серьезных проблемах с кинематикой устройства. Своевременная диагностика позволит избежать брака в будущих проектах. Давайте разберемся, почему возникают <strong>артефакты печати</strong> и как с ними бороться.</p>
+
+<h2 id="вибрационные-артефакты-и-ринггинг">Вибрационные артефакты и ринггинг</h2>
+<p>Одним из самых распространенных типов дефектов является <strong>ринггинг</strong> (ringing), который проявляется в виде ряби или волн, следующих за острыми углами модели. Эти полосы возникают из-за инерции движущихся частей принтера при резком изменении направления движения экструдера. Когда каретка или стол резко останавливаются, конструкция принтера начинает вибрировать, и эти колебания переносятся на печатаемую деталь.</p>
+<p>Основными виновниками здесь выступают недостаточно натянутые ремни или ослабленные винты креплений. <em>Кинематика CoreXY</em> и <em>дельта-принтеры</em> особенно требовательны к равномерному натяжению всех ремней. Если ремень провисает, он действует как пружина, вызывая раскачивание каретки и создавая характерные полосы на поверхности.</p>
+<blockquote>⚠️ Внимание: Чрезмерное натяжение ремней может привести к быстрому износу подшипников и деформации валов, что вызовет еще более серьезные проблемы с геометрией печати.</blockquote>
+<p>Для устранения ринггинга необходимо проверить натяжение ремней и подтянуть все винты на раме. Также стоит снизить скорость печати и ускорение, чтобы уменьшить инерционные нагрузки на конструкцию.</p>
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Используйте приложение-тюнер на смартфоне, прикладывая его к раме принтера во время печати, чтобы визуализировать частоту вибраций и найти резонансные точки.</p></div>
+
+<h2 id="ступенчатость-и-проблемы-экструзии">Ступенчатость и проблемы экструзии</h2>
+<p>Вертикальные полосы, напоминающие ступеньки, часто свидетельствуют о проблемах с подачей пластика. <strong>Недостаточная экструзия</strong> может приводить к тому, что слой ложится не полностью, создавая углубления, которые визуально воспринимаются как полосы. Это может быть вызвано засорением <em>хотэнда</em> или неправильной температурой плавления филамента.</p>
+<p>С другой стороны, <strong>переэкструзия</strong> также создает неровности, когда излишки пластика выдавливаются наружу, образуя наплывы. Важно найти баланс, при котором материал заполняет пространство слоя ровно, без gaps и бампов. Калибровка <code>E-steps</code> (шагов экструдера) является критически важной процедурой в этом случае.</p>
+<p>Чередование толщины слоев также может создавать визуальный шум. Если вы печатаете модель с переменным层高 (высотой слоя), переходы между зонами могут быть заметны. Используйте качественные профили в слайсере для минимизации этого эффекта.</p>
+<ul>
+<li>🔍 Проверьте диаметр филамента в настройках слайсера — даже небольшое отклонение влияет на объем подачи.</li>
+<li>🌡️ Убедитесь, что температура <em>сопла</em> соответствует рекомендациям производителя пластика.</li>
+<li>🌀 Очистите шестерню подачи от пластиковой крошки, которая может проскальзывать.</li>
+</ul>
+
+<h2 id="механические-дефекты-валы-и-подшипники">Механические дефекты: валы и подшипники</h2>
+<p>Горизонтальные линии, повторяющиеся с определенной периодичностью, часто указывают на проблемы с направляющими. Если <strong>Z-ось</strong> имеет люфт или искривление, это неизбежно отразится на поверхности модели. Винтовая передача Z-оси должна быть идеально чистой и смазанной, чтобы избежать эффекта "качания" стола.</p>
+<p>Линейные валы и подшипники скольжения (или шарикоподшипники) не должны иметь выработок. Если на валу образовалась канавка от постоянного движения подшипника в одной зоне (обычно в центре), каретка будет подпрыгивать при прохождении этого участка. Это создает четкую горизонтальную полосу на высоте, соответствующей положению дефекта.</p>
+<div class="attention-box attention-info"><div><strong>📊 Какой тип направляющих у вашего принтера?</strong><ul><li>Линейные валы (Smooth Rods)</li><li>Линейные рельсы (Linear Rails)</li><li>Втулки скольжения</li><li>Другое</li></ul></div></div>
+<p>Регулярная смазка и замена изношенных компонентов — залог гладкой поверхности. Для <em>линейных рельс</em> использование специализированной смазки (например, на литиевой основе) критически важно для демпфирования микровибраций.</p>
+<table>
+<thead>
+<tr>
+<th>Тип дефекта</th>
+<th>Вероятная причина</th>
+<th>Метод решения</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Горизонтальные линии через равные промежутки</td>
+<td>Износ винта Z-оси или подшипников</td>
+<td>Замена винтовой пары или подшипников</td>
+</tr>
+<tr>
+<td>Вертикальные полосы (рябь)</td>
+<td>Ринггинг (вибрации)</td>
+<td>Натяжка ремней, снижение ускорений</td>
+</tr>
+<tr>
+<td>Случайные полосы по всей модели</td>
+<td>Нестабильная экструзия</td>
+<td>Прочистка хотэнда, калибровка E-steps</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="влияние-температуры-и-охлаждения">Влияние температуры и охлаждения</h2>
+<p>Температурный режим играет ключевую роль в формировании поверхности. Если <strong>температура печати</strong> слишком высока, пластик остается жидким слишком долго и может провисать или растекаться, создавая неровности. Особенно это актуально для нависающих элементов и мостов.</p>
+<p>Недостаточное охлаждение также приводит к появлению полос. <em>Вентилятор обдува</em> должен работать эффективно, особенно при печати PLA-пластиком. Если деталь не успевает остывать перед нанесением следующего слоя, она деформируется под весом нового материала.</p>
+<blockquote>⚠️ Внимание: При печати ABS или ASA вентиляторы обдува часто отключают во избежание расслоения, что требует особого контроля температуры камеры.</blockquote>
+<p>Проверьте работу вентиляторов на разных скоростях. Иногда проблема кроется в пыли, забившей радиатор хотэнда, что снижает эффективность теплоотвода и вызывает тепловой пробой (heat creep), ведущий к нестабильной экструзии.</p>
+<details class="faq-item"><summary>Тепловой пробой (Heat Creep)</summary><div class="faq-answer"><p>Что это?:Тепловой пробой возникает, когда тепло от нагревательного блока поднимается вверх по термобарьеру, нагревая зону подачи. Пластик размягчается раньше времени, раздувается и блокирует подачу, вызывая пропуски экструзии и полосы на модели. Решение: улучшить обдув радиатора или снизить температуру печати.</p></div></details>
+
+<h2 id="настройки-слайсера-ретракт-и-скорость">Настройки слайсера: ретракт и скорость</h2>
+<p>Программные настройки часто становятся скрытой причиной появления артефактов. <strong>Ретракт</strong> (втягивание нити) должен быть настроен точно: слишком большой ретракт засасывает воздух и создает пузыри, слишком маленький — приводит к подтекам (stringing), которые могут выглядеть как хаотичные полосы.</p>
+<p>Скорость печати также имеет значение. Печать на максимальных скоростях часто превышает возможности кинематики конкретного принтера, вызывая те самые вибрационные полосы. <em>Слайсеры</em> вроде <strong>Cura</strong> или <strong>PrusaSlicer</strong> позволяют гибко настраивать скорости для внешних и внутренних контуров.</p>
+<p>Рекомендуется печатать внешние периметры медленнее, чем заполнение. Это дает пластику время ровно улечься и улучшает качество поверхности. Внутренние структуры могут печататься быстрее, так как они скрыты.</p>
+<ul>
+<li>🚀 Снижайте ускорение (acceleration) и рывок (jerk) в прошивке принтера для более плавных движений.</li>
+<li>📏 Уменьшите высоту слоя для внешних стенок, если требуется максимальная гладкость.</li>
+<li>🔄 Включите функцию "Ironing" (утюжка) в слайсере для выравнивания верхних плоскостей.</li>
+</ul>
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Оптимальные настройки ретракта индивидуальны для каждого принтера и типа филамента; проводите тесты "Retraction Test" при каждой смене материала.</p></div>
+
+<h2 id="диагностика-и-чек-лист-устранения">Диагностика и чек-лист устранения</h2>
+<p>Процесс устранения полос на 3D-модели требует системного подхода. Не меняйте все настройки сразу, иначе вы не поймете, что именно помогло. Двигайтесь от механики к программным настройкам.</p>
+<p>Сначала убедитесь, что принтер собран правильно, все винты затянуты, а ремни натянуты. Затем перейдите к калибровке потоков и температур. Только после исключения механических факторов стоит экспериментировать с complex-настройками слайсера.</p>
+<div class="checklist-block"><h4>☑️ Диагностика полос на модели</h4><label class="check-item"><input type="checkbox"><span>Проверить натяжение ремней X и Y</span></label><label class="check-item"><input type="checkbox"><span>Очистить и смазать Z-винт</span></label><label class="check-item"><input type="checkbox"><span>Проверить износ подшипников и валов</span></label><label class="check-item"><input type="checkbox"><span>Откалибровать E-steps и поток</span></label><label class="check-item"><input type="checkbox"><span>Снизить скорость печати внешних контуров</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 5</div></div>
+<p>Если после всех манипуляций полосы остаются, попробуйте сменить катушку пластика. Иногда проблема кроется в некачественном филаменте с плавающим диаметром или примесями, которые нарушают стабильность плавления.</p>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+<details>
+<summary>Почему полосы появляются только на одной стороне модели?</summary>
+<p>Это часто указывает на проблему с конкретной осью. Если полосы горизонтальные и только с одной стороны, проверьте выравнивание направляющих этой оси или наличие люфта в каретке именно в этой зоне. Также возможно искривление самого стола.</p>
+</details>
+<details>
+<summary>Может ли влажность пластика вызывать полосы?</summary>
+<p>Да, влажный филамент при нагревании выделяет пар, что приводит к микро-взрывам в экструдере. Это вызывает нестабильность экструзии и появление шероховатостей или полос на поверхности модели. Всегда сушите пластик перед печатью.</p>
+</details>
+<details>
+<summary>Как отличить ринггинг от проблем с шагом двигателя?</summary>
+<p>Ринггинг выглядит как затухающая волна после резкого изменения направления. Проблемы с шагом (steps per mm) проявляются как систематическое искажение размеров или регулярные пропуски слоев, а не как рябь на поверхности.</p>
+</details>
+<details>
+<summary>Влияет ли жесткость стола на появление полос?</summary>
+<p>Безусловно. Если стол закреплен только по центру или имеет люфт, при движении каретки он может вибрировать. Убедитесь, что стол прикручен плотно и не имеет поперечного люфта относительно каретки Y-оси.</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#вибрационные-артефакты-и-ринггинг">Вибрационные артефакты и ринггинг</a></li><li><a href="#ступенчатость-и-проблемы-экструзии">Ступенчатость и проблемы экструзии</a></li><li><a href="#механические-дефекты-валы-и-подшипники">Механические дефекты: валы и подшипники</a></li><li><a href="#влияние-температуры-и-охлаждения">Влияние температуры и охлаждения</a></li><li><a href="#настройки-слайсера-ретракт-и-скорость">Настройки слайсера: ретракт и скорость</a></li><li><a href="#диагностика-и-чек-лист-устранения">Диагностика и чек-лист устранения</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/r/ra/raspolozhenie-vysokovoltnykh-provodov-zmz-406-inzhektor.html" class="related-card">Схема высоковольтных проводов ЗМЗ-406 инжектор: расположение и подключение</a></li><li><a href="/articles/r/ra/raskhod-topliva-na-nissan-zhuk.html" class="related-card">Расход топлива Nissan Juke: реальные цифры и секреты экономии</a></li><li><a href="/articles/l/lo/logotip-folksvagen-staryj.html" class="related-card">Старый логотип Volkswagen: история, значение и эволюция бренда</a></li><li><a href="/articles/p/po/polozhit-pol-na-balkone.html" class="related-card">Как положить пол на балконе своими руками: пошаговая инструкция</a></li><li><a href="/articles/l/la/lada-granta-raspolozhenie-diagnosticheskogo-razema.html" class="related-card">Лада Гранта: где находится диагностический разъем</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/r/ra/raspolozhenie-vysokovoltnykh-provodov-zmz-406-inzhektor.html" class="related-bottom-card"><span class="related-bottom-title">Схема высоковольтных проводов ЗМЗ-406 инжектор: расположение и подключение</span><span class="related-bottom-desc">Подробная схема подключения высоковольтных проводов на двигателе ЗМЗ-406 инжектор: порядок цилиндров</span></a><a href="/articles/r/ra/raskhod-topliva-na-nissan-zhuk.html" class="related-bottom-card"><span class="related-bottom-title">Расход топлива Nissan Juke: реальные цифры и секреты экономии</span><span class="related-bottom-desc">Подробный анализ расхода топлива Nissan Juke. Нормы для 1.6, 1.2 Turbo и 1.5 dCi. Реальные отзывы вл</span></a><a href="/articles/l/lo/logotip-folksvagen-staryj.html" class="related-bottom-card"><span class="related-bottom-title">Старый логотип Volkswagen: история, значение и эволюция бренда</span><span class="related-bottom-desc">Узнайте, как выглядел первый логотип Фольксваген, его скрытый смысл и как он менялся с 1937 года. Фо</span></a><a href="/articles/p/po/polozhit-pol-na-balkone.html" class="related-bottom-card"><span class="related-bottom-title">Как положить пол на балконе своими руками: пошаговая инструкция</span><span class="related-bottom-desc">Полная инструкция: как положить пол на балконе. Выбор материалов, утепление, монтаж лаг и финишного </span></a><a href="/articles/l/la/lada-granta-raspolozhenie-diagnosticheskogo-razema.html" class="related-bottom-card"><span class="related-bottom-title">Лада Гранта: где находится диагностический разъем</span><span class="related-bottom-desc">Точное расположение диагностического разъема Лада Гранта (8 и 16 клапанов). Схемы распиновки, фото м</span></a><a href="/articles/m/mo/model-folksvagena-7.html" class="related-bottom-card"><span class="related-bottom-title">Volkswagen 7: история, характеристики и секреты модели</span><span class="related-bottom-desc">Узнайте всё о легендарной модели &lt;em&gt;Volkswagen 7&lt;/em&gt;: технические особенности, поколения, распрост</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

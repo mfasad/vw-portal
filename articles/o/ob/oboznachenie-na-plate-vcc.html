@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>VCC на плате: что это, где найти и как правильно подключить — VW-portal</title>
+    <meta name="description" content="Разбираемся, что означает обозначение VCC на электронных платах, как его отличить от GND, какие напряжения бывают и как избежать ошибок при подключении. Подробный гайд с схемами и предупреждениями.">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/o/ob/oboznachenie-na-plate-vcc.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="VCC на плате: что это, где найти и как правильно подключить">
+    <meta property="og:description" content="Разбираемся, что означает обозначение VCC на электронных платах, как его отличить от GND, какие напряжения бывают и как избежать ошибок при подключении. Подробный гайд с схемами и предупреждениями.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">VCC на плате: что это, где найти и как правильно подключить</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Обозначение VCC на плате: расшифровка, назначение и правила подключения</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#что-такое-vcc-расшифровка-и-исторический-контекст">Что такое VCC: расшифровка и исторический контекст</a></li><li><a href="#где-искать-vcc-на-плате-визуальные-подсказки">Где искать VCC на плате: визуальные подсказки</a></li><li><a href="#какие-напряжения-скрываются-за-vcc-типичные-значения">Какие напряжения скрываются за VCC: типичные значения</a></li><li><a href="#как-правильно-подключить-vcc-пошаговая-инструкция">Как правильно подключить VCC: пошаговая инструкция</a></li><li><a href="#частые-ошибки-и-как-их-избежать">Частые ошибки и как их избежать</a></li><li><a href="#vcc-в-разных-типах-плат-сравнительный-анализ">VCC в разных типах плат: сравнительный анализ</a></li><li><a href="#практические-примеры-где-vcc-критичен">Практические примеры: где VCC критичен</a></li><li><a href="#faq-частые-вопросы-о-vcc">FAQ: Частые вопросы о VCC</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body"><p>Вы когда-нибудь держали в руках электронную плату и задавались вопросом, что означает надпись <strong>VCC</strong> рядом с контактами питания? Этот термин встречается практически в каждой схеме — от простейших Arduino-проектов до сложных промышленных контроллеров. Но несмотря на распространённость, многие новички (и даже опытные радиолюбители) до конца не понимают его нюансы.</p>
+
+<p>В этой статье мы не просто дадим определение <em>VCC</em>, а разберём его с практической стороны: как отличить от <strong>VDD</strong> или <strong>V+</strong>, какие напряжения могут скрываться за этим обозначением, и почему ошибка в подключении может сжечь всю плату за секунды. Вы узнаете, как правильно интерпретировать маркировку на популярных микросхемах (например, <em>ATmega328P</em> или <em>ESP8266</em>), а также получите чек-лист для безопасного подключения питания.</p>
+
+<h2 id="что-такое-vcc-расшифровка-и-исторический-контекст">Что такое VCC: расшифровка и исторический контекст</h2>
+
+<p>Термин <strong>VCC</strong> пришёл из эпохи биполярных транзисторов и означает <em>Voltage at the Collector of a transistor</em> (напряжение на коллекторе транзистора). В классических схемах на <em>TTL-логике</em> (например, серии <em>7400</em>) это было стандартное обозначение для положительного питания микросхем. Сегодня же <strong>VCC</strong> стало универсальным символом для <mark>основного положительного напряжения питания цифровых схем</mark>, даже если в них нет транзисторов с коллекторами.</p>
+
+<p>Интересно, что в <em>MOSFET</em>-схемах (например, <em>CMOS-логика</em>) аналогом <strong>VCC</strong> служит обозначение <strong>VDD</strong> (<em>Voltage Drain</em>), а для отрицательного питания используют <strong>VSS</strong> или <strong>GND</strong>. Однако на большинстве современных плат (особенно в hobby-электронике) производители предпочитают <strong>VCC</strong> для совместимости с устоявшимися стандартами.</p>
+
+<ul>
+  <li>🔹 <strong>VCC</strong> — положительное питание для <em>TTL</em>/цифровых схем (обычно <code>+5В</code> или <code>+3.3В</code>).</li>
+  <li>🔹 <strong>VDD</strong> — аналог для <em>CMOS</em>/аналоговых схем (может быть <code>+12В</code> или другие значения).</li>
+  <li>🔹 <strong>V+</strong> или <strong>Vin</strong> — общий термин для любого положительного напряжения.</li>
+  <li>🔹 <strong>GND</strong>/<strong>VSS</strong> — общий минус (земля).</li>
+</ul>
+
+<p>На платах <em>Arduino Uno</em> или <em>Raspberry Pi Pico</em> вы часто увидите и <strong>VCC</strong>, и <strong>VDD</strong> — это не ошибка, а следствие смешения технологий. Например, на <em>ESP32</em> контакт <code>3V3</code> может быть подписан как <strong>VCC</strong>, хотя по сути это <strong>VDD</strong> для ядра микроконтроллера.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какую плату вы чаще используете в проектах?</strong><ul><li>Arduino (Uno/Nano)</li><li>ESP8266/ESP32</li><li>Raspberry Pi</li><li>STM32</li><li>Другая</li></ul></div></div>
+
+<h2 id="где-искать-vcc-на-плате-визуальные-подсказки">Где искать VCC на плате: визуальные подсказки</h2>
+
+<p>Обозначение <strong>VCC</strong> редко встречается в одиночку — обычно оно сопровождается дополнительными метками, которые помогают определить его роль. Вот что стоит искать:</p>
+
+<ul>
+  <li>🔍 Рядом с <strong>VCC</strong> часто указывают номинальное напряжение: <code>VCC 5V</code>, <code>3V3</code> или <code>VCC_IN</code>.</li>
+  <li>🔍 На платах с несколькими напряжениями (например, <em>STM32 Nucleo</em>) может быть <code>VCC_3V3</code> и <code>VCC_5V</code>.</li>
+  <li>🔍 В схемах питания <strong>VCC</strong> обычно подключают к стабилизатору (например, <em>AMS1117</em> или <em>LD1117</em>), который преобразует входное напряжение.</li>
+  <li>🔍 На <em>breadboard</em>-макетах <strong>VCC</strong> часто выводится на красную шину питания, а <strong>GND</strong> — на синюю/чёрную.</li>
+</ul>
+
+<p>Если на плате нет явной маркировки, обратите внимание на:</p>
+<ol>
+  <li>Самый толстый проводник (обычно это <strong>VCC</strong> или <strong>GND</strong>).</li>
+  <li>Контакты рядом с электролитическими конденсаторами (их плюсовая ножка часто идёт на <strong>VCC</strong>).</li>
+  <li>Разъёмы питания (например, <code>DC-IN</code> или <code>USB 5V</code>).</li>
+</ol>
+
+<table>
+  <thead>
+    <tr>
+      <th>Тип платы</th>
+      <th>Обозначение VCC</th>
+      <th>Типичное напряжение</th>
+      <th>Пример микросхемы</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Arduino Uno</td>
+      <td><code>VCC</code> или <code>5V</code></td>
+      <td>5В</td>
+      <td><em>ATmega328P</em></td>
+    </tr>
+    <tr>
+      <td>ESP8266 (NodeMCU)</td>
+      <td><code>VCC</code> или <code>3V3</code></td>
+      <td>3.3В</td>
+      <td><em>ESP-12E</em></td>
+    </tr>
+    <tr>
+      <td>Raspberry Pi</td>
+      <td><code>5V0</code> или <code>3V3</code></td>
+      <td>5В / 3.3В</td>
+      <td><em>BCM2835</em></td>
+    </tr>
+    <tr>
+      <td>STM32 Blue Pill</td>
+      <td><code>VCC</code> или <code>3.3V</code></td>
+      <td>3.3В</td>
+      <td><em>STM32F103C8</em></td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>⚠️ <strong>Внимание:</strong> На некоторых китайских клонах плат (например, <em>Arduino Nano</em>) контакт <code>VCC</code> может быть подключён напрямую к <code>USB 5V</code> без стабилизатора. Подключение внешнего источника >5.5В приведёт к повреждению USB-порта компьютера!</blockquote>
+
+<h2 id="какие-напряжения-скрываются-за-vcc-типичные-значения">Какие напряжения скрываются за VCC: типичные значения</h2>
+
+<p>Номинальное напряжение <strong>VCC</strong> зависит от типа логики микросхемы. Вот основные стандарты:</p>
+
+<ul>
+  <li>🔋 <strong>5В</strong> — классическое напряжение для <em>TTL-логики</em> (например, <em>74HC595</em>, <em>ATmega</em>). Используется в Arduino Uno, большинстве реле и драйверов моторов.</li>
+  <li>🔋 <strong>3.3В</strong> — стандарт для <em>CMOS</em> и современных микроконтроллеров (<em>ESP32</em>, <em>STM32</em>, <em>Raspberry Pi</em>). Опасно подавать 5В на такие входы!</li>
+  <li>🔋 <strong>1.8В</strong> или <strong>2.5В</strong> — встречается в высокоскоростных схемах (например, <em>DDR-память</em> или <em>FPGA</em>).</li>
+  <li>🔋 <strong>12В/24В</strong> — может обозначаться как <strong>VCC</strong> в промышленных платах (например, драйверы шаговых двигателей).</li>
+</ul>
+
+<p>Критически важно проверять даташит на микросхему! Например, <em>ESP8266</em> имеет <strong>VCC</strong> на <code>3.3В</code>, но некоторые модули (как <em>NodeMCU</em>) имеют встроенный стабилизатор и могут питаться от <code>5В</code> через <code>Vin</code>. А вот <em>ATtiny85</em> работает от <code>1.8В до 5.5В</code>, но его <strong>VCC</strong> не терпит перенапряжения!</p>
+
+<details class="faq-item"><summary>Что будет если подать 5В на VCC микросхемы с максимумом 3.3В?</summary><div class="faq-answer"><p>Микросхема может выйти из строя сразу или деградировать со временем из-за пробоя транзисторов. Например, <em>ESP8266</em> при 5В на <strong>VCC</strong> часто перегревается и перестаёт загружаться. В лучшем случае сработает защита (если она есть), в худшем — сгорит ядро.</p></div></details>
+
+<p>Как узнать допустимое напряжение без даташита?</p>
+<ul>
+  <li>🔎 Посмотрите на маркировку стабилизатора (например, <em>AMS1117-3.3</em> означает выход <code>3.3В</code>).</li>
+  <li>🔎 На платах с <em>USB Type-C</em> <strong>VCC</strong> обычно <code>5В</code> (стандарт USB).</li>
+  <li>🔎 Если рядом с <strong>VCC</strong> есть <em>диод Шоттки</em> (например, <em>1N5817</em>), скорее всего напряжение не превышает <code>5.5В</code>.</li>
+</ul>
+
+<h2 id="как-правильно-подключить-vcc-пошаговая-инструкция">Как правильно подключить VCC: пошаговая инструкция</h2>
+
+<p>Ошибки при подключении питания — одна из главных причин выхода плат из строя. Следуйте этому алгоритму, чтобы избежать проблем:</p>
+
+<div class="checklist-block"><h4>☑️ Безопасное подключение VCC</h4><label class="check-item"><input type="checkbox"><span>Проверить номинальное напряжение на плате</span></label><label class="check-item"><input type="checkbox"><span>Убедиться в полярности (VCC к "+", GND к "-")</span></label><label class="check-item"><input type="checkbox"><span>Использовать стабилизатор при необходимости</span></label><label class="check-item"><input type="checkbox"><span>Подавать питание только после проверки всех соединений</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<p>Рассмотрим подробнее каждый шаг:</p>
+
+<ol>
+  <li><strong>Определите номинальное напряжение.</strong>
+    <br>На плате <em>Arduino Nano</em> ищите надпись <code>5V</code> рядом с <strong>VCC</strong>. На <em>ESP32</em> — <code>3V3</code>. Если нет маркировки, проверьте даташит или схему платы.</li>
+  <li><strong>Проверьте полярность.</strong>
+    <br>Подключение <strong>VCC</strong> к минусу источника питания гарантированно убьёт плату. Используйте мультиметр в режиме прозвонки, чтобы убедиться, что <strong>GND</strong> соединён с минусом.</li>
+  <li><strong>Выберите источник питания.</strong>
+    <br>Для <code>3.3В</code> подойдёт стабилизатор <em>LD1117V33</em> или <em>AMS1117-3.3</em>. Для <code>5В</code> — любой USB-зарядник (но не превышайте ток!).</li>
+  <li><strong>Подключите нагрузку.</strong>
+    <br>Если плата управляет моторами или реле, убедитесь, что их питание не идёт через <strong>VCC</strong> микроконтроллера — используйте отдельный источник.</li>
+</ol>
+
+<p>Пример безопасного подключения для <em>Arduino Nano</em>:</p>
+<pre><code>USB-зарядник 5V (1A)
+<p>│</p>
+<p>▼</p>
+<p>[USB → Micro-USB кабель] → [Arduino Nano VCC]</p>
+<p>│</p>
+<p>▼</p>
+<p>GND → Общий минус схемы</code></pre></p>
+
+<blockquote>⚠️ <strong>Внимание:</strong> Никогда не подключайте <strong>VCC</strong> платы напрямую к аккумулятору без защиты! Литиевые батареи (например, <code>18650</code>) могут давать до <code>4.2В</code>, что превышает максимум для многих микросхем (<code>3.6В</code> для <em>ESP8266</em>). Используйте модуль защиты с <em>BMS</em>!</blockquote>
+
+<h2 id="частые-ошибки-и-как-их-избежать">Частые ошибки и как их избежать</h2>
+
+<p>Даже опытные инженеры иногда ошибаются с <strong>VCC</strong>. Вот топ-5 ошибок и способы их предотвратить:</p>
+
+<ul>
+  <li>⚡ <strong>Переполюсовка.</strong>
+    <br>Симптомы: плата греется, дымит или не включается.
+    <br>Решение: всегда проверяйте полярность мультиметром перед включением.</li>
+  <li>⚡ <strong>Перенапряжение.</strong>
+    <br>Симптомы: микросхема не отвечает, но светодиоды горят.
+    <br>Решение: используйте стабилизатор с запасом по току (например, <em>LM2596</em> для понижения с <code>12В</code> до <code>5В</code>).</li>
+  <li>⚡ <strong>Недостаточный ток.</strong>
+    <br>Симптомы: плата работает нестабильно, сбрасывается при нагрузке.
+    <br>Решение: для <em>ESP32</em> нужен источник на <code>500мА+</code>, для моторов — <code>1А+</code>.</li>
+  <li>⚡ <strong>Паразитные связи.</strong>
+    <br>Симптомы: помехи, ложные срабатывания датчиков.
+    <br>Решение: развязывайте питание конденсаторами (<em>100nF</em> рядом с <strong>VCC</strong> каждого чипа).</li>
+  <li>⚡ <strong>Игнорирование теплового режима.</strong>
+    <br>Симптомы: стабилизатор горячий, напряжение "проседает".
+    <br>Решение: добавьте радиатор или уменьшите нагрузку.</li>
+</ul>
+
+<p>Особенно коварна ситуация, когда плата <em>кажется</em> рабочей, но работает некорректно. Например, <em>ESP8266</em> при напряжении <code>3.0В</code> (вместо <code>3.3В</code>) может запускаться, но терять связь по Wi-Fi. Всегда проверяйте <strong>VCC</strong> под нагрузкой!</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если у вас нет мультиметра, используйте светодиод с резистором (например, <code>1кОм</code>) для проверки полярности: анод к предполагаемому <strong>VCC</strong>, катод к <strong>GND</strong>. Если светодиод горит — полярность правильная.</p></div>
+
+<h2 id="vcc-в-разных-типах-плат-сравнительный-анализ">VCC в разных типах плат: сравнительный анализ</h2>
+
+<p>Обозначение <strong>VCC</strong> может иметь разные нюансы в зависимости от типа устройства. Разберём наиболее распространённые случаи:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Тип платы</th>
+      <th>Особенности VCC</th>
+      <th>Типичные проблемы</th>
+      <th>Решение</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Arduino (AVR)</td>
+      <td>Часто дублируется на <code>5V</code> и <code>Vin</code> (до <code>12В</code>).</td>
+      <td>Перегрев стабилизатора при питании >7В через <code>Vin</code>.</td>
+      <td>Использовать внешний источник <code>5В</code> для мощных проектов.</td>
+    </tr>
+    <tr>
+      <td>ESP8266/ESP32</td>
+      <td><strong>VCC</strong> = <code>3.3В</code>, но есть вход <code>Vin</code> (до <code>5В</code>).</td>
+      <td>Подача <code>5В</code> на <strong>VCC</strong> убивает чип.</td>
+      <td>Питание только через <code>3V3</code> или стабилизатор.</td>
+    </tr>
+    <tr>
+      <td>Raspberry Pi</td>
+      <td><strong>VCC</strong> на GPIO = <code>3.3В</code> или <code>5В</code> (маркировано!).</td>
+      <td>Короткое замыкание при ошибке в подключении периферии.</td>
+      <td>Использовать <em>level shifter</em> для <code>5В</code>-устройств.</td>
+    </tr>
+    <tr>
+      <td>Промышленные PLC</td>
+      <td><strong>VCC</strong> может быть <code>24В</code> (например, <em>Siemens LOGO!</em>).</td>
+      <td>Несовместимость с hobby-электроникой.</td>
+      <td>Использовать DC-DC конвертеры.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Особого внимания заслуживают платы с <em>двойным питанием</em>, например, <em>STM32</em> с ядром на <code>3.3В</code> и периферией на <code>5В</code>. Здесь <strong>VCC</strong> может обозначать <strong>оба напряжения</strong>, и их нельзя путать! В таких случаях ищите надписи <code>VCC_3V3</code> и <code>VCC_5V</code>.</p>
+
+<h2 id="практические-примеры-где-vcc-критичен">Практические примеры: где VCC критичен</h2>
+
+<p>Разберём реальные сценарии, где неправильное обращение с <strong>VCC</strong> приводит к фатальным последствиям:</p>
+
+<ol>
+  <li><strong>Подключение датчиков.</strong>
+    <br>Датчик <em>DHT22</em> требует <code>3.3–5В</code> на <strong>VCC</strong>, но его выходной сигнал не всегда совместим с <code>3.3В</code>-логикой <em>ESP32</em>. Решение: использовать резисторный делитель или <em>level shifter</em>.</li>
+  <li><strong>Питание сервоприводов.</strong>
+    <br>Серва <em>MG996R</em> потребляет до <code>2А</code> при нагрузке. Если запитать её от <strong>VCC</strong> <em>Arduino</em>, плата сгорит. Решение: отдельный источник <code>5–6В</code>.</li>
+  <li><strong>Работа с OLED-дисплеями.</strong>
+    <br>Дисплей <em>SSD1306</em> на <code>3.3В</code> может сгореть, если его <strong>VCC</strong> подключить к <code>5В</code> <em>Arduino</em>. Решение: питание только от <code>3V3</code> или стабилизатор.</li>
+  <li><strong>Использование реле.</strong>
+    <br>Модуль реле с <em>опторазвязкой</em> часто имеет отдельные <strong>VCC</strong> для логики (<code>3.3–5В</code>) и для катушки (<code>5–24В</code>). Путаница между ними ведёт к сгоревшей оптопаре.</li>
+</ol>
+
+<p>В промышленных проектах (например, с <em>PLC</em> или <em>Arduino Mega</em>) <strong>VCC</strong> может быть связано с <em>защитным заземлением</em> через варисторы. В таких случаях нельзя использовать <em>импульсные</em> источники питания без фильтров — они могут вызвать ложные срабатывания защиты.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Всегда проверяйте не только напряжение, но и максимальный ток, который может отдать ваш источник питания. Например, <em>Arduino Nano</em> через USB потребляет до <code>500мА</code>, но при питании от внешнего адаптера <code>9В</code> ток может превысить <code>1А</code>, если не использовать стабилизатор.</p></div>
+
+<h2 id="faq-частые-вопросы-о-vcc">FAQ: Частые вопросы о VCC</h2>
+
+<details>
+  <summary>Можно ли подключить VCC напрямую к батарее 9В ("крона")?</summary>
+  <p>Нет! Напряжение <code>9В</code> превышает максимально допустимое для большинства плат (<code>5.5В</code> для <em>Arduino</em>, <code>3.6В</code> для <em>ESP8266</em>). Используйте понижающий стабилизатор (например, <em>LM7805</em> для <code>5В</code> или <em>AMS1117-3.3</em> для <code>3.3В</code>).</p>
+</details>
+
+<details>
+  <summary>Чем отличается VCC от VDD?</summary>
+  <p>Исторически <strong>VCC</strong> использовался для биполярных схем (<em>TTL</em>), а <strong>VDD</strong> — для полевых транзисторов (<em>CMOS</em>). Сегодня разница часто стирается, но в даташитах <strong>VDD</strong> может обозначать питание ядра микроконтроллера, а <strong>VCC</strong> — периферии. Всегда уточняйте по документации!</p>
+</details>
+
+<details>
+  <summary>Почему на моей плате несколько контактов VCC?</summary>
+  <p>Это сделано для удобства разводки питания. Все они соединены между собой (check с помощью мультиметра в режиме прозвонки). Например, на <em>Arduino Mega</em> <strong>VCC</strong> дублируется в нескольких местах, чтобы уменьшить падение напряжения на дорожках.</p>
+</details>
+
+<details>
+  <summary>Можно ли использовать VCC для питания моторов или светодиодных лент?</summary>
+  <p>Нет! <strong>VCC</strong> предназначен для питания логических схем, а моторы и LED-ленты потребляют большой ток (от <code>1А</code>). Подключайте их через отдельный источник питания, а для управления используйте транзисторы или драйверы (например, <em>L298N</em> для моторов).</p>
+</details>
+
+<details>
+  <summary>Как проверить, правильно ли подано питание на VCC?</summary>
+  <p>Используйте мультиметр:
+  <ol>
+    <li>Установите режим измерения постоянного напряжения (<code>DCV</code>, диапазон <code>20В</code>).</li>
+    <li>Чёрный щуп — на <strong>GND</strong> платы, красный — на <strong>VCC</strong>.</li>
+    <li>Напряжение должно соответствовать номиналу (±5%). Например, для <code>5В</code> допустимо <code>4.75–5.25В</code>.</li>
+  </ol>
+<p>Если напряжение отсутствует или сильно занижено, проверьте источник питания и цепь подключения.</p></p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#что-такое-vcc-расшифровка-и-исторический-контекст">Что такое VCC: расшифровка и исторический контекст</a></li><li><a href="#где-искать-vcc-на-плате-визуальные-подсказки">Где искать VCC на плате: визуальные подсказки</a></li><li><a href="#какие-напряжения-скрываются-за-vcc-типичные-значения">Какие напряжения скрываются за VCC: типичные значения</a></li><li><a href="#как-правильно-подключить-vcc-пошаговая-инструкция">Как правильно подключить VCC: пошаговая инструкция</a></li><li><a href="#частые-ошибки-и-как-их-избежать">Частые ошибки и как их избежать</a></li><li><a href="#vcc-в-разных-типах-плат-сравнительный-анализ">VCC в разных типах плат: сравнительный анализ</a></li><li><a href="#практические-примеры-где-vcc-критичен">Практические примеры: где VCC критичен</a></li><li><a href="#faq-частые-вопросы-о-vcc">FAQ: Частые вопросы о VCC</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/t/te/teyes-cc3l-kak-izmenit-glavnyj-ekran.html" class="related-card">Как изменить главный экран TEYES CC3L: настройка виджетов и лаунчера</a></li><li><a href="/articles/p/po/pochemu-u-moryakov-telnyashka-polosataya.html" class="related-card">Почему у моряков тельняшка полосатая: история и символика</a></li><li><a href="/articles/c/ch/chem-krepit-polovuyu-dosku-k-lagam.html" class="related-card">Чем крепить половую доску к лагам: саморезы, гвозди или скрытый монтаж?</a></li><li><a href="/articles/k/ka/kak-govoritsya-nachalo-polozheno.html" class="related-card">Как говорится начало положено: психология и старт проектов</a></li><li><a href="/articles/c/ch/chto-takoe-proezzhaya-chast-i-polosa-dvizheniya.html" class="related-card">Проезжая часть и полоса движения: ПДД 2026 с разъяснениями</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/t/te/teyes-cc3l-kak-izmenit-glavnyj-ekran.html" class="related-bottom-card"><span class="related-bottom-title">Как изменить главный экран TEYES CC3L: настройка виджетов и лаунчера</span><span class="related-bottom-desc">Подробная инструкция по смене обоев, виджетов и лаунчера на TEYES CC3L. Узнайте, как персонализирова</span></a><a href="/articles/p/po/pochemu-u-moryakov-telnyashka-polosataya.html" class="related-bottom-card"><span class="related-bottom-title">Почему у моряков тельняшка полосатая: история и символика</span><span class="related-bottom-desc">Узнайте, почему тельняшка имеет сине-белый полосатый узор. История флота, мифы о маскировке и значен</span></a><a href="/articles/c/ch/chem-krepit-polovuyu-dosku-k-lagam.html" class="related-bottom-card"><span class="related-bottom-title">Чем крепить половую доску к лагам: саморезы, гвозди или скрытый монтаж?</span><span class="related-bottom-desc">Подробный гид по выбору крепежа для пола. Сравнение гвоздей и саморезов, технология скрытого монтажа</span></a><a href="/articles/k/ka/kak-govoritsya-nachalo-polozheno.html" class="related-bottom-card"><span class="related-bottom-title">Как говорится начало положено: психология и старт проектов</span><span class="related-bottom-desc">Фразеологизм «как говорится начало положено»: разбор смысла, синонимы и психологические приемы для з</span></a><a href="/articles/c/ch/chto-takoe-proezzhaya-chast-i-polosa-dvizheniya.html" class="related-bottom-card"><span class="related-bottom-title">Проезжая часть и полоса движения: ПДД 2026 с разъяснениями</span><span class="related-bottom-desc">Что такое проезжая часть и полоса движения по ПДД? Определения, отличия, штрафы за нарушения. Разбор</span></a><a href="/articles/p/pr/predokhraniteli-lada-granta-8-klapannaya-raspolozhenie.html" class="related-bottom-card"><span class="related-bottom-title">Предохранители Лада Гранта 8 клапанов: схема и расположение (2026)</span><span class="related-bottom-desc">Детальная схема блока предохранителей &lt;em&gt;Lada Granta&lt;/em&gt; 8 клапанов (ВАЗ-2190): где находятся, рас</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>Разрешение скриптам записывать файлы и доступ к сети: безопасность и настройка — VW-portal</title>
+    <meta name="description" content="Как настроить права доступа для скриптов к файловой системе и сети без рисков для безопасности. Пошаговые инструкции для Windows, Linux и macOS.">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/a/al/allow-scripts-to-write-files-and-access-network.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Разрешение скриптам записывать файлы и доступ к сети: безопасность и настройка">
+    <meta property="og:description" content="Как настроить права доступа для скриптов к файловой системе и сети без рисков для безопасности. Пошаговые инструкции для Windows, Linux и macOS.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Разрешение скриптам записывать файлы и доступ к сети: безопасность и настройка</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Allow Scripts to Write Files and Access Network: полное руководство по настройке прав</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#почему-скриптам-нужны-права-на-запись-файлов-и-доступ-к-сети">Почему скриптам нужны права на запись файлов и доступ к сети?</a></li><li><a href="#механизмы-контроля-доступа-в-разных-ос">Механизмы контроля доступа в разных ОС</a></li><li><a href="#пошаговая-настройка-прав-в-windows">Пошаговая настройка прав в Windows</a></li><li><a href="#изоляция-скриптов-в-linux-chroot-containers-и-capabilities">Изоляция скриптов в Linux: chroot, containers, и capabilities</a></li><li><a href="#macos-gatekeeper-tcc-и-пессочница">macOS: Gatekeeper, TCC и пессочница</a></li><li><a href="#безопасные-практики-как-минимизировать-риски">Безопасные практики: как минимизировать риски</a></li><li><a href="#мониторинг-и-реагирование-на-инциденты">Мониторинг и реагирование на инциденты</a></li><li><a href="#faq-частые-вопросы-о-правах-скриптов">FAQ: Частые вопросы о правах скриптов</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body"><p>Разрешение скриптам записывать файлы и взаимодействовать с сетью — это мощный инструмент автоматизации, но одновременно и потенциальная брешь в безопасности системы. Без правильной настройки такие права могут привести к утечке данных, заражению вредоносным ПО или несанкционированному доступу к корпоративным ресурсам. Однако в некоторых сценариях — например, при работе с <strong>CI/CD-пайплайнами</strong>, обработке больших данных или управлении инфраструктурой — эти возможности становятся критически важными.</p>
+
+<p>В этой статье мы разберём, как грамотно настроить права доступа для скриптов на разных платформах (<em>Windows</em>, <em>Linux</em>, <em>macOS</em>), какие механизмы безопасности стоит задействовать, и как минимизировать риски. Особое внимание уделим <strong>политикам выполнения скриптов</strong>, <strong>изоляции окружений</strong> и <strong>мониторингу активности</strong>. Если вы администратор, разработчик или просто пользователь, которому нужно автоматизировать рутинные задачи — этот материал поможет сделать это безопасно.</p>
+
+<h2 id="почему-скриптам-нужны-права-на-запись-файлов-и-доступ-к-сети">Почему скриптам нужны права на запись файлов и доступ к сети?</h2>
+
+<p>Скрипты с правами на запись файлов и сетевой доступ используются в самых разных сценариях:</p>
+
+<ul>
+  <li>📦 <strong>Автоматизация развёртывания</strong>: скрипты копируют конфигурационные файлы, обновляют зависимости или настраивают серверы (например, <em>Ansible</em>, <em>Terraform</em>).</li>
+  <li>📊 <strong>Обработка данных</strong>: парсинг веб-страниц, загрузка логов или генерация отчётов (например, <em>Python</em>-скрипты с <code>requests</code> и <code>pandas</code>).</li>
+  <li>🔄 <strong>Резервное копирование</strong>: автоматическое создание бэкапов баз данных или пользовательских файлов с отправкой в облако.</li>
+  <li>🛠️ <strong>Мониторинг систем</strong>: скрипты проверяют доступность сервисов, записывают логи ошибок и отправляют уведомления (например, через <em>Telegram Bot API</em>).</li>
+</ul>
+
+<p>Однако каждый из этих случаев таит в себе риски. Например, скрипт с правами на запись в системные директории (<code>/etc/</code> в Linux или <code>C:\Windows\</code>) может быть скомпрометирован и использоваться для установки руткитов. А доступ к сети позволяет злоумышленникам эксфильтрировать данные или подключаться к <strong>C2-серверам</strong> (command-and-control).</p>
+
+<blockquote>⚠️ <strong>Внимание</strong>: Согласно исследованию <em>Verizon DBIR 2023</em>, 82% инцидентов безопасности связаны с человеческим фактором, включая неправильную настройку прав доступа. Даже легитимный скрипт может стать инструментом атаки, если его права не ограничены.</blockquote>
+
+<h2 id="механизмы-контроля-доступа-в-разных-ос">Механизмы контроля доступа в разных ОС</h2>
+
+<p>Каждая операционная система предоставляет свои инструменты для управления правами скриптов. Рассмотрим ключевые подходы:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Операционная система</th>
+      <th>Механизм контроля</th>
+      <th>Примеры инструментов</th>
+      <th>Уровень гибкости</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><em>Windows</em></td>
+      <td>Политики выполнения (<code>ExecutionPolicy</code>), ACL, <em>AppLocker</em></td>
+      <td><code>Set-ExecutionPolicy</code>, <em>Group Policy</em>, <em>Windows Defender Application Control</em></td>
+      <td>Высокий</td>
+    </tr>
+    <tr>
+      <td><em>Linux</em></td>
+      <td>Права доступа (<code>chmod</code>), <em>SELinux</em>/<em>AppArmor</em>, <code>sudoers</code></td>
+      <td><code>chmod 750</code>, <code>setfacl</code>, <em>firejail</em></td>
+      <td>Максимальный</td>
+    </tr>
+    <tr>
+      <td><em>macOS</em></td>
+      <td><em>Gatekeeper</em>, <em>XProtect</em>, <code>TCC</code> (Transparency, Consent, and Control)</td>
+      <td><code>spctl</code>, <code>tccutil</code>, <em>Little Snitch</em></td>
+      <td>Средний</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Например, в <em>Windows</em> политика <code>Restricted</code> полностью блокирует выполнение скриптов, а <code>AllSigned</code> требует цифровой подписи. В <em>Linux</em> можно использовать <code>capabilities</code> для делегирования конкретных прав (например, <code>CAP_NET_RAW</code> для сетевых операций) без полного <code>root</code>-доступа.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какую ОС вы чаще используете для автоматизации?</strong><ul><li>Windows</li><li>Linux</li><li>macOS</li><li>Другую</li></ul></div></div>
+
+<h2 id="пошаговая-настройка-прав-в-windows">Пошаговая настройка прав в Windows</h2>
+
+<p>В <em>Windows</em> основной инструмент управления правами скриптов — <strong>PowerShell Execution Policy</strong>. По умолчанию она установлена в <code>Restricted</code>, что блокирует все скрипты. Чтобы разрешить выполнение:</p>
+
+<ol>
+  <li>Откройте <em>PowerShell</em> от имени администратора.</li>
+  <li>Проверьте текущую политику:
+    <pre><code>Get-ExecutionPolicy -List</code></pre>
+  </li>
+  <li>Установите нужный уровень (например, <code>RemoteSigned</code> для локальных скриптов):
+    <pre><code>Set-ExecutionPolicy RemoteSigned -Scope CurrentUser</code></pre>
+  </li>
+  <li>Для сетевого доступа может потребоваться настройка <em>Windows Defender Firewall</em> или <em>AppLocker</em>.</li>
+</ol>
+
+<p>Если скрипт должен записывать файлы в защищённые директории (например, <code>C:\Program Files\</code>), используйте <strong>ACL</strong>:</p>
+<pre><code>icacls "C:\Scripts\output" /grant Users:(OI)(CI)W</code></pre>
+
+<blockquote>⚠️ <strong>Внимание</strong>: Политика <code>Unrestricted</code> отключает все проверки — это эквивалент запуска скриптов с правами администратора. Используйте её только в изолированных средах (например, в <em>Windows Sandbox</em>).</blockquote>
+
+
+<p>Установить политику не ниже <code>RemoteSigned</code>|</p>
+<p>Ограничить права на запись через <code>icacls</code>|</p>
+<p>Настроить <em>AppLocker</em> для белого списка скриптов|</p>
+<p>Включить логирование в <code>Event Viewer</code> (журнал <em>Windows PowerShell</em>)</p>
+<p>--></p>
+
+<h2 id="изоляция-скриптов-в-linux-chroot-containers-и-capabilities">Изоляция скриптов в Linux: chroot, containers, и capabilities</h2>
+
+<p>В <em>Linux</em> для ограничения прав скриптов используют несколько подходов:</p>
+
+<ul>
+  <li>🔒 <strong>Minimal privileges</strong>: запуск от имени непривилегированного пользователя с минимальными правами (<code>chmod 700 script.sh</code>).</li>
+  <li>🐳 <strong>Контейнеры</strong>: изоляция в <em>Docker</em> или <em>Podman</em> с ограниченными volumes и сетевыми правилами.</li>
+  <li>🛡️ <strong>SELinux/AppArmor</strong>: создание профилей, разрешающих только необходимые операции (например, запись в <code>/var/log/app/</code>).</li>
+  <li>🔧 <strong>Capabilities</strong>: делегирование конкретных прав (например, <code>CAP_NET_BIND_SERVICE</code> для привязки к порту &lt;1024).</li>
+</ul>
+
+<p>Пример ограничения скрипта с помощью <em>firejail</em>:</p>
+<pre><code>firejail --net=eth0 --private ./network_script.sh</code></pre>
+
+<p><mark>Критическая деталь: даже в контейнере скрипт может получить доступ к хостовой системе, если смонтированы критические директории (например, <code>/dev</code> или <code>/proc</code>). Всегда используйте флаг <code>--read-only</code> для чувствительных путей.</mark></p>
+
+<details class="faq-item"><summary>Что такое Linux Capabilities?</summary><div class="faq-answer"><p>
+<p>Capabilities в Linux позволяют разбивать привилегии суперпользователя (root) на отдельные права, такие как <code>CAP_CHOWN</code> (изменение владельца файлов) или <code>CAP_NET_ADMIN</code> (сетевая администрирование). Это позволяет давать скриптам только те права, которые им действительно нужны, вместо полного root-доступа.</p>
+<p></p></div></details></p>
+
+<h2 id="macos-gatekeeper-tcc-и-пессочница">macOS: Gatekeeper, TCC и пессочница</h2>
+
+<p>В <em>macOS</em> контроль над скриптами реализован через несколько механизмов:</p>
+
+<ol>
+  <li><strong>Gatekeeper</strong>: проверяет цифровые подписи скриптов и приложений. Отключать его (<code>spctl --master-disable</code>) не рекомендуется.</li>
+  <li><strong>TCC (Transparency, Consent, and Control)</strong>: управляет доступом к файлам, камере, микрофону и сети. Настраивается через <code>tccutil</code> или в <code>Системные настройки → Конфиденциальность</code>.</li>
+  <li><strong>Пессочница (Sandbox)</strong>: изолирует процессы, ограничивая их взаимодействие с системой (используется, например, в <em>Automator</em>).</li>
+</ol>
+
+<p>Чтобы разрешить скрипту доступ к сети, может потребоваться добавить его в исключения <em>Little Snitch</em> или настроить правила в <em>pfctl</em> (встроенный фаервол). Пример правила для разрешения исходящих соединений:</p>
+<pre><code>sudo pfctl -a com.apple/250.APPLE -f /etc/pf.conf</code></pre>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>В macOS перед первым запуском скрипта система запросит подтверждение доступа к ресурсам (файлам, сети). Всегда проверяйте путь к скрипту в диалоговом окне — злоумышленники могут подменить его на вредоносный.</p></div>
+
+<h2 id="безопасные-практики-как-минимизировать-риски">Безопасные практики: как минимизировать риски</h2>
+
+<p>Даже с правильно настроенными правами скрипты остаются потенциальной угрозой. Следуйте этим рекомендациям:</p>
+
+<ul>
+  <li>🔍 <strong>Аудит кода</strong>: используйте статические анализаторы (<em>Bandit</em> для Python, <em>ShellCheck</em> для bash) для поиска уязвимостей.</li>
+  <li>📜 <strong>Логирование</strong>: ведите журнал действий скриптов (например, через <code>syslog</code> или <em>Sentry</em>).</li>
+  <li>🔄 <strong>Регулярные обновления</strong>: зависимости скриптов (например, <em>npm</em>-пакеты или <em>PyPI</em>-библиотеки) должны обновляться для закрытия уязвимостей.</li>
+  <li>🛡️ <strong>Сетевая сегментация</strong>: ограничьте доступ скриптов к внутренним ресурсам через <em>VLAN</em> или <em>Zero Trust</em>-политики.</li>
+</ul>
+
+<p>Пример безопасного запуска Python-скрипта с сетевым доступом:</p>
+<pre><code>python3 -m venv --clear --without-pip isolated_env
+<p>source isolated_env/bin/activate</p>
+<p>pip install --no-cache-dir -r requirements.txt</p>
+<p>python3 --isolated script.py</code></pre></p>
+
+<blockquote>⚠️ <strong>Внимание</strong>: Скрипты, взаимодействующие с <strong>API-ключами</strong> или <strong>токенами доступа</strong>, должны хранить их в защищённых хранилищах (<em>AWS Secrets Manager</em>, <em>HashiCorp Vault</em>), а не в открытом виде в коде или конфигурационных файлах.</blockquote>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Принцип наименьших привилегий (Principle of Least Privilege) — основа безопасности скриптов. Давайте им только те права, которые необходимы для выполнения задачи, и не более того.</p></div>
+
+<h2 id="мониторинг-и-реагирование-на-инциденты">Мониторинг и реагирование на инциденты</h2>
+
+<p>Даже с правильной настройкой прав скрипты могут быть скомпрометированы. Важно отслеживать их активность:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Инструмент</th>
+      <th>Что отслеживает</th>
+      <th>Пример команды</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><em>auditd</em> (Linux)</td>
+      <td>Изменения файлов, сетевые соединения</td>
+      <td><code>auditctl -w /etc/passwd -p wa -k auth_changes</code></td>
+    </tr>
+    <tr>
+      <td><em>Windows Event Log</em></td>
+      <td>Запуск скриптов, изменения политик</td>
+      <td><code>Get-WinEvent -FilterHashtable @{LogName='Security'; ID=4688}</code></td>
+    </tr>
+    <tr>
+      <td><em>Wireshark</em>/<em>tcpdump</em></td>
+      <td>Сетевой трафик скриптов</td>
+      <td><code>tcpdump -i eth0 -w script_traffic.pcap 'port 80 or port 443'</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Настройте оповещения для подозрительной активности, например:</p>
+<ul>
+  <li>Скрипт пытается подключиться к незнакомым IP-адресам.</li>
+  <li>Запись в системные файлы вне разрешённых директорий.</li>
+  <li>Неожиданное потребление ресурсов (CPU, память, сеть).</li>
+</ul>
+
+<p>Для автоматизации мониторинга можно использовать <em>Prometheus</em> + <em>Grafana</em> (для метрик) или <em>OSSEC</em> (для обнаружения вторжений).</p>
+
+<h2 id="faq-частые-вопросы-о-правах-скриптов">FAQ: Частые вопросы о правах скриптов</h2>
+
+<details>
+  <summary>Можно ли дать скрипту доступ только к конкретной папке, а не ко всей файловой системе?</summary>
+  <p>Да, в <em>Linux</em> используйте <code>chroot</code> или монтируйте папку в контейнер с правами <code>read-only</code>. В <em>Windows</em> настройте <strong>ACL</strong> через <code>icacls</code>, запретив доступ к другим директориям. Например:</p>
+  <pre><code>icacls "C:\Scripts\data" /grant:r User:(OI)(CI)RW
+<p>icacls "C:\" /deny User:(OI)(CI)W</code></pre></p>
+</details>
+
+<details>
+  <summary>Как проверить, какие сетевые соединения открывает скрипт?</summary>
+  <p>В <em>Linux/macOS</em> используйте <code>lsof -i -P | grep script_name</code> или <code>netstat -tulnp</code>. В <em>Windows</em> — <code>netstat -ano | findstr PID_скрипта</code>. Для детального анализа трафика подходит <em>Wireshark</em> с фильтром по процессу.</p>
+</details>
+
+<details>
+  <summary>Что делать, если скрипт требует root-прав, но это небезопасно?</summary>
+  <p>Разбейте скрипт на части: критические операции (требующие root) вынесите в отдельный модуль и запускайте его через <code>sudo</code> с ограниченными правами (настройте <code>/etc/sudoers</code>). Например:</p>
+  <pre><code>%script_users ALL=(root) NOPASSWD: /usr/local/bin/script_helper *</code></pre>
+  <p>Остальной код выполняйте от имени непривилегированного пользователя.</p>
+</details>
+
+<details>
+  <summary>Как защитить скрипты от изменения третьими лицами?</summary>
+  <p>Используйте цифровые подписи (в <em>Windows</em> — <code>SignTool</code>, в <em>Linux</em> — <code>gpg</code>) и проверяйте целостность перед выполнением. Например:</p>
+  <pre><code>gpg --verify script.sh.sig script.sh</code></pre>
+  <p>Также храните скрипты в приватных репозиториях с контрольными суммами (<em>SHA-256</em>).</p>
+</details>
+
+<details>
+  <summary>Можно ли полностью заблокировать доступ скриптов к сети?</summary>
+  <p>Да, в <em>Linux</em> используйте <em>firewall-cmd</em> или <em>iptables</em> для блокировки исходящего трафика от пользователя, под которым запускается скрипт. Пример:</p>
+  <pre><code>sudo iptables -A OUTPUT -m owner --uid-owner script_user -j DROP</code></pre>
+  <p>В <em>Windows</em> настройте правило в <em>Windows Defender Firewall</em> для блокировки программы по пути.</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#почему-скриптам-нужны-права-на-запись-файлов-и-доступ-к-сети">Почему скриптам нужны права на запись файлов и доступ к сети?</a></li><li><a href="#механизмы-контроля-доступа-в-разных-ос">Механизмы контроля доступа в разных ОС</a></li><li><a href="#пошаговая-настройка-прав-в-windows">Пошаговая настройка прав в Windows</a></li><li><a href="#изоляция-скриптов-в-linux-chroot-containers-и-capabilities">Изоляция скриптов в Linux: chroot, containers, и capabilities</a></li><li><a href="#macos-gatekeeper-tcc-и-пессочница">macOS: Gatekeeper, TCC и пессочница</a></li><li><a href="#безопасные-практики-как-минимизировать-риски">Безопасные практики: как минимизировать риски</a></li><li><a href="#мониторинг-и-реагирование-на-инциденты">Мониторинг и реагирование на инциденты</a></li><li><a href="#faq-частые-вопросы-о-правах-скриптов">FAQ: Частые вопросы о правах скриптов</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/d/di/diametr-raspolozheniya-otverstij-na-diskakh-ford-fokus-2.html" class="related-card">PCD дисков на Форд Фокус 2: таблица размеров и совместимость</a></li><li><a href="/articles/s/st/strelka-manometra-ne-na-nule-v-nachalnom-polozhenii.html" class="related-card">Стрелка манометра не на нуле: причины и решения (2026)</a></li><li><a href="/articles/p/pr/pravilnoe-raspolozhenie-ruk-pri-otzhimanii-ot-pola.html" class="related-card">Правильное расположение рук при отжимании от пола: техника и ошибки</a></li><li><a href="/articles/c/cc/cc-catch-stop-draggin-my-heart-around.html" class="related-card">CC Catch «Stop Draggin’ My Heart Around»: история хита, текст и секреты</a></li><li><a href="/articles/c/ch/chto-mozhno-polozhit-v-samogon-dlya-vkusa-priyatnogo-zapakha.html" class="related-card">Что добавить в самогон для аромата и вкуса: 25 проверенных рецептов</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/d/di/diametr-raspolozheniya-otverstij-na-diskakh-ford-fokus-2.html" class="related-bottom-card"><span class="related-bottom-title">PCD дисков на Форд Фокус 2: таблица размеров и совместимость</span><span class="related-bottom-desc">Точные параметры диаметра расположения отверстий (PCD) для дисков &lt;em&gt;Ford Focus 2&lt;/em&gt; (2004–2011).</span></a><a href="/articles/s/st/strelka-manometra-ne-na-nule-v-nachalnom-polozhenii.html" class="related-bottom-card"><span class="related-bottom-title">Стрелка манометра не на нуле: причины и решения (2026)</span><span class="related-bottom-desc">Почему стрелка манометра отклонена при выключенном двигателе? Разбираем причины, диагностику и спосо</span></a><a href="/articles/p/pr/pravilnoe-raspolozhenie-ruk-pri-otzhimanii-ot-pola.html" class="related-bottom-card"><span class="related-bottom-title">Правильное расположение рук при отжимании от пола: техника и ошибки</span><span class="related-bottom-desc">Как правильно ставить руки при отжиманиях? Разбор ширины хвата, положения локтей и запястий. Таблица</span></a><a href="/articles/c/cc/cc-catch-stop-draggin-my-heart-around.html" class="related-bottom-card"><span class="related-bottom-title">CC Catch «Stop Draggin’ My Heart Around»: история хита, текст и секреты</span><span class="related-bottom-desc">Разбор легендарного трека CC Catch 1986 года: перевод текста, история создания, влияние на eurodance</span></a><a href="/articles/c/ch/chto-mozhno-polozhit-v-samogon-dlya-vkusa-priyatnogo-zapakha.html" class="related-bottom-card"><span class="related-bottom-title">Что добавить в самогон для аромата и вкуса: 25 проверенных рецептов</span><span class="related-bottom-desc">Хотите сделать самогон мягким и ароматным? Узнайте, какие травы, специи, фрукты и ягоды добавляют дл</span></a><a href="/articles/p/pr/pri-pechati-na-printere-poyavlyayutsya-polosy-kak-ispravit-epson.html" class="related-bottom-card"><span class="related-bottom-title">Полосы при печати на Epson: 7 способов устранить проблему</span><span class="related-bottom-desc">Почему принтер Epson печатает с полосами? Пошаговые инструкции по очистке головки, замене картриджей</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

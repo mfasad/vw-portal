@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>AQS в Geely Atlas Pro: что это, как работает и зачем нужен — VW-portal</title>
+    <meta name="description" content="Разбираем систему AQS в Geely Atlas Pro: принцип работы, функции, преимущества и как правильно пользоваться. Экспертный обзор с советами и FAQ.">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/a/aq/aqs-v-mashine-geely-atlas-pro-chto-eto.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="AQS в Geely Atlas Pro: что это, как работает и зачем нужен">
+    <meta property="og:description" content="Разбираем систему AQS в Geely Atlas Pro: принцип работы, функции, преимущества и как правильно пользоваться. Экспертный обзор с советами и FAQ.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/atlas/">Atlas</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">AQS в Geely Atlas Pro: что это, как работает и зачем нужен</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>AQS в Geely Atlas Pro: разбираем систему контроля качества воздуха в салоне</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#что-такое-aqs-в-geely-atlas-pro-расшифровка-и-назначение">Что такое AQS в Geely Atlas Pro: расшифровка и назначение</a></li><li><a href="#как-устроена-система-aqs-технические-детали">Как устроена система AQS: технические детали</a></li><li><a href="#преимущества-aqs-в-geely-atlas-pro-почему-это-важно">Преимущества AQS в Geely Atlas Pro: почему это важно?</a></li><li><a href="#как-пользоваться-aqs-в-geely-atlas-pro-пошаговая-инструкция">Как пользоваться AQS в Geely Atlas Pro: пошаговая инструкция</a></li><li><a href="#частые-вопросы-и-проблемы-с-aqs-в-geely-atlas-pro">Частые вопросы и проблемы с AQS в Geely Atlas Pro</a></li><li><a href="#сравнение-aqs-в-geely-atlas-pro-с-аналогами-у-конкурентов">Сравнение AQS в Geely Atlas Pro с аналогами у конкурентов</a></li><li><a href="#обслуживание-aqs-когда-и-как-менять-фильтры">Обслуживание AQS: когда и как менять фильтры</a></li><li><a href="#faq-ответы-на-популярные-вопросы-об-aqs-в-geely-atlas-pro">FAQ: Ответы на популярные вопросы об AQS в Geely Atlas Pro</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body"><p>Если вы владелец <em>Geely Atlas Pro</em> или рассматриваете эту модель к покупке, то наверняка сталкивались с аббревиатурой <strong>AQS</strong> в списке опций. Что скрывается за этими тремя буквами? Почему производитель акцентирует на этой системе внимание, а некоторые дилеры называют её "фишкой" кроссовера? В этой статье мы детально разберём, что такое <strong>AQS (Air Quality System)</strong> в <em>Geely Atlas Pro</em>, как она устроена, какие задачи решает и почему её наличие может стать весомым аргументом при выборе автомобиля.</p>
+
+<p>Современные автомобили всё чаще оснащаются системами, которые выходят за рамки традиционных "двигатель-коробка-подвеска". <em>Geely</em> не исключение: бренд активно внедряет технологии, направленные на комфорт и здоровье пассажиров. AQS как раз относится к таким инновациям — это не просто маркетинговый ход, а реально работающая система, которая влияет на микроклимат в салоне. Но как именно? Давайте разберёмся по порядку, начиная с основ и заканчивая нюансами эксплуатации.</p>
+
+<h2 id="что-такое-aqs-в-geely-atlas-pro-расшифровка-и-назначение">Что такое AQS в Geely Atlas Pro: расшифровка и назначение</h2>
+
+<p><strong>AQS</strong> расшифровывается как <strong>A</strong>ir <strong>Q</strong>uality <strong>S</strong>ystem — система контроля качества воздуха. В контексте <em>Geely Atlas Pro</em> это комплекс решений, призванный поддерживать оптимальный состав воздуха в салоне, минимизируя попадание вредных частиц, пыли, аллергенов и неприятных запахов. Система работает в автоматическом режиме, анализируя данные с датчиков и управляя климатической установкой.</p>
+
+<p>Главная задача AQS — защитить пассажиров от внешних загрязнений, которые проникают в салон через систему вентиляции. Это особенно актуально для городских условий, где воздух насыщен выхлопными газами, пылью от дорожного покрытия и промышленными выбросами. В <em>Atlas Pro</em> система интегрирована с климат-контролем и использует несколько уровней фильтрации, включая <strong>HEPA-фильтр</strong> и угольный фильтр, чтобы обеспечить чистоту воздуха.</p>
+
+<ul>
+  <li>🔍 <strong>Мониторинг</strong>: Датчики постоянно анализируют состав воздуха на предмет вредных примесей.</li>
+  <li>🚗 <strong>Автоматическая реакция</strong>: При превышении нормы система переключается в режим рециркуляции или активирует дополнительную фильтрацию.</li>
+  <li>🌿 <strong>Оздоровление</strong>: Используются ионизаторы и ароматизаторы (в некоторых комплектациях) для улучшения микроклимата.</li>
+  <li>📊 <strong>Информирование</strong>: На дисплее мультимедийной системы отображается текущее состояние воздуха (например, "Хорошо", "Средне", "Плохо").</li>
+</ul>
+
+<p>Важно понимать, что AQS — это не просто фильтр, а интеллектуальная система, которая адаптируется к условиям окружающей среды. Например, если вы едете за грузовиком, выбрасывающим сажу, или попали в пробку с высоким уровнем CO₂, система среагирует мгновенно, закрыв доступ внешнего воздуха и включив рециркуляцию.</p>
+
+<h2 id="как-устроена-система-aqs-технические-детали">Как устроена система AQS: технические детали</h2>
+
+<p>В <em>Geely Atlas Pro</em> система AQS состоит из нескольких ключевых компонентов, каждый из которых выполняет свою функцию. Рассмотрим их подробнее:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Компонент</th>
+      <th>Назначение</th>
+      <th>Особенности в Atlas Pro</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Датчик качества воздуха</td>
+      <td>Измеряет концентрацию CO₂, PM2.5, формальдегида и других вредных веществ</td>
+      <td>Расположен в воздуховоде, реагирует на изменения за доли секунды</td>
+    </tr>
+    <tr>
+      <td>HEPA-фильтр</td>
+      <td>Задерживает до 99,9% частиц размером до 0,3 мкм (пыль, бактерии, вирусы)</td>
+      <td>Требует замены каждые 15–20 тыс. км (зависит от условий эксплуатации)</td>
+    </tr>
+    <tr>
+      <td>Угольный фильтр</td>
+      <td>Поглощает газы и неприятные запахи (бензин, выхлоп, табачный дым)</td>
+      <td>Часто комбинируется с HEPA в одном модуле</td>
+    </tr>
+    <tr>
+      <td>Ионизатор воздуха</td>
+      <td>Нейтрализует бактерии и вирусы, насыщает воздух отрицательными ионами</td>
+      <td>Включается автоматически или вручную через меню климат-контроля</td>
+    </tr>
+    <tr>
+      <td>Электронный блок управления</td>
+      <td>Обрабатывает данные датчиков и управляет заслонками, вентилятором, фильтрами</td>
+      <td>Интегрирован с мультимедийной системой для отображения статуса AQS</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Особенность реализации AQS в <em>Atlas Pro</em> — это тесная интеграция с климат-контролем. Система не только фильтрует воздух, но и оптимизирует его температуру и влажность. Например, если датчики фиксируют повышенную влажность (что способствует размножению бактерий), AQS может автоматически включить кондиционер для осушения воздуха.</p>
+
+<p>Кроме того, в некоторых комплектациях <em>Geely Atlas Pro</em> предусмотрена функция <strong>ароматизации салона</strong>. Она работает в паре с AQS: после очистки воздуха система распыляет нейтральные ароматы (например, цитрусовые или хвойные), создавая эффект "свежести". Это не только приятный бонус, но и психологический фактор, который снижает усталость водителя в длительных поездках.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Как часто вы обращаете внимание на качество воздуха в салоне автомобиля?</strong><ul><li>Всегда слежу</li><li>Иногда проверяю</li><li>Никогда не задумывался</li><li>Знаю о такой функции, но не пользуюсь</li></ul></div></div>
+
+<h2 id="преимущества-aqs-в-geely-atlas-pro-почему-это-важно">Преимущества AQS в Geely Atlas Pro: почему это важно?</h2>
+
+<p>На первый взгляд может показаться, что система контроля воздуха — это роскошь, а не необходимость. Однако есть несколько веских причин, почему AQS в <em>Atlas Pro</em> стоит рассматривать как важную опцию:</p>
+
+<ol>
+  <li><strong>Защита здоровья</strong>. По данным ВОЗ, загрязнённый воздух в салоне автомобиля может содержать в 2–5 раз больше вредных частиц, чем на улице. AQS снижает этот риск, особенно для аллергиков, астматиков и детей.</li>
+  <li><strong>Комфорт в пробках</strong>. В городских условиях, где концентрация CO₂ и выхлопных газов высока, система автоматически переключается на рециркуляцию, предотвращая головные боли и усталость.</li>
+  <li><strong>Защита от вирусов</strong>. HEPA-фильтры задерживают бактерии и вирусы (включая коронавирус), что актуально в сезон простуд или во время пандемий.</li>
+  <li><strong>Снижение запахов</strong>. Угольный фильтр эффективен против табачного дыма, запаха бензина или новых материалов салона ("химии" от пластика).</li>
+  <li><strong>Продление ресурса салона</strong>. Чистый воздух уменьшает оседание пыли на приборной панели и сиденьях, что упрощает уход за автомобилем.</li>
+</ol>
+
+<p><mark>В <em>Geely Atlas Pro</em> система AQS сертифицирована по стандарту <strong>CARS (China Automotive Air Quality Standard)</strong>, который предъявляет жёсткие требования к фильтрации PM2.5 и формальдегида. Это означает, что эффективность очистки воздуха в салоне подтверждена независимыми тестами.</mark></p>
+
+<p>Ещё один плюс — это <strong>энергоэффективность</strong>. В отличие от некоторых аналогов, AQS в <em>Atlas Pro</em> не создаёт дополнительной нагрузки на двигатель или аккумулятор. Система работает от бортовой сети и оптимизирована так, чтобы не влиять на расход топлива.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если вы часто ездите по пыльным дорогам или в условиях смога, проверяйте состояние фильтров AQS каждые 10 тыс. км. Их засорение может привести к снижению эффективности системы и повышенной нагрузке на вентилятор климат-контроля.</p></div>
+
+<h2 id="как-пользоваться-aqs-в-geely-atlas-pro-пошаговая-инструкция">Как пользоваться AQS в Geely Atlas Pro: пошаговая инструкция</h2>
+
+<p>Система AQS в <em>Atlas Pro</em> работает в автоматическом режиме, но у водителя есть возможность управлять некоторыми параметрами вручную. Вот как это сделать:</p>
+
+<ol>
+  <li><strong>Активация/деактивация AQS</strong>:
+    <p>По умолчанию система включена. Чтобы отключить её, перейдите в меню климат-контроля на центральном экране: <code>Настройки → Качество воздуха → AQS</code> и снимите галочку. Однако мы не рекомендуем этого делать без необходимости.</p>
+  </li>
+  <li><strong>Ручной режим рециркуляции</strong>:
+    <p>Если вы хотите принудительно закрыть доступ внешнего воздуха (например, при езде за дизельным грузовиком), нажмите кнопку рециркуляции на панели климат-контроля. AQS при этом продолжит работать, но будет очищать только внутренний воздух.</p>
+  </li>
+  <li><strong>Проверка состояния фильтров</strong>:
+    <p>Информацию о ресурсе фильтров можно найти в меню: <code>Настройки → Обслуживание → Фильтры AQS</code>. Система сама напомнит о необходимости замены.</p>
+  </li>
+  <li><strong>Ионизация и ароматизация</strong>:
+    <p>В комплектациях с этими функциями их можно включить через то же меню <code>Качество воздуха</code>. Ионизатор работает бесшумно, а ароматизатор имеет регулировку интенсивности.</p>
+  </li>
+</ol>
+
+<p>Важно: если на дисплее появилось предупреждение <code>"Плохое качество воздуха"</code>, не игнорируйте его. Это значит, что система фиксирует высокий уровень загрязнений, и лучше переключиться на рециркуляцию до улучшения условий.</p>
+
+<div class="checklist-block"><h4>☑️ Что проверить при активации AQS</h4><label class="check-item"><input type="checkbox"><span>Убедиться, что фильтры не засорены</span></label><label class="check-item"><input type="checkbox"><span>Закрыть окна для точного измерения</span></label><label class="check-item"><input type="checkbox"><span>Проверить, что датчики не закрыты посторонними предметами</span></label><label class="check-item"><input type="checkbox"><span>Активировать ионизатор при длительной поездке</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<p>Если AQS перестала работать или показывает некорректные данные, это может быть связано с:</p>
+<ul>
+  <li>🚨 Засорением датчиков (например, после мойки подкапотного пространства).</li>
+  <li>🚨 Неисправностью электроники (требуется диагностика).</li>
+  <li>🚨 Износом фильтров (нужна замена).</li>
+</ul>
+
+<details class="faq-item"><summary>Что делать, если AQS показывает "Ошибка датчика"</summary><div class="faq-answer"><p>Обычно это означает, что датчик качества воздуха загрязнён или вышел из строя. Попробуйте сбросить настройки климат-контроля (зажать кнопку AUTO на 10 секунд). Если ошибка осталась — обратитесь в сервис для чистки или замены датчика.</p></div></details>
+
+<h2 id="частые-вопросы-и-проблемы-с-aqs-в-geely-atlas-pro">Частые вопросы и проблемы с AQS в Geely Atlas Pro</h2>
+
+<p>Несмотря на надёжность системы, у владельцев <em>Atlas Pro</em> иногда возникают вопросы или трудности с AQS. Рассмотрим наиболее типичные ситуации:</p>
+
+<blockquote>⚠️ <strong>Внимание</strong>: Если после замены фильтров AQS продолжает показывать высокий уровень загрязнения, проверьте герметичность корпуса фильтра. Иногда уплотнительные резинки изнашиваются, и неофильтрованный воздух проникает в салон.</blockquote>
+
+<p><strong>1. AQS не реагирует на загрязнённый воздух</strong></p>
+<p>Возможные причины:</p>
+<ul>
+  <li>🔧 Датчик отключён в настройках (проверьте меню климат-контроля).</li>
+  <li>🔧 Фильтры засорены (требуется замена).</li>
+  <li>🔧 Неисправность электронного блока (нужна диагностика).</li>
+</ul>
+
+<p><strong>2. В салоне появился неприятный запах, несмотря на AQS</strong></p>
+<p>Это может быть связано с:</p>
+<ul>
+  <li>🧼 Загрязнением испарителя кондиционера (нужна дезинфекция).</li>
+  <li>🧼 Износом угольного фильтра (он поглощает запахи, но имеет ограниченный ресурс).</li>
+  <li>🧼 Попаданием влаги в систему (например, после мойки).</li>
+</ul>
+
+<p><strong>3. AQS слишком часто включает рециркуляцию</strong></p>
+<p>Если система постоянно переключается на внутреннюю циркуляцию, это может означать:</p>
+<ul>
+  <li>🌆 Вы часто ездите в условиях сильного загрязнения (например, в центре мегаполиса).</li>
+  <li>🌆 Датчик даёт ложные срабатывания (нужна калибровка или замена).</li>
+  <li>🌆 Фильтры требуют замены (засорённые фильтры ухудшают пропускную способность).</li>
+</ul>
+
+<p>В большинстве случаев проблемы с AQS решаются заменой фильтров или сбросом настроек. Если это не помогает — обратитесь в официальный сервис <em>Geely</em>, так как самостоятельный ремонт датчиков или электроники может привести к потере гарантии.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Регулярная замена фильтров AQS (каждые 15–20 тыс. км) — залог эффективной работы системы. Используйте только оригинальные фильтры или сертифицированные аналоги, так как дешёвые заменители могут не обеспечивать заявленную степень очистки.</p></div>
+
+<h2 id="сравнение-aqs-в-geely-atlas-pro-с-аналогами-у-конкурентов">Сравнение AQS в Geely Atlas Pro с аналогами у конкурентов</h2>
+
+<p>Системы контроля качества воздуха сегодня устанавливаются на многие автомобили, но их реализация может сильно отличаться. Давайте сравним AQS в <em>Atlas Pro</em> с решениями от других производителей:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Производитель/Модель</th>
+      <th>Название системы</th>
+      <th>Особенности</th>
+      <th>Преимущества перед AQS в Atlas Pro</th>
+      <th>Недостатки</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Volvo (XC60, XC90)</td>
+      <td>CleanZone</td>
+      <td>Многозоновая очистка, ионизация, контроль CO₂</td>
+      <td>Более точные датчики, интеграция с навигацией (закрывает воздух в тоннелях)</td>
+      <td>Дорогое обслуживание</td>
+    </tr>
+    <tr>
+      <td>Toyota (Camry, RAV4)</td>
+      <td>Nanoe-X</td>
+      <td>Ионизация + увлажнение воздуха</td>
+      <td>Эффективна против вирусов и бактерий</td>
+      <td>Нет HEPA-фильтра в базовых версиях</td>
+    </tr>
+    <tr>
+      <td>Hyundai/Kia (Tucson, Sportage)</td>
+      <td>Clean Air System</td>
+      <td>Фильтрация PM2.5, контроль запахов</td>
+      <td>Простая и надёжная</td>
+      <td>Меньше функций, чем у AQS</td>
+    </tr>
+    <tr>
+      <td>BMW (5 Series, X5)</td>
+      <td>Microfilter</td>
+      <td>Угольный + электростатический фильтр</td>
+      <td>Высокая эффективность против аллергенов</td>
+      <td>Высокая стоимость замены фильтров</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Как видно из таблицы, AQS в <em>Geely Atlas Pro</em> не уступает системам премиальных брендов по основным параметрам, а по некоторым показателям (например, сертификации по стандарту CARS) даже превосходит их. При этом стоимость обслуживания <em>Atlas Pro</em> остаётся на доступном уровне, что делает его привлекательным выбором в сегменте.</p>
+
+<p>Отдельно стоит отметить, что в <em>Atlas Pro</em> система AQS работает тише, чем у многих конкурентов. Это достигается за счёт оптимизированной конструкции воздуховодов и использования малошумных вентиляторов. Для тех, кто ценит тишину в салоне, это важный плюс.</p>
+
+<h2 id="обслуживание-aqs-когда-и-как-менять-фильтры">Обслуживание AQS: когда и как менять фильтры</h2>
+
+<p>Чтобы система AQS в <em>Geely Atlas Pro</em> работала эффективно, необходимо своевременно обслуживать её компоненты. Основной расходный материал — это фильтры, которые требуют регулярной замены.</p>
+
+<p><strong>Рекомендуемые сроки замены:</strong></p>
+<ul>
+  <li>📅 <strong>HEPA-фильтр</strong>: каждые 15–20 тыс. км или раз в год (в зависимости от условий эксплуатации).</li>
+  <li>📅 <strong>Угольный фильтр</strong>: каждые 20–25 тыс. км. В условиях мегаполиса или частых поездок по пыльным дорогам — раз в 15 тыс. км.</li>
+  <li>📅 <strong>Ионизатор</strong>: не требует замены, но раз в 2–3 года рекомендуется проверять его работу в сервисе.</li>
+</ul>
+
+<p><strong>Признаки, что фильтры пора менять:</strong></p>
+<ul>
+  <li>🚗 Появление пыли на приборной панели даже после уборки.</li>
+  <li>🚗 Неприятный запах в салоне при включении вентиляции.</li>
+  <li>🚗 Уменьшение потока воздуха из дефлекторов.</li>
+  <li>🚗 Частое срабатывание рециркуляции без видимых причин.</li>
+  <li>🚗 Сообщение на дисплее: <code>"Замените фильтр AQS"</code>.</li>
+</ul>
+
+<p><strong>Как заменить фильтры самостоятельно:</strong></p>
+<ol>
+  <li>Откройте бардачок и снимите его крепления (обычно достаточно отщёлкнуть защёлки).</li>
+  <li>За бардачком вы увидите крышку фильтра (она может быть закреплена винтами или клипсами).</li>
+  <li>Извлеките старый фильтр, обратив внимание на направление потока воздуха (указано стрелкой на корпусе).</li>
+  <li>Установите новый фильтр, соблюдая направление. Убедитесь, что он плотно сел в пазы.</li>
+  <li>Соберите всё в обратном порядке. После замены сбросьте счётчик ресурса фильтра в меню <code>Настройки → Обслуживание</code>.</li>
+</ol>
+
+<blockquote>⚠️ <strong>Внимание</strong>: При замене фильтров AQS избегайте прикасаться к их рабочей поверхности руками — это может снизить эффективность фильтрации. Также не используйте бывшие в употреблении или повреждённые фильтры: они не обеспечат должной защиты.</blockquote>
+
+<p>Если вы не уверены в своих силах, лучше доверить замену фильтров профессионалам. В официальных сервисах <em>Geely</em> эта процедура занимает не более 30 минут и стоит относительно недорого (от 1 500 до 3 000 рублей в зависимости от региона).</p>
+
+<h2 id="faq-ответы-на-популярные-вопросы-об-aqs-в-geely-atlas-pro">FAQ: Ответы на популярные вопросы об AQS в Geely Atlas Pro</h2>
+
+<details>
+  <summary>Можно ли отключить AQS полностью, если она мешает?</summary>
+  <p>Да, систему можно отключить через меню климат-контроля (<code>Настройки → Качество воздуха → AQS</code>). Однако мы не рекомендуем этого делать, так как вы лишаетесь защиты от загрязнённого воздуха. Лучше настроить чувствительность датчиков или использовать ручной режим рециркуляции при необходимости.</p>
+</details>
+
+<details>
+  <summary>Сколько стоит замена фильтров AQS в Atlas Pro?</summary>
+  <p>Стоимость оригинальных фильтров для AQS в <em>Geely Atlas Pro</em> составляет:</p>
+  <ul>
+    <li>HEPA-фильтр: ~2 500–3 500 рублей;</li>
+    <li>Угольный фильтр: ~1 800–2 500 рублей;</li>
+    <li>Комплект (HEPA + угольный): ~4 000–5 000 рублей.</li>
+  </ul>
+  <p>Стоимость работы в сервисе: ~500–1 000 рублей. При самостоятельной замене вы экономите на работе, но рискуете повредить крепления или неправильно установить фильтр.</p>
+</details>
+
+<details>
+  <summary>Правда ли, что AQS помогает от аллергии?</summary>
+  <p>Да, система AQS в <em>Atlas Pro</em> сертифицирована для фильтрации аллергенов, включая пыльцу, пылевых клещей и споры плесени. HEPA-фильтр задерживает частицы размером до 0,3 мкм, что покрывает большинство аллергенов. Однако для максимального эффекта рекомендуется:</p>
+  <ul>
+    <li>Регулярно менять фильтры (каждые 10–15 тыс. км в сезон аллергии).</li>
+    <li>Использовать рециркуляцию в пиковые часы (утро, вечер).</li>
+    <li>Проводить влажную уборку салона не реже раза в неделю.</li>
+  </ul>
+</details>
+
+<details>
+  <summary>Можно ли установить AQS на Geely Atlas Pro, если её не было в базовой комплектации?</summary>
+  <p>Технически возможно, но это потребует серьёзных доработок:</p>
+  <ul>
+    <li>Замена климат-контроля на версию с поддержкой AQS.</li>
+    <li>Установка датчиков и проводки.</li>
+    <li>Прошивка блока управления.</li>
+  </ul>
+  <p>Стоимость такого апгрейда может превысить 50 000 рублей, поэтому целесообразнее выбирать комплектацию с AQS изначально.</p>
+</details>
+
+<details>
+  <summary>Влияет ли AQS на расход топлива?</summary>
+  <p>Нет, система AQS в <em>Atlas Pro</em> не оказывает заметного влияния на расход топлива. Она работает от бортовой электросети и потребляет минимальное количество энергии (сопоставимо с работой магнитолы). Единственный момент — если фильтры сильно засорены, вентилятор климат-контроля может работать с повышенной нагрузкой, что теоретически увеличивает расход на 0,1–0,3 л/100 км. Но это скорее сигнал о необходимости замены фильтров, а не проблема AQS.</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#что-такое-aqs-в-geely-atlas-pro-расшифровка-и-назначение">Что такое AQS в Geely Atlas Pro: расшифровка и назначение</a></li><li><a href="#как-устроена-система-aqs-технические-детали">Как устроена система AQS: технические детали</a></li><li><a href="#преимущества-aqs-в-geely-atlas-pro-почему-это-важно">Преимущества AQS в Geely Atlas Pro: почему это важно?</a></li><li><a href="#как-пользоваться-aqs-в-geely-atlas-pro-пошаговая-инструкция">Как пользоваться AQS в Geely Atlas Pro: пошаговая инструкция</a></li><li><a href="#частые-вопросы-и-проблемы-с-aqs-в-geely-atlas-pro">Частые вопросы и проблемы с AQS в Geely Atlas Pro</a></li><li><a href="#сравнение-aqs-в-geely-atlas-pro-с-аналогами-у-конкурентов">Сравнение AQS в Geely Atlas Pro с аналогами у конкурентов</a></li><li><a href="#обслуживание-aqs-когда-и-как-менять-фильтры">Обслуживание AQS: когда и как менять фильтры</a></li><li><a href="#faq-ответы-на-популярные-вопросы-об-aqs-в-geely-atlas-pro">FAQ: Ответы на популярные вопросы об AQS в Geely Atlas Pro</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/p/po/podsvetka-salona-dzhili-atlas.html" class="related-card">Подсветка салона Geely Atlas: выбор, установка и настройка</a></li><li><a href="/articles/e/ex/exceed-txl-ili-geely-atlas.html" class="related-card">Exceed TXL vs Geely Atlas: сравнение кроссоверов 2026 года</a></li><li><a href="/articles/v/ve/ves-geely-atlas-pro.html" class="related-card">Вес Geely Atlas Pro: полные данные по массе и грузоподъёмности</a></li><li><a href="/articles/s/sa/salon-dzhili-atlas-pro.html" class="related-card">Салон Geely Atlas Pro: обзор, комплектации и советы по выбору</a></li><li><a href="/articles/d/de/deflektory-dzhili-atlas-pro.html" class="related-card">Дефлекторы на Geely Atlas Pro: выбор, установка и отзывы владельцев</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/p/po/podsvetka-salona-dzhili-atlas.html" class="related-bottom-card"><span class="related-bottom-title">Подсветка салона Geely Atlas: выбор, установка и настройка</span><span class="related-bottom-desc">Как выбрать и установить LED-подсветку в салон &lt;em&gt;Geely Atlas&lt;/em&gt;? Схемы подключения, типы ламп, о</span></a><a href="/articles/e/ex/exceed-txl-ili-geely-atlas.html" class="related-bottom-card"><span class="related-bottom-title">Exceed TXL vs Geely Atlas: сравнение кроссоверов 2026 года</span><span class="related-bottom-desc">Подробный анализ Exceed TXL и Geely Atlas: технические характеристики, цены, плюсы и минусы, что выб</span></a><a href="/articles/v/ve/ves-geely-atlas-pro.html" class="related-bottom-card"><span class="related-bottom-title">Вес Geely Atlas Pro: полные данные по массе и грузоподъёмности</span><span class="related-bottom-desc">Официальные данные о весе Geely Atlas Pro 2023-2026: снаряжённая масса, полная масса, грузоподъёмнос</span></a><a href="/articles/s/sa/salon-dzhili-atlas-pro.html" class="related-bottom-card"><span class="related-bottom-title">Салон Geely Atlas Pro: обзор, комплектации и советы по выбору</span><span class="related-bottom-desc">Подробный разбор салона Geely Atlas Pro: материалы, эргономика, мультимедиа и практические советы дл</span></a><a href="/articles/d/de/deflektory-dzhili-atlas-pro.html" class="related-bottom-card"><span class="related-bottom-title">Дефлекторы на Geely Atlas Pro: выбор, установка и отзывы владельцев</span><span class="related-bottom-desc">Полный гайд по выбору и монтажу дефлекторов на &lt;em&gt;Geely Atlas Pro&lt;/em&gt; 2023-2026: сравнение материа</span></a><a href="/articles/g/ge/geely-atlas-new-otzyvy-vladeltsev.html" class="related-bottom-card"><span class="related-bottom-title">Geely Atlas New: отзывы владельцев и реальный расход</span><span class="related-bottom-desc">Честные отзывы владельцев Geely Atlas New. Разбор проблем, реальный расход топлива, достоинства и не</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

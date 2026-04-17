@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>Чёрный экран и мигающая полоска при установке Windows с флешки: причины и решения — VW-portal</title>
+    <meta name="description" content="Разбираемся, почему при установке Windows с USB-накопителя появляется чёрный экран с мигающим курсором и как исправить проблему самостоятельно. Пошаговые инструкции для UEFI и Legacy BIOS.">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/p/pr/pri-ustanovke-vindovs-s-fleshki-chernyj-ekran-i-morgaet-poloska.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Чёрный экран и мигающая полоска при установке Windows с флешки: причины и решения">
+    <meta property="og:description" content="Разбираемся, почему при установке Windows с USB-накопителя появляется чёрный экран с мигающим курсором и как исправить проблему самостоятельно. Пошаговые инструкции для UEFI и Legacy BIOS.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Чёрный экран и мигающая полоска при установке Windows с флешки: причины и решения</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Чёрный экран и мигающая полоска при установке Windows с флешки: 7 способов решения</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#1-проверка-загрузочной-флешки-3-критические-ошибки">1. Проверка загрузочной флешки: 3 критические ошибки</a></li><li><a href="#2-настройки-biosuefi-что-отключить-чтобы-установка-пошла">2. Настройки BIOS/UEFI: что отключить, чтобы установка пошла</a></li><li><a href="#3-конфликт-с-железом-когда-виноват-ssd-оперативка-или-видеокарта">3. Конфликт с железом: когда виноват SSD, оперативка или видеокарта</a></li><li><a href="#4-проблемы-с-разделами-диска-почему-установщик-не-видит-ssd">4. Проблемы с разделами диска: почему установщик "не видит" SSD</a></li><li><a href="#5-редкие-причины-от-вирусов-в-bios-до-конфликта-с-антивирусами">5. Редкие причины: от вирусов в BIOS до конфликта с антивирусами</a></li><li><a href="#6-альтернативные-способы-установки-windows">6. Альтернативные способы установки Windows</a></li><li><a href="#7-диагностика-неисправностей-когда-обращаться-в-сервис">7. Диагностика неисправностей: когда обращаться в сервис</a></li><li><a href="#faq-ответы-на-частые-вопросы">FAQ: Ответы на частые вопросы</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body"><p>Вы пытаетесь установить <strong>Windows 10 или 11</strong> с загрузочной флешки, но вместо привычного мастера установки видите лишь <strong>чёрный экран с мигающей полоской</strong> (подчёркиванием) в верхнем левом углу? Эта проблема встречается как на новых ПК с <em>UEFI</em>, так и на старых машинах с <em>Legacy BIOS</em>, и причин у неё может быть десяток — от неверных настроек загрузчика до аппаратных неисправностей.</p>
+
+<p>В этой статье мы разберём <mark>все возможные причины чёрного экрана при установке Windows с флешки</mark>, включая редкие случаи (например, конфликт с <em>Secure Boot</em> на некоторых материнских платах <em>ASUS</em> или <em>Gigabyte</em>). Вы получите пошаговые инструкции с иллюстрациями ключевых моментов, таблицу совместимости режимов загрузки и ответы на частые вопросы. Если после прочтения проблема останется — вы хотя бы будете знать, в каком направлении двигаться дальше (и когда стоит нести ПК в сервис).</p>
+
+<h2 id="1-проверка-загрузочной-флешки-3-критические-ошибки">1. Проверка загрузочной флешки: 3 критические ошибки</h2>
+
+<p>В 60% случаев чёрный экран с мигающим курсором возникает из-за <strong>некорректно записанного установочного носителя</strong>. Даже если вы использовали <em>Rufus</em> или <em>Media Creation Tool</em>, это не гарантирует работоспособность флешки. Вот что нужно проверить в первую очередь:</p>
+
+<ul>
+  <li>🔹 <strong>Файловая система</strong>: Для <em>UEFI</em> требуется <code>FAT32</code>, для <em>Legacy BIOS</em> — <code>NTFS</code>. Если выбран неверный формат, система не сможет прочитать файлы установщика.</li>
+  <li>🔹 <strong>Схема разделов</strong>: На флешке должна быть <code>GPT</code> для <em>UEFI</em> или <code>MBR</code> для <em>Legacy</em>. Проверить это можно через <code>Управление дисками</code> (<code>diskmgmt.msc</code>).</li>
+  <li>🔹 <strong>Целостность файлов</strong>: Повреждённые файлы <code>install.wim</code> или <code>boot.wim</code> приводят к зависанию на чёрном экране. Проверьте хэш-сумму скачанного ISO-образа.</li>
+</ul>
+
+<p>Если флешка записывалась через <em>Rufus</em>, обратите внимание на параметр <code>"Целевая система"</code> — он должен соответствовать режиму загрузки вашего ПК. Для проверки работоспособности носителя можно использовать тестовый запуск на другом компьютере или в виртуальной машине (<em>VirtualBox</em>).</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Как вы создавали загрузочную флешку?</strong><ul><li>Rufus</li><li>Media Creation Tool</li><li>UltraISO</li><li>Другой инструмент</li></ul></div></div>
+
+<blockquote>⚠️ <strong>Внимание</strong>: Некоторые модели флешек (например, <em>SanDisk Ultra Fit</em>) конфликтуют с портами <em>USB 3.0</em> (синие разъёмы) на этапе загрузки. Попробуйте подключить носитель к порту <em>USB 2.0</em> (чёрный разъём) или используйте переходник.</blockquote>
+
+<h2 id="2-настройки-biosuefi-что-отключить-чтобы-установка-пошла">2. Настройки BIOS/UEFI: что отключить, чтобы установка пошла</h2>
+
+<p>Неправильные параметры в <em>BIOS/UEFI</em> — вторая по частоте причина чёрного экрана. Производители материнских плат (<em>ASUS</em>, <em>MSI</em>, <em>Gigabyte</em>) часто включают по умолчанию функции, мешающие загрузке с внешних носителей. Вот ключевые настройки, которые нужно проверить:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Параметр</th>
+      <th>Рекомендуемое значение для UEFI</th>
+      <th>Рекомендуемое значение для Legacy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Secure Boot</code></td>
+      <td>Disabled</td>
+      <td>N/A (отсутствует)</td>
+    </tr>
+    <tr>
+      <td><code>Fast Boot</code></td>
+      <td>Disabled</td>
+      <td>Disabled</td>
+    </tr>
+    <tr>
+      <td><code>CSM (Compatibility Support Module)</code></td>
+      <td>Disabled</td>
+      <td>Enabled</td>
+    </tr>
+    <tr>
+      <td><code>Boot Mode Select</code></td>
+      <td>UEFI</td>
+      <td>Legacy/CSM</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Особое внимание уделите параметру <code>CSM</code>: на некоторых платах (<em>ASRock B550</em>, <em>MSI Z690</em>) его включение может привести к конфликту с <em>GPT-разделами</em> на флешке. Если после отключения <code>Secure Boot</code> установка всё равно не идёт, попробуйте сбросить <em>BIOS</em> к заводским настройкам (<code>Load Optimized Defaults</code>).</p>
+
+<div class="checklist-block"><h4>☑️ Проверка BIOS перед установкой Windows</h4><label class="check-item"><input type="checkbox"><span>Отключить Secure Boot</span></label><label class="check-item"><input type="checkbox"><span>Отключить Fast Boot</span></label><label class="check-item"><input type="checkbox"><span>Выбрать правильный режим загрузки (UEFI/Legacy)</span></label><label class="check-item"><input type="checkbox"><span>Сохранить настройки (F10)</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<p>На ноутбуках <em>Lenovo</em> и <em>HP</em> иногда требуется дополнительное отключение функции <code>Secure Rollback Prevention</code> (находится в разделе <code>Security</code>). Эта опция блокирует загрузку устаревших версий <em>UEFI</em>, что может восприниматься как чёрный экран.</p>
+
+<h2 id="3-конфликт-с-железом-когда-виноват-ssd-оперативка-или-видеокарта">3. Конфликт с железом: когда виноват SSD, оперативка или видеокарта</h2>
+
+<p>Если флешка и настройки <em>BIOS</em> проверены, но чёрный экран остаётся, проблема может крыться в <strong>аппаратной несовместимости</strong>. Чаще всего виноваты:</p>
+
+<ul>
+  <li>🖥️ <strong>NVMe SSD</strong>: Некоторые старые версии Windows (например, <em>Windows 7</em>) не имеют встроенных драйверов для <em>NVMe</em>. Решение — интегрировать драйвер в установочный образ или использовать <em>SATA- SSD</em>.</li>
+  <li>🧠 <strong>Оперативная память</strong>: Если планки <em>RAM</em> работают в нестабильном режиме (например, с разгоном <em>XMP</em>), это может приводить к зависанию на этапе инициализации установщика. Попробуйте оставить одну планку.</li>
+  <li>🎮 <strong>Дискретная видеокарта</strong>: На некоторых ноутбуках (<em>Dell XPS</em>, <em>HP Omen</em>) установщик Windows "не видит" экран, если не отключить <em>dGPU</em> в <em>BIOS</em> (параметр <code>Switchable Graphics</code>).</li>
+</ul>
+
+<p>Для диагностики аппаратных проблем попробуйте:</p>
+<ol>
+  <li>Отключить все периферийные устройства (принтеры, внешние жёсткие диски).</li>
+  <li>Вынуть видеокарту (если она дискретная) и подключить монитор к встроенному видеоадаптеру.</li>
+  <li>Запустить установку с другой флешки или DVD-диска (если есть привод).</li>
+</ol>
+
+<details class="faq-item"><summary>Как проверить совместимость NVMe с Windows 7?</summary><div class="faq-answer"><p>Если у вас старый NVMe-накопитель (например, <em>Samsung 950 Pro</em> или <em>Intel 600p</em>), Windows 7 не сможет его увидеть без дополнительных драйверов. Скачайте драйвер для вашей модели с сайта производителя и интегрируйте его в установочный ISO с помощью <em>Dism++</em> или <em>NTLite</em>.</p></div></details>
+
+<blockquote>⚠️ <strong>Внимание</strong>: На материнских платах с чипсетом <em>Intel 12-го поколения</em> (например, <em>Z690</em>) установка Windows 10 версии <em>20H2</em> и старше может завершаться чёрным экраном из-за отсутствия поддержки <em>TPM 2.0</em> в старых сборках. Обновите ISO-образ до последней версии.</blockquote>
+
+<h2 id="4-проблемы-с-разделами-диска-почему-установщик-не-видит-ssd">4. Проблемы с разделами диска: почему установщик "не видит" SSD</h2>
+
+<p>Чёрный экран с мигающим курсором может появляться, если на целевом диске <strong>отсутствуют правильные разделы</strong> для установки Windows. Это актуально для:</p>
+<ul>
+  <li>💾 Дисков с <code>MBR</code>, когда пытаются установить систему в режиме <em>UEFI</em>.</li>
+  <li>🔄 Дисков с повреждённой таблицей разделов (например, после неудачного клонирования).</li>
+  <li>🔒 Дисков с включённым <em>BitLocker</em> (даже если система не установлена, шифрование может мешать).</li>
+</ul>
+
+<p>Чтобы решить проблему:</p>
+<ol>
+  <li>Загрузитесь с флешки в режиме <code>Command Prompt</code> (нажмите <code>Shift + F10</code> на экране установки).</li>
+  <li>Выполните команды:
+    <pre><code>diskpart
+<p>list disk</p>
+<p>select disk 0 (замените на номер вашего диска)</p>
+<p>clean</p>
+<p>convert gpt (или mbr, если нужен Legacy)</p>
+<p>exit</code></pre></p>
+  </li>
+  <li>Перезагрузитесь и повторите установку.</li>
+</ol>
+
+<p>Если диск ранее использовался в <em>macOS</em> или <em>Linux</em>, на нём могли остаться служебные разделы (<code>EFI</code>, <code>swap</code>), мешающие установке. Удалите их через <code>diskpart</code> командой <code>delete partition override</code>.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если после команды <code>clean</code> диск всё равно не определяется, проверьте подключение кабелей SATA/PCIe. На некоторых платах (<em>ASUS ROG Strix</em>) порты <code>SATA5/6</code> отключены по умолчанию в BIOS.</p></div>
+
+<h2 id="5-редкие-причины-от-вирусов-в-bios-до-конфликта-с-антивирусами">5. Редкие причины: от вирусов в BIOS до конфликта с антивирусами</h2>
+
+<p>Если все предыдущие шаги не помогли, проблема может быть неочевидной. Вот 4 редких сценария, о которых мало кто знает:</p>
+
+<ul>
+  <li>🦠 <strong>Вирус в прошивке BIOS</strong>: Некоторые вредоносные программы (например, <em>LoJax</em>) модифицируют <em>UEFI</em>, блокируя загрузку с внешних носителей. Решение — перепрошить <em>BIOS</em> с официального сайта производителя.</li>
+  <li>🛡️ <strong>Антивирус на флешке</strong>: Если вы записывали образ на флешку, которая ранее использовалась для <em>Kaspersky Rescue Disk</em> или <em>Dr.Web LiveUSB</em>, остатки антивирусных модулей могут конфликтовать с установщиком. Отформатируйте носитель в <code>FAT32</code> с полным стиранием.</li>
+  <li>⚡ <strong>Нестабильное питание</strong>: На некоторых блоках питания (<em>Cooler Master</em>, <em>Thermaltake</em>) при подключении к <em>USB 3.0</em> наблюдаются просадки напряжения, ведущие к зависанию. Попробуйте подключить флешку через <em>USB-хаб с внешним питанием</em>.</li>
+  <li>🔄 <strong>Конфликт с предыдущей установкой</strong>: Если на диске остались файлы старой Windows (папка <code>Windows.old</code>), они могут блокировать установку. Удалите их через <code>Command Prompt</code>:</li>
+</ul>
+
+<pre><code>del /f /q c:\Windows.old\*
+<p>rmdir /s /q c:\Windows.old</code></pre></p>
+
+<p>На ноутбуках <em>Acer</em> и <em>Packard Bell</em> встречается баг, при котором установщик Windows 11 зависает на чёрном экране из-за включённой функции <code>Trusted Platform Module (TPM) 1.2</code>. Решение — обновить <em>BIOS</em> до последней версии или отключить <em>TPM</em> в настройках безопасности.</p>
+
+<h2 id="6-альтернативные-способы-установки-windows">6. Альтернативные способы установки Windows</h2>
+
+<p>Если стандартная установка с флешки не работает, попробуйте один из этих методов:</p>
+
+<ul>
+  <li>🖥️ <strong>Установка через сеть (PXE)</strong>: Подходит для серверов и ПК без USB-портов. Требуется второй компьютер с настроенным <em>DHCP</em>-сервером и образом Windows.</li>
+  <li>💿 <strong>DVD-диск</strong>: Несмотря на устарелость, оптические диски иногда работают там, где флешки отказывают (особенно на старых <em>Lenovo ThinkCentre</em>).</li>
+  <li>🔧 <strong>Ручное развёртывание образа</strong>: С помощью <em>Dism++</em> можно применить <code>install.wim</code> напрямую на диск, минуя установщик:
+    <pre><code>dism /apply-image /imagefile:E:\sources\install.wim /index:1 /applydir:D:\</code></pre>
+<p>где <code>E:</code> — буква флешки, а <code>D:</code> — целевой диск.</li></p>
+</ul>
+
+<p>Для ноутбуков с <em>eMMC-памятью</em> (например, <em>Acer Swift 1</em> или <em>Lenovo IdeaPad</em>) иногда помогает установка Windows через <em>Linux Live USB</em> с использованием утилиты <code>woeusb</code>. Этот метод обходит ограничения <em>UEFI</em> на некоторые конфигурации железа.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если ни один из методов не сработал, проблема с 90% вероятностью аппаратная. Проверить это можно, подключив диск к другому ПК и попытавшись установить Windows на него там.</p></div>
+
+<h2 id="7-диагностика-неисправностей-когда-обращаться-в-сервис">7. Диагностика неисправностей: когда обращаться в сервис</h2>
+
+<p>Если после всех манипуляций чёрный экран остаётся, стоит рассмотреть следующие аппаратные неисправности:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Симптом</th>
+      <th>Возможная причина</th>
+      <th>Решение</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Чёрный экран + писк из динамика</td>
+      <td>Неисправность оперативной памяти</td>
+      <td>Замена планок <em>RAM</em> или тест с <em>MemTest86</em></td>
+    </tr>
+    <tr>
+      <td>Мигающий курсор + отсутствие реакции на клавиатуру</td>
+      <td>Проблемы с южным мостом чипсета</td>
+      <td>Диагностика в сервисном центре</td>
+    </tr>
+    <tr>
+      <td>Чёрный экран только при подключённой флешке</td>
+      <td>Короткое замыкание в USB-портах</td>
+      <td>Проверка мультиметром или замена портов</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>На материнских платах <em>ASUS ROG</em> и <em>MSI MEG</em> встречается дефект контроллера <em>USB 3.2 Gen 2</em>, из-за которого порты перестают корректно работать с загрузочными носителями. В этом случае поможет либо отключение контроллера в <em>BIOS</em>, либо использование <em>PS/2-клавиатуры</em> для навигации по меню установки.</p>
+
+<blockquote>⚠️ <strong>Внимание</strong>: Если чёрный экран появляется <strong>только при установке Windows 11</strong>, но Windows 10 ставится нормально, проблема может быть в отсутствии поддержки <em>TPM 2.0</em> или <em>Secure Boot</em> на вашем железе. Проверьте совместимость на сайте <em>Microsoft</em> или используйте обходные патчи (например, <em>Skip_TPM_Check</em>).</blockquote>
+
+<h2 id="faq-ответы-на-частые-вопросы">FAQ: Ответы на частые вопросы</h2>
+
+<details>
+  <summary>Можно ли установить Windows, если чёрный экран появляется только после выбора раздела?</summary>
+  <p>Да, это указывает на проблему с <strong>таблицей разделов</strong> или <strong>файловой системой</strong> целевого диска. Попробуйте:</p>
+  <ol>
+    <li>Удалить все разделы на диске через установщик (кнопка <code>Удалить</code> → <code>Создать</code>).</li>
+    <li>Преобразовать диск в <code>GPT</code> с помощью <code>diskpart</code> (команда <code>convert gpt</code>).</li>
+    <li>Отключить в <em>BIOS</em> параметр <code>VMD Controller</code> (если есть).</li>
+  </ol>
+</details>
+
+<details>
+  <summary>Почему на ноутбуке HP чёрный экран появляется сразу после выбора языка?</summary>
+  <p>Это известная проблема ноутбуков <em>HP Pavilion</em> и <em>HP Envy</em> с <em>BIOS</em> версии <code>F.10</code> и ниже. Решения:</p>
+  <ul>
+    <li>Обновите <em>BIOS</em> до последней версии.</li>
+    <li>Отключите в <em>BIOS</em> параметр <code>Legacy Support</code> (даже если устанавливаете в режиме <em>Legacy</em>).</li>
+    <li>Используйте <em>HP Cloud Recovery Tool</em> для восстановления системы.</li>
+  </ul>
+</details>
+
+<details>
+  <summary>Что делать, если чёрный экран появляется только при установке с конкретной флешки?</summary>
+  <p>Проблема в <strong>контроллере флешки</strong> или её прошивке. Попробуйте:</p>
+  <ul>
+    <li>Записать образ на другую флешку (желательно другой модели).</li>
+    <li>Использовать программу <em>Ventoy</em> для создания мультизагрузочного носителя.</li>
+    <li>Проверить флешку на ошибки через <code>chkdsk E: /f</code> (где <code>E:</code> — буква флешки).</li>
+  </ul>
+  <p>Если флешка от <em>Transcend</em> или <em>ADATA</em>, скачайте утилиту для перепрошивки контроллера с официального сайта.</p>
+</details>
+
+<details>
+  <summary>Может ли чёрный экран быть из-за вируса на установочной флешке?</summary>
+  <p>Да, но это крайне редкий случай. Вирусы типа <em>Ransomware</em> или <em>Bootkit</em> могут модифицировать загрузочный сектор флешки, что приводит к зависанию. Чтобы проверить:</p>
+  <ol>
+    <li>Отсканируйте флешку антивирусом с загрузочного диска (<em>Kaspersky Rescue Disk</em>).</li>
+    <li>Сравните хэш-сумму файла <code>boot.wim</code> с оригинальным образом от <em>Microsoft</em>.</li>
+    <li>Запишите образ на новую флешку, отформатированную в <code>FAT32</code> с параметром <code>/fs:FAT32 /q</code>.</li>
+  </ol>
+</details>
+
+<details>
+  <summary>Как установить Windows, если чёрный экран появляется из-за отсутствия драйверов NVMe?</summary>
+  <p>Есть два варианта:</p>
+  <ol>
+    <li><strong>Интеграция драйвера в образ:</strong>
+      <ul>
+        <li>Скачайте драйвер для вашего <em>NVMe</em> (например, для <em>Samsung 970 EVO Plus</em> с сайта <em>Samsung</em>).</li>
+        <li>Используйте <em>Dism++</em> или <em>NTLite</em>, чтобы добавить драйвер в <code>install.wim</code>.</li>
+        <li>Запишите модифицированный образ на флешку.</li>
+      </ul>
+    </li>
+    <li><strong>Установка через SATA:</strong>
+      <ul>
+        <li>Подключите <em>SATA-SSD</em> или <em>HDD</em>, установите на него Windows.</li>
+        <li>Подключите <em>NVMe</em> как вторичный диск и перенесите систему с помощью <em>Macrium Reflect</em> или <em>Clonezilla</em>.</li>
+      </ol>
+    </li>
+  </ol>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#1-проверка-загрузочной-флешки-3-критические-ошибки">1. Проверка загрузочной флешки: 3 критические ошибки</a></li><li><a href="#2-настройки-biosuefi-что-отключить-чтобы-установка-пошла">2. Настройки BIOS/UEFI: что отключить, чтобы установка пошла</a></li><li><a href="#3-конфликт-с-железом-когда-виноват-ssd-оперативка-или-видеокарта">3. Конфликт с железом: когда виноват SSD, оперативка или видеокарта</a></li><li><a href="#4-проблемы-с-разделами-диска-почему-установщик-не-видит-ssd">4. Проблемы с разделами диска: почему установщик "не видит" SSD</a></li><li><a href="#5-редкие-причины-от-вирусов-в-bios-до-конфликта-с-антивирусами">5. Редкие причины: от вирусов в BIOS до конфликта с антивирусами</a></li><li><a href="#6-альтернативные-способы-установки-windows">6. Альтернативные способы установки Windows</a></li><li><a href="#7-диагностика-неисправностей-когда-обращаться-в-сервис">7. Диагностика неисправностей: когда обращаться в сервис</a></li><li><a href="#faq-ответы-на-частые-вопросы">FAQ: Ответы на частые вопросы</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/k/ka/kak-snyat-ruchku-steklopodemnika-hyundai-accent.html" class="related-card">Как снять ручку стеклоподъемника Hyundai Accent: пошаговая инструкция</a></li><li><a href="/articles/m/mo/mozhno-li-ostanovitsya-na-polose-dlya-avtobusov.html" class="related-card">Остановка на полосе для автобусов: правила, штрафы и нюансы</a></li><li><a href="/articles/o/ob/obves-type-s-accord-7.html" class="related-card">Обвес Type S для Honda Accord 7: стиль и производительность</a></li><li><a href="/articles/m/me/mekhanika-pedali-raspolozhenie-v-mashine.html" class="related-card">Расположение педалей в машине: механика и особенности управления</a></li><li><a href="/articles/v/vv/vvertyshi-rezbovye-m8.html" class="related-card">Ввертыши резьбовые М8: виды, установка и выбор для ремонта</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/k/ka/kak-snyat-ruchku-steklopodemnika-hyundai-accent.html" class="related-bottom-card"><span class="related-bottom-title">Как снять ручку стеклоподъемника Hyundai Accent: пошаговая инструкция</span><span class="related-bottom-desc">Подробное руководство по демонтажу ручки стеклоподъемника на Hyundai Accent (MC, LC, RB). Инструмент</span></a><a href="/articles/m/mo/mozhno-li-ostanovitsya-na-polose-dlya-avtobusov.html" class="related-bottom-card"><span class="related-bottom-title">Остановка на полосе для автобусов: правила, штрафы и нюансы</span><span class="related-bottom-desc">Можно ли остановиться на полосе для автобусов для высадки пассажиров? Разбор ПДД, работа камер и реа</span></a><a href="/articles/o/ob/obves-type-s-accord-7.html" class="related-bottom-card"><span class="related-bottom-title">Обвес Type S для Honda Accord 7: стиль и производительность</span><span class="related-bottom-desc">Подробный гайд по выбору и установке обвеса Type S на Accord 7: особенности, комплектация, советы по</span></a><a href="/articles/m/me/mekhanika-pedali-raspolozhenie-v-mashine.html" class="related-bottom-card"><span class="related-bottom-title">Расположение педалей в машине: механика и особенности управления</span><span class="related-bottom-desc">Подробный гайд по расположению педалей в МКПП: схема, назначение, ошибки новичков и советы по правил</span></a><a href="/articles/v/vv/vvertyshi-rezbovye-m8.html" class="related-bottom-card"><span class="related-bottom-title">Ввертыши резьбовые М8: виды, установка и выбор для ремонта</span><span class="related-bottom-desc">Все о резьбовых ввертышах М8: материалы, размеры, инструкция по монтажу и советы по выбору для восст</span></a><a href="/articles/p/p-/p-11-osnovnykh-polozhenij-po-dopusku-transportnykh-sredstv-k-ekspluatatsii.html" class="related-bottom-card"><span class="related-bottom-title">Пункт 11 ПДД: допуск ТС к эксплуатации — разбор 2026 года</span><span class="related-bottom-desc">Что проверяют по п.11 Основных положений при техосмотре? Полный разбор требований к фарам, шинам, то</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>Как создать атлас в Навител: пошаговая инструкция 2026 — VW-portal</title>
+    <meta name="description" content="Подробное руководство по созданию и настройке атласа в навигаторе Навител для автомобилей. Скачивание карт, оптимизация маршрутов и решение ошибок.">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/k/ka/kak-sozdat-atlas-v-navigatore-navitel.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Как создать атлас в Навител: пошаговая инструкция 2026">
+    <meta property="og:description" content="Подробное руководство по созданию и настройке атласа в навигаторе Навител для автомобилей. Скачивание карт, оптимизация маршрутов и решение ошибок.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Как создать атлас в Навител: пошаговая инструкция 2026</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Создание атласа в Навител: от скачивания карт до тонкой настройки маршрутов</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#что-такое-атлас-в-навителе-и-зачем-он-нужен">Что такое атлас в Навителе и зачем он нужен</a></li><li><a href="#подготовка-устройства-требования-и-настройки">Подготовка устройства: требования и настройки</a></li><li><a href="#пошаговая-инструкция-как-создать-атлас-в-навителе">Пошаговая инструкция: как создать атлас в Навителе</a></li><li><a href="#оптимизация-атласа-как-уменьшить-размер-и-ускорить-работу">Оптимизация атласа: как уменьшить размер и ускорить работу</a></li><li><a href="#резервное-копирование-и-восстановление-атласов">Резервное копирование и восстановление атласов</a></li><li><a href="#дополнительные-функции-метки-треки-и-настройки-маршрутизации">Дополнительные функции: метки, треки и настройки маршрутизации</a></li><li><a href="#решение-распространённых-ошибок-при-работе-с-атласами">Решение распространённых ошибок при работе с атласами</a></li><li><a href="#faq-частые-вопросы-по-атласам-в-навителе">FAQ: Частые вопросы по атласам в Навителе</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body"><p>Современные навигаторы <em>Навител</em> позволяют не только прокладывать маршруты, но и создавать персональные атласы с уникальными настройками. Такой подход особенно актуален для водителей, которые регулярно путешествуют по одним и тем же регионам или нуждаются в специализированных картах — например, для бездорожья, велосипедных маршрутов или коммерческого транспорта. В отличие от стандартных решений, где все карты загружаются в общую базу, <strong>атлас в Навителе</strong> работает как отдельный проект: вы можете хранить в нём только необходимые регионы, обновлять их выборочно и даже делиться с другими пользователями.</p>
+
+<p>Однако многие сталкиваются с трудностями уже на этапе создания атласа: программа не видит скачанные карты, выдаёт ошибки при активации или «теряет» сохранённые маршруты. В этой статье мы разберём <mark>уникальный алгоритм настройки атласа в Навителе, который учитывает особенности последних версий ПО (включая <em>Navitel Navigator 9.17+</em>) и помогает избежать типичных ошибок при работе с офлайн-картами</mark>. Вы узнаете, как правильно скачивать регионы, конвертировать форматы, оптимизировать память устройства и даже создавать резервные копии атласов для быстрого восстановления.</p>
+
+<h2 id="что-такое-атлас-в-навителе-и-зачем-он-нужен">Что такое атлас в Навителе и зачем он нужен</h2>
+
+<p>Атлас в <em>Навителе</em> — это пользовательская коллекция карт, объединённая под одним именем и настройками. В отличие от стандартного хранения, где все карты складываются в общую папку, атлас позволяет:</p>
+<ul>
+  <li>🗺️ <strong>Группировать карты по тематике</strong> (например, «Европа для грузовиков», «Россия: бездорожье», «Туристические маршруты Крыма»).</li>
+  <li>🔄 <strong>Обновлять только нужные регионы</strong>, не затрагивая остальные (экономит трафик и время).</li>
+  <li>📱 <strong>Оптимизировать память устройства</strong>, удаляя ненужные карты без риска потерять важные данные.</li>
+  <li>🚚 <strong>Настраивать индивидуальные параметры</strong> для каждого атласа (например, отображение камер, ограничения по весу/высоте для грузового транспорта).</li>
+</ul>
+
+<p>Важно понимать, что атлас — это не просто папка с картами, а полноценный проект со своими метками, треками и настройками маршрутизации. Например, если вы создадите атлас «Поездка на Байкал», то сможете сохранить в нём не только карты Иркутской области, но и заранее проложенные маршруты с учетом сезонных дорог, заправок и кемпингов. При этом другой атлас (скажем, «Деловой Москва») будет использовать совершенно иные настройки — например, приоритет платных дорог для экономии времени.</p>
+
+<blockquote>⚠️ <strong>Внимание:</strong> Атласы в Навителе не совместимы между разными версиями программы. Если вы создали атлас в <em>Navitel Navigator 9.16</em>, а затем обновились до <em>9.18</em>, может потребоваться повторная активация карт или даже пересоздание атласа. Всегда проверяйте совместимость в официальных релиз-ноутах.</blockquote>
+
+<h2 id="подготовка-устройства-требования-и-настройки">Подготовка устройства: требования и настройки</h2>
+
+<p>Перед созданием атласа убедитесь, что ваше устройство соответствует минимальным требованиям. Для стабильной работы <em>Навител</em> с атласами рекомендуется:</p>
+<ul>
+  <li>📱 <strong>Android 8.0+</strong> или <strong>iOS 12+</strong> (для мобильных версий).</li>
+  <li>🖥️ <strong>Windows 7/10/11</strong> (для настольной версии <em>Navitel Navigator PC</em>).</li>
+  <li>💾 <strong>Свободное место на диске</strong>: не менее 2 ГБ для базового атласа (карты России в высоком разрешении занимают ~1.5 ГБ).</li>
+  <li>🔌 <strong>Стабильное интернет-соединение</strong> для скачивания карт (или готовые офлайн-файлы).</li>
+</ul>
+
+<p>Особое внимание уделите <strong>папке хранения карт</strong>. По умолчанию Навител использует:</p>
+<ul>
+  <li>На <strong>Android</strong>: <code>/Android/data/com.navitel/files/NavitelContent/Maps/</code></li>
+  <li>На <strong>iOS</strong>: доступ только через iTunes (папка «Файлы Навител»).</li>
+  <li>На <strong>Windows</strong>: <code>C:\Users\ИмяПользователя\Documents\NavitelContent\Maps\</code></li>
+</ul>
+
+<p>Если вы планируете работать с большими атласами (например, карты всей Европы), лучше перенести папку на <code>SD-карту</code> или внешний накопитель. Для этого:</p>
+<ol>
+  <li>Закройте Навител.</li>
+  <li>Скопируйте папку <code>NavitelContent</code> на SD-карту.</li>
+  <li>В настройках Навител укажите новый путь: <code>Настройки → Карты → Путь к картам</code>.</li>
+</ol>
+
+<div class="attention-box attention-info"><div><strong>📊 Какое устройство вы используете для Навител?</strong><ul><li>Смартфон Android</li><li>iPhone</li><li>Планшет</li><li>Автомагнитола</li><li>Настольный ПК</li></ul></div></div>
+
+<h2 id="пошаговая-инструкция-как-создать-атлас-в-навителе">Пошаговая инструкция: как создать атлас в Навителе</h2>
+
+<p>Процесс создания атласа состоит из трёх ключевых этапов: <strong>скачивание карт</strong>, <strong>создание нового атласа</strong> и <strong>активация регионов</strong>. Рассмотрим каждый шаг подробно.</p>
+
+<h3>Шаг 1: Скачивание карт</h3>
+<p>Вы можете скачать карты двумя способами:</p>
+<ol>
+  <li><strong>Через встроенный каталог Навител:</strong>
+    <ol>
+      <li>Откройте программу и перейдите в <code>Меню → Карты → Загрузить карты</code>.</li>
+      <li>Выберите нужный регион (например, «Россия → Московская область»).</li>
+      <li>Нажмите «Скачать» и дождитесь завершения (карты будут сохранены в папку по умолчанию).</li>
+    </ol>
+  </li>
+  <li><strong>С внешнего источника (официальный сайт или форумы):</strong>
+    <ol>
+      <li>Скачайте файл карты в формате <code>.nm7</code> или <code>.nm3</code> (например, <code>Russia_Moscow.nm7</code>).</li>
+      <li>Перенесите файл в папку <code>NavitelContent/Maps/</code>.</li>
+    </ol>
+  </li>
+</ol>
+
+<h3>Шаг 2: Создание нового атласа</h3>
+<p>Теперь создадим сам атлас:</p>
+<ol>
+  <li>В Навителе перейдите в <code>Меню → Карты → Мои атласы</code>.</li>
+  <li>Нажмите «Создать атлас» и введите название (например, «Поездка на Алтай»).</li>
+  <li>Выберите тип атласа:
+    <ul>
+      <li>🚗 <strong>Автомобильный</strong> (стандартные настройки для легковых авто).</li>
+      <li>🚛 <strong>Грузовой</strong> (с учётом габаритов и ограничений).</li>
+      <li>🚴 <strong>Велосипедный/пеший</strong> (для туристических маршрутов).</li>
+    </ol>
+  </li>
+  <li>Нажмите «Сохранить» — атлас появится в списке.</li>
+</ol>
+
+<h3>Шаг 3: Добавление карт в атлас</h3>
+<p>Чтобы атлас заработал, нужно привязать к нему скачанные карты:</p>
+<ol>
+  <li>В разделе «Мои атласы» выберите созданный атлас и нажмите «Редактировать».</li>
+  <li>Нажмите «Добавить карты» и отметьте галочками нужные регионы.</li>
+  <li>Подтвердите выбор — карты будут активированы для этого атласа.</li>
+</ol>
+
+
+<p>Все нужные регионы добавлены|Карты актуальной версии (проверьте дату обновления)|Настройки маршрутизации соответствуют типу транспорта|Сделан бэкап важных меток и треков--></p>
+
+<p>После сохранения атлас появится в главном меню Навител. Теперь вы можете переключаться между атласами в зависимости от поездки.</p>
+
+<h2 id="оптимизация-атласа-как-уменьшить-размер-и-ускорить-работу">Оптимизация атласа: как уменьшить размер и ускорить работу</h2>
+
+<p>Один из главных недостатков Навител — большой вес карт. Атлас с картами всей России может занимать до <strong>5–7 ГБ</strong>, что критично для мобильных устройств. Чтобы оптимизировать пространство:</p>
+<ul>
+  <li>🗑️ <strong>Удаляйте ненужные регионы</strong>. Например, если вы ездите только по Центральной России, удалите карты Дальнего Востока.</li>
+  <li>🔍 <strong>Используйте карты низкого разрешения</strong> для редко посещаемых областей (в настройках атласа выберите «Экономичный режим»).</li>
+  <li>🔄 <strong>Обновляйте только необходимые карты</strong>. В Навителе есть функция выборочного обновления: <code>Меню → Карты → Обновить → Выбрать регионы</code>.</li>
+  <li>📦 <strong>Архивируйте старые атласы</strong>. Если какой-то атлас временно не нужен, перенесите его папку на ПК или внешний диск.</li>
+</ul>
+
+<p>Для ускорения работы программы также рекомендуется:</p>
+<ul>
+  <li>🛠️ <strong>Очищать кэш</strong> раз в месяц: <code>Настройки → Система → Очистить кэш</code>.</li>
+  <li>📵 <strong>Отключать фоновые процессы</strong> (например, обновление погоды или пробок, если они не нужны).</li>
+  <li>🔋 <strong>Использовать режим энергосбережения</strong> на мобильных устройствах (продлевает работу аккумулятора).</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>Проблема</th>
+      <th>Причина</th>
+      <th>Решение</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Навител тормозит при прокладке маршрута</td>
+      <td>Слишком много активных карт в атласе</td>
+      <td>Удалите ненужные регионы или разбейте атлас на несколько меньших</td>
+    </tr>
+    <tr>
+      <td>Карты не отображаются в атласе</td>
+      <td>Несовместимость версий карт и программы</td>
+      <td>Обновите Навител или скачайте карты той же версии, что и ПО</td>
+    </tr>
+    <tr>
+      <td>Атлас исчез после обновления</td>
+      <td>Сброс настроек или ошибка миграции</td>
+      <td>Восстановите атлас из резервной копии (см. раздел ниже)</td>
+    </tr>
+    <tr>
+      <td>Нельзя добавить карту в атлас</td>
+      <td>Файл карты повреждён или не поддерживается</td>
+      <td>Перескачайте карту или конвертируйте в формат <code>.nm7</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если вы часто путешествуете по одним и тем же маршрутам, сохраните их как <strong>избранные треки</strong> в атласе. Для этого проложите маршрут, нажмите «Сохранить» и выберите опцию «Добавить в атлас». В следующий раз маршрут будет доступен в один клик.</p></div>
+
+<h2 id="резервное-копирование-и-восстановление-атласов">Резервное копирование и восстановление атласов</h2>
+
+<p>Потеря атласа с метками, треками и настройками может стать серьёзной проблемой, особенно если вы полагались на него в длительной поездке. Чтобы избежать этого, регулярно создавайте резервные копии. В Навителе есть два способа бэкапа:</p>
+
+<h3>Способ 1: Ручное копирование файлов</h3>
+<p>Атлас хранится в виде набора файлов в папке <code>NavitelContent/Atlases/</code>. Чтобы сделать бэкап:</p>
+<ol>
+  <li>Закройте Навител.</li>
+  <li>Скопируйте папку атласа (например, <code>Altai_Trip_2026</code>) на ПК или облачное хранилище.</li>
+  <li>Для восстановления просто верните папку обратно.</li>
+</ol>
+
+<h3>Способ 2: Экспорт через Навител</h3>
+<p>Программа позволяет экспортировать атлас в файл <code>.navitelatlas</code>:</p>
+<ol>
+  <li>Откройте <code>Меню → Мои атласы</code>.</li>
+  <li>Выберите атлас и нажмите «Экспортировать».</li>
+  <li>Укажите место сохранения (например, <code>Documents/Navitel_Backups/</code>).</li>
+</ol>
+
+<blockquote>⚠️ <strong>Внимание:</strong> При восстановлении атласа из бэкапа убедитесь, что версия Навител совпадает с версией, в которой был создан резерв. Если вы обновили программу, может потребоваться конвертация атласа через <em>Navitel Content Manager</em> (доступен на официальном сайте).</blockquote>
+
+<p>Для автоматического бэкапа используйте облачные сервисы (например, <em>Google Drive</em> или <em>Dropbox</em>). Настройте синхронизацию папки <code>NavitelContent/Atlases/</code> — так вы всегда будете иметь актуальную копию.</p>
+
+<details class="faq-item"><summary>Что делать, если атлас не восстанавливается?</summary><div class="faq-answer"><p>
+<p>Если после восстановления атлас не открывается или выдаёт ошибку, попробуйте следующее:</p>
+<p>1. Проверьте целостность файлов (например, через архиватор — повреждённые файлы не распакуются).</p>
+<p>2. Удалите атлас из Навител и импортируйте заново.</p>
+<p>3. Если проблема в картах, скачайте их повторно с официального сайта.</p>
+<p>4. В крайнем случае создайте новый атлас и вручную перенесите в него метки/треки из бэкапа (файлы <code>.kml</code> или <code>.gpx</code>).</p></div></details></p>
+
+<h2 id="дополнительные-функции-метки-треки-и-настройки-маршрутизации">Дополнительные функции: метки, треки и настройки маршрутизации</h2>
+
+<p>Атлас в Навителе — это не только карты, но и инструмент для планирования маршрутов. Рассмотрим ключевые функции, которые помогут сделать ваши поездки комфортнее:</p>
+
+<h3>1. Добавление пользовательских меток (POI)</h3>
+<p>Вы можете отмечать на карте важные точки: заправки, отели, достопримечательности. Для этого:</p>
+<ol>
+  <li>Нажмите на карту в нужном месте и удерживайте палец (или кликните ПКМ на ПК).</li>
+  <li>Выберите «Добавить метку».</li>
+  <li>Задайте название, категорию (например, «Кафе» или «Парковка») и при необходимости добавьте фотографию.</li>
+</ol>
+<p>Метки сохраняются в атласе и будут доступны даже без интернета.</p>
+
+<h3>2. Импорт и экспорт треков</h3>
+<p>Если у вас есть готовые маршруты в формате <code>.gpx</code> или <code>.kml</code> (например, скачанные с <em>Wikiloc</em> или <em>OSMAnd</em>), их можно загрузить в атлас:</p>
+<ol>
+  <li>Скопируйте файл трека в папку <code>NavitelContent/Tracks/</code>.</li>
+  <li>В Навителе перейдите в <code>Меню → Треки → Импортировать</code>.</li>
+  <li>Выберите файл и подтвердите загрузку.</li>
+</ol>
+
+<h3>3. Настройка маршрутизации</h3>
+<p>Для каждого атласа можно задать уникальные параметры прокладки маршрута:</p>
+<ul>
+  <li>🚗 <strong>Тип транспорта:</strong> легковой, грузовой, велосипед, пеший.</li>
+  <li>🛣️ <strong>Приоритет дорог:</strong> скоростные, экономичные, с минимальным количеством поворотов.</li>
+  <li>🚫 <strong>Ограничения:</strong> избегать платных дорог, паромов, грунтовых участков.</li>
+  <li>⚠️ <strong>Предупреждения:</strong> камеры, лежачие полицейские, опасные участки.</li>
+</ul>
+<p>Настройки находятся в <code>Меню → Настройки → Маршрут</code>.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Используйте функцию «Симуляция маршрута» (<code>Меню → Инструменты → Симуляция</code>), чтобы проверить проложенный маршрут в атласе <strong>до начала поездки</strong>. Это поможет избежать неожиданностей на дороге, например, закрытых участков или ошибок в навигации.</p></div>
+
+<h2 id="решение-распространённых-ошибок-при-работе-с-атласами">Решение распространённых ошибок при работе с атласами</h2>
+
+<p>Даже при правильной настройке атласов пользователи сталкиваются с ошибками. Рассмотрим самые частые проблемы и их решения.</p>
+
+<h3>1. Навител не видит скачанные карты</h3>
+<p><strong>Причины и решения:</strong></p>
+<ul>
+  <li>🔹 <strong>Неправильный путь к картам:</strong> проверьте, что файлы <code>.nm7</code> лежат в <code>NavitelContent/Maps/</code>.</li>
+  <li>🔹 <strong>Несовместимость версий:</strong> скачайте карты той же версии, что и ваш Навител (посмотреть версию можно в <code>Настройки → О программе</code>).</li>
+  <li>🔹 <strong>Повреждённые файлы:</strong> перескачайте карты или проверьте их контрольную сумму (MD5).</li>
+</ul>
+
+<h3>2. Атлас не сохраняется или пропадает</h3>
+<p><strong>Что делать:</strong></p>
+<ul>
+  <li>🔹 Проверьте права доступа к папке <code>NavitelContent</code> (на Android может потребоваться разрешение на запись).</li>
+  <li>🔹 Убедитесь, что на устройстве достаточно свободного места.</li>
+  <li>🔹 Попробуйте создать атлас с другим именем (иногда возникают конфликты с кириллицей).</li>
+</ul>
+
+<h3>3. Карты в атласе не обновляются</h3>
+<p><strong>Решение:</strong></p>
+<ul>
+  <li>🔹 Удалите старую версию карты из папки <code>Maps/</code>.</li>
+  <li>🔹 Скачайте новую версию и добавьте её в атлас заново.</li>
+  <li>🔹 Если обновление идёт через Навител, проверьте подключение к интернету (иногда помогает смена сети с Wi-Fi на мобильный трафик).</li>
+</ul>
+
+<h3>4. Навител выдаёт ошибку «Неверный формат атласа»</h3>
+<p>Эта ошибка возникает при:</p>
+<ul>
+  <li>🔹 Попытке открыть атлас из более новой версии программы.</li>
+  <li>🔹 Повреждении файлов атласа (например, при некорректном копировании).</li>
+  <li>🔹 Использовании неофициальных (пиратских) карт.</li>
+</ul>
+<p>Решение: создайте новый атлас и перенесите в него карты вручную.</p>
+
+<blockquote>⚠️ <strong>Внимание:</strong> Если вы используете <em>Navitel для автомобильных магнитол</em> (например, в <em>Volkswagen</em> или <em>Toyota</em>), учтите, что некоторые прошивки блокируют создание атласов. В этом случае обновите навигационную систему через дилера или используйте официальные карты от производителя магнитолы.</blockquote>
+
+<h2 id="faq-частые-вопросы-по-атласам-в-навителе">FAQ: Частые вопросы по атласам в Навителе</h2>
+
+<details>
+  <summary>Можно ли перенести атлас с Android на iPhone?</summary>
+  <p>Да, но с оговорками. Файлы атласа (<code>.navitelatlas</code>) кросс-платформенные, однако:</p>
+  <ul>
+    <li>Скопируйте папку атласа с Android на ПК.</li>
+    <li>Подключите iPhone к iTunes, найдите раздел «Файлы Навител» и загрузите папку.</li>
+    <li>На iOS может потребоваться повторная активация карт (из-за различий в лицензировании).</li>
+  </ul>
+  <p>Обратите внимание: метки и треки перенесутся, но некоторые настройки маршрутизации могут сброситься.</p>
+</details>
+
+<details>
+  <summary>Как удалить ненужный атлас?</summary>
+  <p>Чтобы удалить атлас:</p>
+  <ol>
+    <li>Перейдите в <code>Меню → Мои атласы</code>.</li>
+    <li>Выберите атлас и нажмите «Удалить».</li>
+    <li>Подтвердите действие (карты останутся в папке <code>Maps/</code>, но будут деактивированы).</li>
+  </ol>
+  <p>Если нужно полностью удалить карты, сделайте это вручную через файловый менеджер.</p>
+</details>
+
+<details>
+  <summary>Почему в атласе не отображаются 3D-здания?</summary>
+  <p>3D-здания и рельеф требуют дополнительных файлов:</p>
+  <ul>
+    <li>Скачайте <code>3D Buildings</code> и <code>DemData</code> для нужного региона в <code>Меню → Карты → Загрузить дополнительные данные</code>.</li>
+    <li>Убедитесь, что в настройках отображения (<code>Настройки → Карта → 3D-режим</code>) включена опция «Здания».</li>
+  </ul>
+  <p>На слабых устройствах 3D может тормозить — в этом случае отключите его в настройках.</p>
+</details>
+
+<details>
+  <summary>Можно ли использовать один атлас на нескольких устройствах?</summary>
+  <p>Да, но с ограничениями:</p>
+  <ul>
+    <li>🔹 <strong>Лицензия:</strong> карты в атласе привязаны к аккаунту. Если на втором устройстве другой аккаунт, может потребоваться повторная активация.</li>
+    <li>🔹 <strong>Синхронизация:</strong> скопируйте папку атласа на второе устройство и импортируйте её через Навител.</li>
+    <li>🔹 <strong>Обновления:</strong> изменения на одном устройстве не синхронизируются автоматически — нужно вручную обновлять атлас на обоих.</li>
+  </ul>
+</details>
+
+<details>
+  <summary>Как добавить в атлас карты из OpenStreetMap?</summary>
+  <p>Навител не поддерживает прямую загрузку OSM, но можно конвертировать их:</p>
+  <ol>
+    <li>Скачайте нужный регион с <a href="https://www.openstreetmap.org" target="_blank">OpenStreetMap</a> в формате <code>.osm</code>.</li>
+    <li>Используйте конвертер (например, <em>OsmAndMapCreator</em>) для преобразования в <code>.nm7</code>.</li>
+    <li>Загрузите полученный файл в папку <code>Maps/</code> и добавьте в атлас.</li>
+  </ol>
+  <p>Учтите, что такие карты могут содержать ошибки и не поддерживать все функции Навител (например, голосовое сопровождение).</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#что-такое-атлас-в-навителе-и-зачем-он-нужен">Что такое атлас в Навителе и зачем он нужен</a></li><li><a href="#подготовка-устройства-требования-и-настройки">Подготовка устройства: требования и настройки</a></li><li><a href="#пошаговая-инструкция-как-создать-атлас-в-навителе">Пошаговая инструкция: как создать атлас в Навителе</a></li><li><a href="#оптимизация-атласа-как-уменьшить-размер-и-ускорить-работу">Оптимизация атласа: как уменьшить размер и ускорить работу</a></li><li><a href="#резервное-копирование-и-восстановление-атласов">Резервное копирование и восстановление атласов</a></li><li><a href="#дополнительные-функции-метки-треки-и-настройки-маршрутизации">Дополнительные функции: метки, треки и настройки маршрутизации</a></li><li><a href="#решение-распространённых-ошибок-при-работе-с-атласами">Решение распространённых ошибок при работе с атласами</a></li><li><a href="#faq-частые-вопросы-по-атласам-в-навителе">FAQ: Частые вопросы по атласам в Навителе</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/t/te/teyes-cc3l-4-64gb-obzor.html" class="related-card">TEYES CC3L 4/64Gb: полный обзор мультимедиа для авто</a></li><li><a href="/articles/k/ka/kak-snyat-datchik-polozheniya-drosselnoj-zaslonki.html" class="related-card">Как снять датчик дроссельной заслонки: пошаговая инструкция 2026</a></li><li><a href="/articles/4/4p/4pda-teyes-cc3.html" class="related-card">TEYES CC3 на 4PDA: Прошивки, лаунчеры и решения проблем</a></li><li><a href="/articles/p/po/posle-zameny-displeya-polosy-na-ekrane.html" class="related-card">Полосы на экране после замены дисплея: причины и решения (2026)</a></li><li><a href="/articles/p/pe/peresechenie-avtobusnoj-polosy-shtraf.html" class="related-card">Штраф за выезд на автобусную полосу в 2026 году: размеры, нюансы, как оспорить</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/t/te/teyes-cc3l-4-64gb-obzor.html" class="related-bottom-card"><span class="related-bottom-title">TEYES CC3L 4/64Gb: полный обзор мультимедиа для авто</span><span class="related-bottom-desc">Подробный технический обзор TEYES CC3L 4/64Gb. Анализ производительности, экрана, звука и функционал</span></a><a href="/articles/k/ka/kak-snyat-datchik-polozheniya-drosselnoj-zaslonki.html" class="related-bottom-card"><span class="related-bottom-title">Как снять датчик дроссельной заслонки: пошаговая инструкция 2026</span><span class="related-bottom-desc">Подробный гайд по демонтажу ДПДЗ с фото, советами и нюансами для разных авто. Узнайте, как избежать </span></a><a href="/articles/4/4p/4pda-teyes-cc3.html" class="related-bottom-card"><span class="related-bottom-title">TEYES CC3 на 4PDA: Прошивки, лаунчеры и решения проблем</span><span class="related-bottom-desc">Полный гид по магнитоле TEYES CC3: прошивки с 4PDA, установка сторонних лаунчеров, сброс и настройки</span></a><a href="/articles/p/po/posle-zameny-displeya-polosy-na-ekrane.html" class="related-bottom-card"><span class="related-bottom-title">Полосы на экране после замены дисплея: причины и решения (2026)</span><span class="related-bottom-desc">Появились вертикальные/горизонтальные полосы на экране после замены дисплея? Разбираем 7 причин, диа</span></a><a href="/articles/p/pe/peresechenie-avtobusnoj-polosy-shtraf.html" class="related-bottom-card"><span class="related-bottom-title">Штраф за выезд на автобусную полосу в 2026 году: размеры, нюансы, как оспорить</span><span class="related-bottom-desc">Актуальные штрафы за пересечение автобусной полосы по КоАП РФ 2026: когда можно ехать, как фиксируют</span></a><a href="/articles/o/ot/otzyvy-nissan-zhuk-16-mekhanika.html" class="related-bottom-card"><span class="related-bottom-title">Nissan Juke 1.6 МКПП: реальные отзывы владельцев 2026 года</span><span class="related-bottom-desc">Честные отзывы о Nissan Juke 1.6 с механикой: плюсы и минусы, расход топлива, надежность, типичные п</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

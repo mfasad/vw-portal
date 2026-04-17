@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>Яндекс Карты неправильно определяет местоположение: исправляем — VW-portal</title>
+    <meta name="description" content="GPS не работает в Яндекс Картах? Узнайте, почему навигатор врет, как откалибровать датчики и исправить точность геолокации на Android и iPhone.">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/y/ya/yandeks-karty-nepravilno-opredelyaet-moe-mestopolozhenie.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Яндекс Карты неправильно определяет местоположение: исправляем">
+    <meta property="og:description" content="GPS не работает в Яндекс Картах? Узнайте, почему навигатор врет, как откалибровать датчики и исправить точность геолокации на Android и iPhone.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Яндекс Карты неправильно определяет местоположение: исправляем</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Яндекс Карты неправильно определяет мое местоположение</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#почему-навигатор-показывает-неверное-место-основные-причины">Почему навигатор показывает неверное место: основные причины</a></li><li><a href="#базовые-настройки-геолокации-на-android-и-ios">Базовые настройки геолокации на Android и iOS</a></li><li><a href="#калибровка-компаса-и-датчиков-пошаговая-инструкция">Калибровка компаса и датчиков: пошаговая инструкция</a></li><li><a href="#влияние-режима-энергосбережения-на-gps">Влияние режима энергосбережения на GPS</a></li><li><a href="#сравнение-источников-определения-координат">Сравнение источников определения координат</a></li><li><a href="#сброс-настроек-и-обновление-программного-обеспечения">Сброс настроек и обновление программного обеспечения</a></li><li><a href="#аппаратные-проблемы-и-внешние-факторы">Аппаратные проблемы и внешние факторы</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Ситуация, когда навигационное приложение уводит вас не в ту сторону, знакома многим. Вы стоите на перекрестке, а синий кружок на экране уверенно показывает, что вы находитесь посередине реки или в соседнем квартале. Это не просто раздражает, но и может привести к опозданию или даже аварийной ситуации на дороге. Проблема с <strong>геолокацией</strong> часто кроется не в самом приложении, а в комплексе факторов: от настроек смартфона до физических помех в окружающей среде.</p>
+
+<p>Современные смартфоны используют сложные алгоритмы для определения координат, комбинируя данные GPS, ГЛОНАСС, Wi-Fi и сотовых вышек. Когда <em>Яндекс Карты</em> или любой другой навигатор получают противоречивые сигналы, точность падает. Иногда достаточно простой калибровки, чтобы исправить ситуацию, но в некоторых случаях требуется более глубокое вмешательство в настройки операционной системы или даже аппаратная диагностика.</p>
+
+<p>В этой статье мы разберем все возможные причины, почему навигатор врет, и предложим пошаговые решения. Вы узнаете, как работает <strong>триангуляция</strong>, почему режим энергосбережения может быть врагом точности и как заставить GPS-модуль работать на полную мощность. Мы рассмотрим особенности работы на Android и iOS, а также обсудим редкие, но возможные аппаратные неисправности.</p>
+
+<h2 id="почему-навигатор-показывает-неверное-место-основные-причины">Почему навигатор показывает неверное место: основные причины</h2>
+
+<p>Прежде чем переходить к активным действиям, необходимо понять природу ошибки. GPS-сигнал, приходящий со спутников, очень слаб и легко блокируется. Если вы находитесь в помещении с толстыми бетонными стенами, в тоннеле метро или среди высотных зданий, сигнал может отражаться от поверхностей. Это явление называется <strong>многолучевым распространением</strong>, и именно оно часто заставляет синюю точку "прыгать" по карте.</p>
+
+<p>Еще одной распространенной причиной являются программные сбои. Операционная система может некорректно кэшировать данные о местоположении или неправильно интерпретировать сигналы от Wi-Fi роутеров nearby. Например, если роутер был перемещен в другой район, а в базах данных он все еще числится по старому адресу, телефон может ошибочно считать, что вы находитесь там.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Использование чехлов с металлическими вставками или магнитными креплениями может экранировать антенну GPS, значительно снижая точность позиционирования даже на открытом пространстве.</p>
+</blockquote>
+
+<p>Также стоит учитывать состояние спутниковой группировки. Хотя это редкость, технические работы или солнечная активность могут временно ухудшить качество сигнала. В таких случаях никакие настройки телефона не помогут — нужно просто подождать или переместиться в зону с лучшим обзором неба. </p>
+
+<div class="attention-box attention-info"><div><strong>📊 Как часто у вас врет навигатор?</strong><ul><li>Постоянно в центре города</li><li>Только в помещениях</li><li>Редко, бывает</li><li>Никогда не замечал</li></ul></div></div>
+
+<h2 id="базовые-настройки-геолокации-на-android-и-ios">Базовые настройки геолокации на Android и iOS</h2>
+
+<p>Первое, что нужно проверить — это разрешительная документация системы. Операционные системы современных смартфонов строго контролируют доступ приложений к данным о местоположении. Если для <em>Яндекс Карт</em> установлен запрет или ограничение фоновой работы, навигатор не сможет обновлять координаты в реальном времени. На Android это проверяется в разделе <code>Настройки → Приложения → Яндекс Карты → Разрешения</code>.</p>
+
+<p>Владельцам iPhone следует обратить внимание на настройки конфиденциальности. В iOS существует возможность передавать только приблизительное местоположение, что экономит заряд батареи, но снижает точность навигации. Для полноценной работы навигатора необходимо переключить ползунок в положение "Точное местоположение". Без этого <strong>геопозиционирование</strong> будет иметь погрешность в несколько сотен метров.</p>
+
+<p>Не стоит забывать и о переключателях быстрого доступа. Иногда пользователи случайно отключают модуль GPS или переводят телефон в режим "В самолете", думая, что выключили только мобильный интернет. Убедитесь, что службы геолокации активны глобально. На Android для высокой точности рекомендуется выбрать режим "По всем источникам" (GPS, Wi-Fi и мобильные сети), а не только "По спутникам".</p>
+
+<div class="checklist-block"><h4>☑️ Проверка базовых настроек</h4><label class="check-item"><input type="checkbox"><span>Включены службы геолокации глобально</span></label><label class="check-item"><input type="checkbox"><span>Для Яндекс.Карт стоит разрешение "Всегда" или "При использовании"</span></label><label class="check-item"><input type="checkbox"><span>Режим энергосбережения GPS отключен</span></label><label class="check-item"><input type="checkbox"><span>Дата и время установлены автоматически</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<h2 id="калибровка-компаса-и-датчиков-пошаговая-инструкция">Калибровка компаса и датчиков: пошаговая инструкция</h2>
+
+<p>Если настройки в порядке, но курсор на карте смотрит не туда или медленно поворачивается за вами, требуется калибровка. Смартфоны используют магнитометр (цифровой компас) для определения направления. Со временем или после воздействия магнитных полей (например, от автомобильной магнитолы или динамиков) датчик может сбиться. <strong>Калибровка</strong> возвращает его в рабочее состояние.</p>
+
+<p>На устройствах под управлением Android процесс часто автоматизирован. Откройте Google Карты или Яндекс Карты, нажмите на синюю точку своего местоположения и выберите "Откалибровать". Система попросит вас выполнить характерное движение телефоном в воздухе, рисуя восьмерку. Это движение помогает алгоритмам понять текущую ориентацию магнитного поля Земли относительно корпуса устройства.</p>
+
+<pre><code>Движение "Восьмерка":
+<p>1. Держите телефон плашмя или вертикально.</p>
+<p>2. Рисуйте в воздухе широкую цифру 8.</p>
+<p>3. Повторите 3-5 раз в разных плоскостях.</code></pre></p>
+
+<p>На iPhone отдельной кнопки калибровки нет, но можно использовать встроенный уровень. Откройте приложение <code>Компас</code>, нажмите на кнопку калибровки (если она появилась) или просто покрутите устройство в разных плоскостях, следуя подсказкам на экране. Если после этих манипуляций стрелка все еще ведет себя странно, возможно, датчик поврежден физически.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Перед калибровкой снимите с телефона все чехлы, особенно те, что содержат магниты или металлические пластины, так как они исказят показания магнитометра.</p></div>
+
+<h2 id="влияние-режима-энергосбережения-на-gps">Влияние режима энергосбережения на GPS</h2>
+
+<p>Одной из самых коварных причин плохой работы навигации является агрессивная оптимизация энергопотребления. Современные смартфоны стремятся продлить жизнь батареи любыми способами, и часто под нож попадают фоновые процессы GPS. Когда включен режим экономии энергии, частота опроса спутников снижается, что приводит к "рывкам" курсора и запоздалым командам навигатора.</p>
+
+<p>В системе Android существуют специальные функции, такие как "Адаптивное питание" или "Умный режим". Они могут ограничивать работу навигатора, если экран выключен или приложение свернуто. Чтобы избежать этого, необходимо добавить <em>Яндекс Карты</strong> в список исключений или разрешить фоновую деятельность. Игнорирование этого шага приведет к тому, что навигатор будет "замирать" на поворотах.</p>
+
+<p>На iOS ситуация схожая: режим низкого энергопотребления отключает обновление контента в фоне и снижает частоту использования геосервисов. Если вы планируете длительную поездку без подзарядки, лучше заранее скачать офлайн-карты, чтобы снизить нагрузку на сеть, но сам GPS-модуль оставить работать в полном режиме. Отключение энергосбережения — критически важный шаг для водителей.</p>
+
+<blockquote>
+<p>⚠️ Внимание: В некоторых оболочках Android (например, MIUI или EMUI) требуется вручную разрешить автозапуск для навигатора, иначе система "убьет" процесс GPS через несколько минут после выключения экрана.</p>
+</blockquote>
+
+<h2 id="сравнение-источников-определения-координат">Сравнение источников определения координат</h2>
+
+<p>Понимание того, как телефон определяет, где вы находитесь, помогает быстрее диагностировать проблему. Устройство не полагается только на спутники. В таблице ниже приведено сравнение основных методов, используемых в связке.</p>
+
+<table>
+<thead>
+<tr>
+<th>Источник сигнала</th>
+<th>Точность</th>
+<th>Где работает</th>
+<th>Зависимость</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GPS / ГЛОНАСС</td>
+<td>Высокая (3-10 м)</td>
+<td>На открытом воздухе</td>
+<td>Облачность, здания</td>
+</tr>
+<tr>
+<td>Wi-Fi сканирование</td>
+<td>Средняя (20-50 м)</td>
+<td>В городах, ТЦ</td>
+<td>Наличие роутеров</td>
+</tr>
+<tr>
+<td>Сотовые вышки</td>
+<td>Низкая (100-1000 м)</td>
+<td>Везде, где есть сеть</td>
+<td>Плотность вышек</td>
+</tr>
+<tr>
+<td>Bluetooth маяки</td>
+<td>Высокая (1-5 м)</td>
+<td>Внутри помещений</td>
+<td>Наличие маяков</td>
+</tr>
+</tbody>
+</table>
+
+<p>Как видно из таблицы, в помещении GPS часто бессилен, и телефон переключается на Wi-Fi. Если база данных Wi-Fi точек устарела (владелец роутера переехал), то и координаты будут неверными. В таких случаях помогает отключение Wi-Fi модуля, чтобы принудить телефон искать спутники, либо наоборот — включение, если вы в плотной застройке.</p>
+
+<p>Использование <strong>AGPS</strong> (Assisted GPS) позволяет ускорить поиск спутников, загружая данные об их положении через интернет. Убедитесь, что в настройках геолокации стоит галочка на использование беспроводных сетей для ускорения поиска. Это особенно актуально при "холодном старте" после долгого простоя телефона.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Комбинация GPS и Wi-Fi дает наилучший результат в городе, но если Wi-Fi врет, его принудительное отключение может улучшить точность.</p></div>
+
+<h2 id="сброс-настроек-и-обновление-программного-обеспечения">Сброс настроек и обновление программного обеспечения</h2>
+
+<p>Если программные сбои стали хроническими, может потребоваться сброс настроек сети. Это не удалит ваши личные данные, фото или контакты, но вернет параметры Bluetooth, Wi-Fi и мобильной сети к заводским значениям. Часто это решает проблему, когда телефон "застрял" на старых координатах.</p>
+
+<p>Для выполнения сброса на Android перейдите в <code>Настройки → Система → Сброс настроек → Сброс настроек Wi-Fi, мобильного интернета и Bluetooth</code>. На iPhone путь выглядит так: <code>Настройки → Основные → Перенос или сброс iPhone → Сброс → Сброс настроек сети</code>. После перезагрузки телефон заново зарегистрируется в сетях и обновит данные A-GPS.</p>
+
+<p>Также критически важно следить за обновлениями операционной системы и самого приложения <em>Яндекс Карты</em>. Разработчики регулярно выпускают патчи, исправляющие ошибки в драйверах GPS и алгоритмах работы с картами. Устаревшая версия ОС может содержать баги, мешающие корректной работе модулей навигации.</p>
+
+<details class="faq-item"><summary>Что делать, если сброс не помог?</summary><div class="faq-answer"><p>Если программные методы бессильны, возможно, поврежден сам GPS-модуль или антенный шлейф внутри телефона. Это часто случается после падений или попадания влаги. В таком случае поможет только диагностика в сервисном центре.</p></div></details>
+
+<h2 id="аппаратные-проблемы-и-внешние-факторы">Аппаратные проблемы и внешние факторы</h2>
+
+<p>Не стоит сбрасывать со счетов и физические повреждения. Если телефон падал, антенный контакт внутри мог отойти. В современных тонких смартфонах антенны GPS часто расположены по периметру корпуса или в верхней части. Деформация корпуса может нарушить прием сигнала. Проверьте, не появлялись ли проблемы с навигацией после последнего механического воздействия на устройство.</p>
+
+<p>Кроме того, существуют "глушилки" GPS-сигнала, которые могут использоваться в некоторых учреждениях или автомобилях с охраной. В их радиусе действия ни один гражданский навигатор работать не будет. Также мощные линии электропередач и радиопередатчики могут создавать помехи, сопоставимые с уровнем шума, что делает сигнал спутников нечитаемым.</p>
+
+<p>В редких случаях проблема может быть в SIM-карте. Поскольку данные о вышках сотовой связи используются для辅助定位, старая или поврежденная SIM-карта может некорректно передавать данные о сети, что сбивает алгоритмы определения местоположения. Попробуйте извлечь и протереть контакты SIM-карты или заменить ее у оператора.</p>
+
+<details>
+<summary>Почему Яндекс Карты показывают прошлое местоположение?</summary>
+<p>Это происходит из-за задержки в передаче данных или кэширования. Если интернет-соединение нестабильно, приложение может отображать последнюю известную точку. Также такое бывает, если фоновое обновление геопозиции запрещено системой для экономии заряда.</p>
+</details>
+
+<details>
+<summary>Может ли магнит в чехле сбить навигатор?</summary>
+<p>Да, сильный неодимовый магнит, используемый в креплениях для авто, может временно намагнитить датчики или создать помехи. После снятия такого чехла рекомендуется провести процедуру калибровки компаса.</p>
+</details>
+
+<details>
+<summary>Как проверить, работает ли GPS вообще?</summary>
+<p>Скачайте приложение "GPS Test" или аналог. Оно покажет количество видимых спутников и уровень сигнала. Если в поле с открытым небом телефон не видит ни одного спутника спустя 2-3 минуты, вероятна аппаратная поломка.</p>
+</details>
+
+<details>
+<summary>Влияет ли погода на работу навигатора?</summary>
+<p>Плотная облачность, дождь или снег могут немного ослабить сигнал, но редко блокируют его полностью. Однако грозовые облака и сильная магнитная буря способны значительно ухудшить качество приема GPS-сигнала.</p>
+</details>
+
+<details>
+<summary>Почему навигатор врет только в одном приложении?</summary>
+<p>Если в Google Картах все верно, а в Яндекс — нет, проблема в кэше или баге конкретного приложения. Попробуйте очистить данные приложения или переустановить его. Также проверьте, не включен ли в нем режим "Экономия трафика", который может ограничивать обновление карт.</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#почему-навигатор-показывает-неверное-место-основные-причины">Почему навигатор показывает неверное место: основные причины</a></li><li><a href="#базовые-настройки-геолокации-на-android-и-ios">Базовые настройки геолокации на Android и iOS</a></li><li><a href="#калибровка-компаса-и-датчиков-пошаговая-инструкция">Калибровка компаса и датчиков: пошаговая инструкция</a></li><li><a href="#влияние-режима-энергосбережения-на-gps">Влияние режима энергосбережения на GPS</a></li><li><a href="#сравнение-источников-определения-координат">Сравнение источников определения координат</a></li><li><a href="#сброс-настроек-и-обновление-программного-обеспечения">Сброс настроек и обновление программного обеспечения</a></li><li><a href="#аппаратные-проблемы-и-внешние-факторы">Аппаратные проблемы и внешние факторы</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/k/ko/kontraktnyj-dvigatel-vw.html" class="related-card">Контрактный двигатель VW: как выбрать, установить и не прогадать</a></li><li><a href="/articles/c/ch/chem-obrabotat-lagi-pod-polom-ot-gnieniya.html" class="related-card">Чем обработать лаги под полом от гниения: 7 эффективных средств</a></li><li><a href="/articles/k/ka/kak-otkryt-dispenser-dlya-bumazhnykh-polotenets-bez-klyucha.html" class="related-card">Как открыть диспенсер для бумажных полотенец без ключа — 7 способов</a></li><li><a href="/articles/n/no/nokia-8800-sirocco.html" class="related-card">Nokia 8800 Sirocco: обзор, характеристики и цена легендарного телефона</a></li><li><a href="/articles/m/mo/motornoe-maslo-yacco-5w40-otzyvy.html" class="related-card">Моторное масло Yacco 5W40: отзывы экспертов, характеристики и анализ</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/k/ko/kontraktnyj-dvigatel-vw.html" class="related-bottom-card"><span class="related-bottom-title">Контрактный двигатель VW: как выбрать, установить и не прогадать</span><span class="related-bottom-desc">Полное руководство по покупке контрактного мотора для Volkswagen: плюсы и минусы, проверка перед пок</span></a><a href="/articles/c/ch/chem-obrabotat-lagi-pod-polom-ot-gnieniya.html" class="related-bottom-card"><span class="related-bottom-title">Чем обработать лаги под полом от гниения: 7 эффективных средств</span><span class="related-bottom-desc">Экспертный обзор антисептиков и народных методов для защиты деревянных лаг от гниения. Пошаговые инс</span></a><a href="/articles/k/ka/kak-otkryt-dispenser-dlya-bumazhnykh-polotenets-bez-klyucha.html" class="related-bottom-card"><span class="related-bottom-title">Как открыть диспенсер для бумажных полотенец без ключа — 7 способов</span><span class="related-bottom-desc">Пошаговая инструкция с фото и видео, как вскрыть диспенсер для бумажных полотенец без ключа. Способы</span></a><a href="/articles/n/no/nokia-8800-sirocco.html" class="related-bottom-card"><span class="related-bottom-title">Nokia 8800 Sirocco: обзор, характеристики и цена легендарного телефона</span><span class="related-bottom-desc">Полный обзор Nokia 8800 Sirocco. Характеристики, особенности дизайна, цена, плюсы и минусы. Стоит ли</span></a><a href="/articles/m/mo/motornoe-maslo-yacco-5w40-otzyvy.html" class="related-bottom-card"><span class="related-bottom-title">Моторное масло Yacco 5W40: отзывы экспертов, характеристики и анализ</span><span class="related-bottom-desc">Подробный обзор моторного масла Yacco 5W40: реальные отзывы, допуски API/ACEA, совместимость с сажев</span></a><a href="/articles/a/an/antifriz-nissan-zhuk.html" class="related-bottom-card"><span class="related-bottom-title">Антифриз Nissan Juke: какой лить, объём и замена</span><span class="related-bottom-desc">Какой антифриз заливать в Nissan Juke? Полный обзор спецификаций, объём системы охлаждения и пошагов</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

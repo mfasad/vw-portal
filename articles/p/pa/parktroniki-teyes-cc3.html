@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>TEYES CC3 и парктроники: настройка, калибровка и решение проблем — VW-portal</title>
+    <meta name="description" content="Подробная инструкция по подключению парктроников к TEYES CC3. Калибровка сенсоров, настройка зон, работа с проводными и беспроводными датчиками.">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/p/pa/parktroniki-teyes-cc3.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="TEYES CC3 и парктроники: настройка, калибровка и решение проблем">
+    <meta property="og:description" content="Подробная инструкция по подключению парктроников к TEYES CC3. Калибровка сенсоров, настройка зон, работа с проводными и беспроводными датчиками.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">TEYES CC3 и парктроники: настройка, калибровка и решение проблем</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Парктроники TEYES CC3: полная настройка и устранение неисправностей</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#принцип-работы-и-типы-совместимых-датчиков">Принцип работы и типы совместимых датчиков</a></li><li><a href="#схема-подключения-и-физический-монтаж">Схема подключения и физический монтаж</a></li><li><a href="#настройка-в-заводском-меню-и-калибровка">Настройка в заводском меню и калибровка</a></li><li><a href="#работа-с-беспроводными-и-проводными-системами">Работа с беспроводными и проводными системами</a></li><li><a href="#диагностика-неисправностей-и-ложных-срабатываний">Диагностика неисправностей и ложных срабатываний</a></li><li><a href="#интеграция-с-камерой-заднего-вида-и-ahd">Интеграция с камерой заднего вида и AHD</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Современные мультимедийные системы <em>TEYES CC3</em> значительно расширяют функционал автомобиля, превращая стандартную панель приборов в полноценный центр управления. Одной из ключевых функций, обеспечивающих безопасность при маневрах, является интеграция системы парктроников. Владельцы часто сталкиваются с необходимостью правильной настройки чувствительности и отображения зон обнаружения препятствий.</p>
+<p>Качественная работа датчиков парковки напрямую зависит от корректности установки и программной калибровки головного устройства. Неправильные настройки могут привести к ложным срабатываниям или, наоборот, к игнорированию реальных препятствий. В этой статье мы детально разберем процесс подключения, настройки и диагностики парктроников на базе платформы <strong>TEYES CC3</strong>.</p>
+
+<h2 id="принцип-работы-и-типы-совместимых-датчиков">Принцип работы и типы совместимых датчиков</h2>
+<p>Система парковки в связке с <em>TEYES CC3</em> базируется на обработке сигналов от ультразвуковых сенсоров, установленных в бамперах автомобиля. Головное устройство выступает в роли процессора, который преобразует время отклика волны в визуальное и звуковое предупреждение для водителя. Важно понимать, что мультимедийка поддерживает как штатные проводные системы, так и внешние комплекты.</p>
+<p>Существует два основных типа подключения, которые необходимо учитывать при выборе оборудования. Первый вариант — это использование встроенного в магнитолу процессора парктроника, который требует подключения датчиков непосредственно к разъемам на задней панели устройства. Второй вариант предполагает использование внешних блоков управления, которые передают данные на экран через видеовход или цифровой интерфейс.</p>
+<p>Точность работы системы зависит от частоты сенсоров и их расположения. Стандартные датчики работают в диапазоне частот, который позволяет эффективно обнаруживать препятствия на расстоянии от 0,3 до 2,5 метра.</p>
+
+<ul>
+<li>🚗 Проводные датчики — классическое решение, требующее прокладки проводов от бампера до салона, обеспечивает стабильный сигнал без задержек.</li>
+<li>📡 Беспроводные комплекты — передают данные по радиоканалу, что упрощает монтаж, но может быть чувствительно к электромагнитным помехам.</li>
+<li>🔌 Штатные системы — интеграция оригинальных датчиков автомобиля через специальные переходники или CAN-шину, сохраняющая заводской дизайн.</li>
+</ul>
+
+<p>При выборе комплекта для <em>TEYES CC3</em> обращайте внимание на совместимость протоколов обмена данными. Некоторые модели головных устройств требуют активации функции парктроника в инженерном меню перед началом физической установки.</p>
+
+<h2 id="схема-подключения-и-физический-монтаж">Схема подключения и физический монтаж</h2>
+<p>Процесс установки начинается с демонтажа головного устройства и бамперов для доступа к местам крепления сенсоров. Для <em>TEYES CC3</em> критически важно правильно определить пины на разъеме <code>Car</code> или <code>Back</code>, отвечающие за питание и сигнал датчиков. Ошибка в полярности может привести к выходу из строя контроллера парковки.</p>
+<p>Проводка должна быть защищена гофрой и надежно зафиксирована, чтобы избежать перетирания и короткого замыкания. Особенно это актуально для участков, проходящих через подвижные элементы кузова, такие как крышка багажника или двери. Используйте качественные клеммы для соединения проводов во избежание окисления контактов.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка перед подключением</h4><label class="check-item"><input type="checkbox"><span>Проверка целостности проводов датчиков</span></label><label class="check-item"><input type="checkbox"><span>Наличие питания 12В на входе</span></label><label class="check-item"><input type="checkbox"><span>Целостность предохранителя магнитолы</span></label><label class="check-item"><input type="checkbox"><span>Отсутствие замыканий в цепи</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<blockquote>
+<p>⚠️ Внимание: Перед началом любых работ с электропроводкой обязательно снимите минусовую клемму с аккумулятора автомобиля. Это предотвратит случайное короткое замыкание и защитит электронику <strong>TEYES CC3</strong> от скачков напряжения.</p>
+</blockquote>
+
+<p>После физического подключения всех компонентов необходимо проверить целостность цепи мультиметром. Убедитесь, что сопротивление датчиков находится в допустимых пределах, указанных в технической документации. Только после успешной проверки можно приступать к сборке салона и программной настройке.</p>
+
+<h2 id="настройка-в-заводском-меню-и-калибровка">Настройка в заводском меню и калибровка</h2>
+<p>После включения устройства необходимо перейти в раздел настроек парктроника. Обычно доступ к расширенным параметрам осуществляется через заводское меню, вход в которое требует ввода специального кода. Для моделей <em>TEYES CC3</em> этот код часто равен <code>8888</code> или <code>1234</code>, но может варьироваться в зависимости от версии прошивки.</p>
+<p>В меню <code>Factory Settings</code> найдите вкладку <code>Park</code> или <code>Reverse</code>. Здесь вам потребуется выбрать тип используемой камеры заднего вида и тип парктроника. Если вы используете встроенную обработку, выберите опцию <strong>Internal</strong>, если внешний блок — <strong>External</strong>. Неправильный выбор приведет к отсутствию изображения зон на экране.</p>
+
+<table>
+<thead>
+<tr>
+<th>Параметр настройки</th>
+<th>Рекомендуемое значение</th>
+<th>Описание влияния на систему</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sensitivity (Чувствительность)</td>
+<td>Level 3-4</td>
+<td>Определяет минимальное расстояние обнаружения. Высокий уровень может давать ложные срабатывания от дождя.</td>
+</tr>
+<tr>
+<td>Volume (Громкость)</td>
+<td>70-80%</td>
+<td>Уровень звукового сигнала. При слишком низкой громкости сигнал может быть не слышен в шумном салоне.</td>
+</tr>
+<tr>
+<td>Display Mode (Режим экрана)</td>
+<td>Full/Zone</td>
+<td>Выбор между отображением только зон или полной картины с камерой и графическими линиями.</td>
+</tr>
+<tr>
+<td>Probe Count (Кол-во датчиков)</td>
+<td>4 или 8</td>
+<td>Количество активных сенсоров. Должно соответствовать физически установленным датчикам.</td>
+</tr>
+</tbody>
+</table>
+
+<p>Калибровка зон осуществляется визуально. Подведите автомобиль к препятствию на известное расстояние и проверьте, совпадает ли индикация на экране с реальностью. Если зоны "уезжают" или отображаются некорректно, может потребоваться сброс настроек до заводских значений и повторная калибровка.</p>
+
+<details class="faq-item"><summary>Секретная функция калибровки</summary><div class="faq-answer"><p>В некоторых версиях прошивки TEYES CC3 доступна скрытая функция ручной калибровки расстояний. Для её активации необходимо в инженерном меню выбрать пункт Advanced Park Settings и удерживать палец на кнопке калибровки в течение 5 секунд. Это позволяет задать точные расстояния для каждой зоны отдельно, что полезно при нестандартном бампере.</p></div></details>
+
+<h2 id="работа-с-беспроводными-и-проводными-системами">Работа с беспроводными и проводными системами</h2>
+<p>Использование беспроводных парктроников с <em>TEYES CC3</em> имеет свои особенности. Основное преимущество — отсутствие необходимости тянуть провода через весь кузов автомобиля. Приемник подключается к разъему питания магнитолы, а датчики врезаются в бампер и запитываются от фонарей заднего хода или отдельной цепи.</p>
+<p>Однако беспроводные системы могут страдать от помех, создаваемых другими электронными устройствами в автомобиле или за его пределами. Если вы заметили "пляшущие" значения расстояния или периодические пропадания сигнала, попробуйте изменить частоту канала связи, если такая опция доступна в комплекте.</p>
+
+<ul>
+<li>🔋 Автономность — беспроводные датчики часто имеют встроенные элементы питания, требующие периодической замены.</li>
+<li>📶 Стабильность — проводные системы всегда обеспечивают более стабильный и быстрый отклик системы.</li>
+<li>🛠 Монтаж — беспроводной монтаж занимает меньше времени, но требует тщательной герметизации мест врезки датчиков.</li>
+</ul>
+
+<p>Для проводных систем критически важно качество изоляции соединений. Влага, попадающая на контакты разъема в багажнике, может вызвать коррозию и потерю контакта с одним из датчиков, что приведет к ошибке всей системы.</p>
+
+<h2 id="диагностика-неисправностей-и-ложных-срабатываний">Диагностика неисправностей и ложных срабатываний</h2>
+<p>Наиболее частой проблемой является ложное срабатывание парктроника на ровной дороге. Это может быть вызвано загрязнением поверхности датчиков грязью, снегом или водой. Регулярная очистка сенсоров мягкой тканью обычно решает эту проблему. Также причиной может быть слишком высокая чувствительность, настроенная в меню.</p>
+<p>Если система вообще не реагирует на препятствия, проверьте целостность предохранителя, отвечающего за питание блока парковки. В <em>TEYES CC3</em> часто реализована функция самодиагностики: при включении зажигания система проверяет наличие всех подключенных датчиков и сообщает об ошибках звуковым сигналом или сообщением на экране.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Для быстрой проверки работы каждого датчика включите зажигание и поднесите руку к каждому сенсору по очереди. Вы должны слышать характерный щелчок или изменение тональности звукового сигнала, что подтверждает исправность конкретного элемента.</p></div>
+
+<blockquote>
+<p>⚠️ Внимание: Если после мойки автомобиля под высоким давлением парктроники начали работать некорректно, возможно, вода попала внутрь сенсоров. Дайте автомобилю высохнуть в теплом помещении в течение 24 часов перед повторной проверкой.</p>
+</blockquote>
+
+<p>В случае постоянного писка даже без препятствий, проверьте, не залип ли один из датчиков в положении "обнаружено". Это часто случается при механическом повреждении или попадании льда в резонатор датчика зимой.</p>
+
+<h2 id="интеграция-с-камерой-заднего-вида-и-ahd">Интеграция с камерой заднего вида и AHD</h2>
+<p>Современные системы <em>TEYES CC3</em> позволяют совмещать изображение с камеры заднего вида и графические зоны парктроников. Для этого необходимо использовать камеры с поддержкой динамической или статической разметки, либо полагаться на программное наложение зон самой магнитолы. Важно правильно настроить тип видеосигнала: <code>CVBS</code> для аналоговых камер или <code>AHD</code> для高清 систем.</p>
+<p>При использовании AHD камер высокого разрешения убедитесь, что в настройках видео выбрано соответствующее разрешение (720p или 1080p). Несоответствие формата сигнала приведет к черно-белому изображению или его полному отсутствию. Парктроники в этом режиме работают параллельно, выводя звуковые сигналы и визуальные бары поверх видеопотока.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой тип парковки вы используете?</strong><ul><li>Только камера</li><li>Только датчики</li><li>Камера + датчики</li><li>Штатная система авто</li></ul></div></div>
+
+<p>Некоторые пользователи предпочитают отключать звуковое сопровождение, полагаясь только на визуальную информацию. В настройках <code>Sound</code> можно полностью убрать звук, оставив только мигание зон на экране, что делает парковку более комфортной для водителя.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Идеальная работа парктроников на TEYES CC3 достигается только при сочетании правильной физической установки датчиков, качественной изоляции проводки и точной программной калибровки чувствительности под условия эксплуатации.</p></div>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+
+<details>
+<summary>Почему парктроники TEYES CC3 не включаются при включении задней передачи?</summary>
+<p>Скорее всего, отсутствует сигнал запуска (Trigger) на проводе <code>Back</code> или <code>Reverse</code>. Проверьте, приходит ли туда плюс 12В от фонарей заднего хода. Также убедитесь, что в заводских настройках активирована функция парктроника.</p>
+</details>
+
+<details>
+<summary>Можно ли использовать штатные датчики парковки автомобиля с TEYES CC3?</summary>
+<p>Прямое подключение штатных датчиков часто невозможно из-за различий в протоколах. Обычно требуется дополнительный блок-интерфейс (CAN- decoder), который преобразует сигналы автомобиля в формат, понятный магнитоле, либо использование внешней системы параллельно штатной.</p>
+</details>
+
+<details>
+<summary>Как сбросить настройки парктроника к заводским?</summary>
+<p>В меню настроек парковки найдите пункт <code>Reset</code> или <code>Default</code>. Если система не отвечает, можно выполнить полный сброс головного устройства через <code>Factory Settings</code>, выбрав опцию <code>Clear Data</code>, но это удалит все ваши личные настройки и приложения.</p>
+</details>
+
+<details>
+<summary>Парктроник пищит постоянно, хотя препятствий нет. Что делать?</summary>
+<p>Проверьте чистоту датчиков. Если они чистые, возможно, один из сенсоров неисправен (замкнут) или поврежден провод в жгуте. Попробуйте последовательно отключать датчики от блока управления: если писк прекратился после отключения конкретного датчика, проблема в нем.</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#принцип-работы-и-типы-совместимых-датчиков">Принцип работы и типы совместимых датчиков</a></li><li><a href="#схема-подключения-и-физический-монтаж">Схема подключения и физический монтаж</a></li><li><a href="#настройка-в-заводском-меню-и-калибровка">Настройка в заводском меню и калибровка</a></li><li><a href="#работа-с-беспроводными-и-проводными-системами">Работа с беспроводными и проводными системами</a></li><li><a href="#диагностика-неисправностей-и-ложных-срабатываний">Диагностика неисправностей и ложных срабатываний</a></li><li><a href="#интеграция-с-камерой-заднего-вида-и-ahd">Интеграция с камерой заднего вида и AHD</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/f/fi/fiat-500-gucci.html" class="related-card">Fiat 500 Gucci: История, Дизайн и Особенности Итальянского Стиля</a></li><li><a href="/articles/r/ra/razmer-koles-geely-atlas.html" class="related-card">Размер колес Geely Atlas: все диски и шины по годам</a></li><li><a href="/articles/r/ra/raskhod-topliva-geely-atlas-pro.html" class="related-card">Расход топлива Geely Atlas Pro: реальные данные и советы по экономии</a></li><li><a href="/articles/c/ch/chto-polozhit-na-derevyannyj-pol-pod-plitku.html" class="related-card">Что положить на деревянный пол под плитку: 5 проверенных решений</a></li><li><a href="/articles/a/aj/ajdi-6-folksvagen.html" class="related-card">VW ID.6 2026: обзор, цены, характеристики и секреты электрокроссовера</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/f/fi/fiat-500-gucci.html" class="related-bottom-card"><span class="related-bottom-title">Fiat 500 Gucci: История, Дизайн и Особенности Итальянского Стиля</span><span class="related-bottom-desc">Полный обзор легендарного Fiat 500 Gucci. Узнайте историю создания, особенности дизайна, технические</span></a><a href="/articles/r/ra/razmer-koles-geely-atlas.html" class="related-bottom-card"><span class="related-bottom-title">Размер колес Geely Atlas: все диски и шины по годам</span><span class="related-bottom-desc">Полный справочник: размер колес Geely Atlas всех поколений. Подбор дисков, шин, разболтовка, вылет E</span></a><a href="/articles/r/ra/raskhod-topliva-geely-atlas-pro.html" class="related-bottom-card"><span class="related-bottom-title">Расход топлива Geely Atlas Pro: реальные данные и советы по экономии</span><span class="related-bottom-desc">Подробный анализ расхода топлива &lt;em&gt;Geely Atlas Pro&lt;/em&gt; 2023-2026: официальные цифры, отзывы владе</span></a><a href="/articles/c/ch/chto-polozhit-na-derevyannyj-pol-pod-plitku.html" class="related-bottom-card"><span class="related-bottom-title">Что положить на деревянный пол под плитку: 5 проверенных решений</span><span class="related-bottom-desc">Экспертный разбор материалов для укладки плитки на деревянный пол: от цементно-стружечных плит до на</span></a><a href="/articles/a/aj/ajdi-6-folksvagen.html" class="related-bottom-card"><span class="related-bottom-title">VW ID.6 2026: обзор, цены, характеристики и секреты электрокроссовера</span><span class="related-bottom-desc">Полный гайд по &lt;em&gt;Volkswagen ID.6&lt;/em&gt;: технические данные, особенности зарядки, сравнение с конкур</span></a><a href="/articles/c/ch/chem-otlichaetsya-koaksialnaya-akustika-ot-shirokopolosnoj.html" class="related-bottom-card"><span class="related-bottom-title">Коаксиальная или широкополосная акустика: в чем разница и что выбрать</span><span class="related-bottom-desc">Подробное сравнение коаксиальной и широкополосной акустики. Разбираем устройство, звук, плюсы и мину</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

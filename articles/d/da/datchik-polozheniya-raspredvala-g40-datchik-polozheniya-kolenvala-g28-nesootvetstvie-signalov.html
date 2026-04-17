@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>Ошибки G40 и G28: несоответствие фаз газораспределения — VW-portal</title>
+    <meta name="description" content="Датчик положения распредвала G40 и коленвала G28: причины несоответствия сигналов, симптомы обрыва цепи, диагностика и замена компонентов двигателя.">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/d/da/datchik-polozheniya-raspredvala-g40-datchik-polozheniya-kolenvala-g28-nesootvetstvie-signalov.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Ошибки G40 и G28: несоответствие фаз газораспределения">
+    <meta property="og:description" content="Датчик положения распредвала G40 и коленвала G28: причины несоответствия сигналов, симптомы обрыва цепи, диагностика и замена компонентов двигателя.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/golf/">Golf</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Ошибки G40 и G28: несоответствие фаз газораспределения</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Конфликт датчиков G40 и G28: диагностика рассинхронизации фаз</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#принцип-работы-синхронизации-g28-и-g40">Принцип работы синхронизации G28 и G40</a></li><li><a href="#основные-симптомы-неисправности-системы">Основные симптомы неисправности системы</a></li><li><a href="#механические-причины-рассинхронизации">Механические причины рассинхронизации</a></li><li><a href="#электрические-неисправности-датчиков">Электрические неисправности датчиков</a></li><li><a href="#методы-компьютерной-диагностики">Методы компьютерной диагностики</a></li><li><a href="#алгоритм-устранения-неисправности">Алгоритм устранения неисправности</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Когда на приборной панели загорается индикатор «Check Engine», а диагностический сканер выдает ошибку о рассинхронизации сигналов <strong>G40</strong> и <strong>G28</strong>, игнорировать проблему становится невозможно. Двигатель переходит в аварийный режим, теряя мощность и увеличивая расход топлива. Это классическая ситуация для современных моторных групп VAG, где электроника жестко контролирует каждый такт работы.</p>
+
+<p>Суть проблемы кроется в том, что блок управления двигателем (ЭБУ) получает противоречивые данные о положении поршней и клапанов. <em>Датчик Холла G40</em> отслеживает положение распредвала, определяя момент открытия клапанов, а <em>индуктивный датчик G28</em> считывает вращение коленчатого вала. Если их сигналы не совпадают по фазе, система воспринимает это как критический сбой.</p>
+
+<p>В данной статье мы детально разберем механические и электрические причины возникновения таких ошибок. Вы узнаете, как отличить растяжение цепи ГРМ от выхода из строя самого сенсора, и почему своевременная диагностика может спасти мотор от дорогостоящего ремонта.</p>
+
+<h2 id="принцип-работы-синхронизации-g28-и-g40">Принцип работы синхронизации G28 и G40</h2>
+
+<p>Для корректной работы системы впрыска и зажигания ЭБУ должен знать точное положение каждого поршня в цилиндре. <strong>Датчик G28</strong>, расположенный на картере сцепления, считывает зубчатый венец маховика. Он выдает сигнал о частоте вращения коленвала и его угловом положении. Однако этого недостаточно для управления фазами газораспределения.</p>
+
+<p>Здесь вступает в работу <strong>датчик G40</strong>, установленный в головке блока цилиндров. Он реагирует на реперный зуб или магнитную метку на распределительном валу. Сравнивая сигналы от обоих датчиков, ЭБУ вычисляет взаимное положение валов. Если угловая разница выходит за допустимые пределы (обычно несколько градусов), фиксируется ошибка рассинхронизации.</p>
+
+<blockquote>⚠️ Внимание: Эксплуатация автомобиля с постоянной ошибкой рассинхронизации может привести к перескоку цепи ГРМ, что в интервальных двигателях гарантированно означает встречу клапанов с поршнями и капитальный ремонт.</blockquote>
+
+<p>В нормальном режиме работы сигналы имеют строго определенную временную задержку относительно друг друга. Любое отклонение от эталонной карты, зашитой в <em>блоке управления</em>, воспринимается как неисправность. Современные системы OBD-II способны отслеживать даже минимальные отклонения, вызванные начальным растяжением цепи.</p>
+
+<details class="faq-item"><summary>Технические детали сигнала</summary><div class="faq-answer"><p>Сигнал датчика G28 обычно синусоидальный, в то время как G40 (датчик Холла) выдает прямоугольный цифровой сигнал. ЭБУ анализирует фронт сигнала G40 относительно пропущенного зуба на венце G28.</p></div></details>
+
+<h2 id="основные-симптомы-неисправности-системы">Основные симптомы неисправности системы</h2>
+
+<p>Водитель может заметить первые признаки проблемы еще до появления ошибок в памяти ЭБУ. Нестабильная работа двигателя на холостом ходу — первый звоночек. Мотор может «плавать» по оборотам или глохнуть при резком сбросе газа, когда система не может корректно рассчитать угол опережения зажигания.</p>
+
+<p>При разгоне часто наблюдается провал тяги. Автомобиль перестает реагировать на педаль акселератора так же резво, как раньше. Это происходит потому, что ЭБУ, не видя четкой синхронизации, переходит в режим работы по усредненным таблицам, игнорируя данные о точном положении фаз.</p>
+
+<ul>
+<li>🚗 Затрудненный запуск двигателя, особенно «на горячую» или после длительной стоянки.</li>
+<li>📉 Существенное увеличение расхода топлива из-за некорректного смесеобразования.</li>
+<li>🔊 Появление металлического лязга или шелеста в районе цепи ГРМ при запуске.</li>
+<li>💡 Мигание или постоянное горение лампы Check Engine на панели приборов.</li>
+</ul>
+
+<p>Иногда симптомы могут проявляться intermittently (периодически). Машина может ехать нормально на холодную, но терять мощность после прогрева. Это часто указывает на температурное расширение деталей или изменение сопротивления в электрической цепи датчиков.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Как проявилась ошибка у вас?</strong><ul><li>Только лампа на панели:Мотор троит и дергается:Проблем с динамикой нет:Глохнет на светофорах</li></ul></div></div>
+
+<h2 id="механические-причины-рассинхронизации">Механические причины рассинхронизации</h2>
+
+<p>Наиболее частой и опасной причиной несоответствия сигналов является физическое изменение взаимного положения валов. В двигателях с цепным приводом ГРМ ресурс цепи ограничен. Со временем она растягивается, и натяжитель уже не может компенсировать удлинение. В результате фаза распредвала смещается относительно коленвала.</p>
+
+<p><strong>Растяжение цепи</strong> — процесс накопительный. Сначала ошибка появляется редко, при высоких нагрузках, но со временем становится постоянной. Если игнорировать ранние стадии, цепь может перескочить на зуб. В этом случае рассинхронизация сигналов G40 и G28 станет критической, и двигатель, скорее всего, перестанет запускаться.</p>
+
+<p>Другой механической причиной может быть неисправность самого механизма ГРМ. Износ звездочек, дефекты успокоителей цепи или проблемы с фазовращателями (если они предусмотрены конструкцией) также приводят к смещению меток. В некоторых случаях виновником становится ослабленный болт звездочки распредвала.</p>
+
+<p>Важно отметить, что даже незначительное смещение фаз на 2-3 градуса уже может быть воспринято системой как ошибка. <mark>Критическим порогом для многих двигателей TSI/TFSI является рассинхронизация более 5 градусов по коленвалу</mark>, после чего ЭБУ блокирует нормальную работу двигателя.</p>
+
+<div class="checklist-block"><h4>☑️ Диагностика механики ГРМ</h4><label class="check-item"><input type="checkbox"><span>Проверить натяжение цепи через диагностический канал:Осмотреть состояние успокоителей и натяжителя:Проверить метки ГРМ на соответствие:Оценить износ звездочек распредвалов</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 1</div></div>
+
+<h2 id="электрические-неисправности-датчиков">Электрические неисправности датчиков</h2>
+
+<p>Не всегда проблема кроется в механике. Часто виновниками становятся сами сенсоры или проводка. <strong>Датчик G28</strong> работает в агрессивной среде, рядом с горячим маслом и магнитной стружкой. Загрязнение его рабочей поверхности металлической пылью может искажать сигнал, делая его нечитаемым для ЭБУ.</p>
+
+<p><strong>Датчик G40</strong> (Холла) более чувствителен к электрическим помехам и качеству питания. Окисление контактов в разъеме, перетертый провод или пробой изоляции могут приводить к появлению ложных импульсов. ЭБУ видит эти скачки как резкое изменение положения вала, что вызывает ошибку рассинхронизации.</p>
+
+<table>
+<thead>
+<tr>
+<th>Параметр</th>
+<th>Датчик G28 (Коленвал)</th>
+<th>Датчик G40 (Распредвал)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Тип сигнала</td>
+<td>Индуктивный (синус)</td>
+<td>Эффект Холла (прямоугольный)</td>
+</tr>
+<tr>
+<td>Расположение</td>
+<td>Картер сцепления</td>
+<td>Головка блока цилиндров</td>
+</tr>
+<tr>
+<td>Влияние загрязнения</td>
+<td>Высокое (магнитная стружка)</td>
+<td>Среднее (масляный налет)</td>
+</tr>
+<tr>
+<td>Частота отказов</td>
+<td>Низкая (очень надежен)</td>
+<td>Средняя (чувствителен к питанию)</td>
+</tr>
+</tbody>
+</table>
+
+<p>При диагностике электрики необходимо проверять не только наличие сигнала, но и его амплитуду и форму. Ослабленный контакт массы двигателя также может вносить существенные искажения в работу обоих датчиков, создавая иллюзию их неисправности.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>При замене датчиков обязательно используйте оригинальные уплотнительные кольца. Неправильная глубина посадки датчика G28 может привести к его повреждению венцом маховика.</p></div>
+
+<h2 id="методы-компьютерной-диагностики">Методы компьютерной диагностики</h2>
+
+<p>Современная диагностика начинается не с разборки мотора, а с подключения сканера. Необходимо считать коды ошибок. Часто встречаются коды вида P0011, P0016 или специфические коды производителя (например, 16685 / P0301 в группе VAG), указывающие на рассинхронизацию.</p>
+
+<p>Ключевым этапом является просмотр <strong>измеряемых блоков</strong> (Live Data). Нужно найти каналы, отображающие угол опережения/запаздывания распредвала относительно коленвала. В исправном двигателе эти значения должны быть стабильными и находиться в узком диапазоне, обычно от -3 до +3 градусов.</p>
+
+<p>Если на холостом ходу вы видите скачки угла рассинхронизации до 10-15 градусов, это прямой признак растянутой цепи. Если же значения стабильны, но ошибка есть, проблема, вероятнее всего, электрическая. Также стоит проверить адаптации системы изменения фаз газораспределения.</p>
+
+<blockquote>⚠️ Внимание: При проведении замеров убедитесь, что уровень масла в двигателе в норме. Низкое давление масла из-за нехватки смазки может вызывать сбои в работе гидронатяжителя цепи, что也会导致 временную рассинхронизацию.</blockquote>
+
+<p>Дополнительно следует проверить осциллограммы сигналов. Осциллограф позволяет увидеть форму волны и наличие шумов, которые обычный сканер может интерпретировать неверно. Это особенно актуально для выявления intermittent-проблем с проводкой.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Стабильное значение рассинхронизации в измеряемых блоках при работающем двигателе — главный индикатор механического износа цепи ГРМ.</p></div>
+
+<h2 id="алгоритм-устранения-неисправности">Алгоритм устранения неисправности</h2>
+
+<p>Процесс ремонта начинается с визуального осмотра и проверки уровней технических жидкостей. Если уровень масла в норме, переходят к замене датчиков, так как это наименее затратная часть. Часто проблема решается установкой нового <em>датчика G40</em> и чисткой G28.</p>
+
+<p>Если замена сенсоров не помогла, необходимо вскрывать систему ГРМ. Проверяется состояние цепи, звездочек и натяжителя. При растяжении цепи более чем на 3% от номинала или при наличии люфтов в механизме, производится полная замена комплекта ГРМ.</p>
+
+<p>После механических работ обязательна процедура адаптации. Для этого через диагностический интерфейс выполняется сброс адаптаций и запуск процедуры базовых установок. Двигатель должен прогреться до рабочей температуры, и система сама калибрует углы.</p>
+
+<ul>
+<li>🔧 Считать и сохранить коды ошибок, проверить измеряемые блоки.</li>
+<li>🧹 Очистить датчик G28 от металлической стружки, проверить разъемы.</li>
+<li>⚙️ При необходимости заменить цепь ГРМ и успокоители.</li>
+<li>💻 Выполнить адаптацию системы газораспределения через OBD.</li>
+</ul>
+
+<p>Завершающим этапом всегда должен быть тест-драйв в различных режимах работы двигателя. Необходимо убедиться, что ошибка не возвращается при резких ускорениях и на высоких оборотах. Только комплексный подход гарантирует долговечность ремонта.</p>
+
+<details>
+<summary>Можно ли ездить с ошибкой рассинхронизации G40/G28?</summary>
+<p>Кратковременная поездка до сервиса допустима, если двигатель работает ровно. Однако длительная эксплуатация запрещена, так как риск перескока цепи и повреждения клапанов возрастает с каждым километром.</p>
+</details>
+
+<details>
+<summary>Почему ошибка появляется только на холодном двигателе?</summary>
+<p>Это может указывать на неисправный гидронатяжитель цепи, который не держит давление масла при холодном пуске, или на проблему с электрическим сопротивлением датчиков при низких температурах.</p>
+</details>
+
+<details>
+<summary>Нужно ли менять оба датчика сразу?</summary>
+<p>Нет, менять нужно только тот, чей сигнал отсутствует или искажен, либо который указан в коде ошибки. Однако, если пробег автомобиля велик, превентивная замена обоих сенсоров может быть экономически оправдана.</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#принцип-работы-синхронизации-g28-и-g40">Принцип работы синхронизации G28 и G40</a></li><li><a href="#основные-симптомы-неисправности-системы">Основные симптомы неисправности системы</a></li><li><a href="#механические-причины-рассинхронизации">Механические причины рассинхронизации</a></li><li><a href="#электрические-неисправности-датчиков">Электрические неисправности датчиков</a></li><li><a href="#методы-компьютерной-диагностики">Методы компьютерной диагностики</a></li><li><a href="#алгоритм-устранения-неисправности">Алгоритм устранения неисправности</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/r/re/remkomplekt-petli-golf-4.html" class="related-card">Ремкомплект петли Гольф 4: замена, артикулы, выбор</a></li><li><a href="/articles/s/sa/salnik-pervichnogo-vala-golf-3.html" class="related-card">Сальник первичного вала Golf 3: замена, артикулы и симптомы</a></li><li><a href="/articles/v/vo/volkswagen-golf-2024-goda.html" class="related-card">Volkswagen Golf 2026: характеристики, двигатели и комплектации</a></li><li><a href="/articles/o/op/opel-golf-1992.html" class="related-card">Opel Golf 1992 года: характеристики, проблемы и советы по выбору</a></li><li><a href="/articles/r/ra/razborka-golf-7.html" class="related-card">Разборка Volkswagen Golf 7: пошаговое руководство с фото и советами</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/r/re/remkomplekt-petli-golf-4.html" class="related-bottom-card"><span class="related-bottom-title">Ремкомплект петли Гольф 4: замена, артикулы, выбор</span><span class="related-bottom-desc">Полный гид по ремонту дверей VW Golf 4. Как выбрать ремкомплект петли, заменить втулки и штифты, уст</span></a><a href="/articles/s/sa/salnik-pervichnogo-vala-golf-3.html" class="related-bottom-card"><span class="related-bottom-title">Сальник первичного вала Golf 3: замена, артикулы и симптомы</span><span class="related-bottom-desc">Полное руководство по замене сальника первичного вала КПП на VW Golf 3. Разбор симптомов течи, выбор</span></a><a href="/articles/v/vo/volkswagen-golf-2024-goda.html" class="related-bottom-card"><span class="related-bottom-title">Volkswagen Golf 2026: характеристики, двигатели и комплектации</span><span class="related-bottom-desc">Полный обзор Volkswagen Golf 2026 года. Технические характеристики, расход топлива, новые опции и ос</span></a><a href="/articles/o/op/opel-golf-1992.html" class="related-bottom-card"><span class="related-bottom-title">Opel Golf 1992 года: характеристики, проблемы и советы по выбору</span><span class="related-bottom-desc">Подробный обзор Opel Golf 1992: технические данные, слабые места, цены на запчасти и рекомендации по</span></a><a href="/articles/r/ra/razborka-golf-7.html" class="related-bottom-card"><span class="related-bottom-title">Разборка Volkswagen Golf 7: пошаговое руководство с фото и советами</span><span class="related-bottom-desc">Как правильно разобрать Golf 7 для ремонта или тюнинга? Детальная инструкция с нюансами снятия панел</span></a><a href="/articles/a/ad/adaptatsiya-rulya-golf-5.html" class="related-bottom-card"><span class="related-bottom-title">Адаптация руля Гольф 5: коды блоков, ошибки и настройка</span><span class="related-bottom-desc">Полная инструкция по адаптации рулевого управления VW Golf 5. Разбор ошибок G85, настройка угла пово</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

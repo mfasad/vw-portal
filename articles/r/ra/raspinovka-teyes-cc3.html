@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>Распиновка Teyes CC3: схема подключения и нюансы установки — VW-portal</title>
+    <meta name="description" content="Подробная распиновка камеры заднего вида Teyes CC3 с разъяснением контактов, схемами подключения и типовыми ошибками. Инструкция для авто с CAN-шиной и аналоговым сигналом.">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/r/ra/raspinovka-teyes-cc3.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Распиновка Teyes CC3: схема подключения и нюансы установки">
+    <meta property="og:description" content="Подробная распиновка камеры заднего вида Teyes CC3 с разъяснением контактов, схемами подключения и типовыми ошибками. Инструкция для авто с CAN-шиной и аналоговым сигналом.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/cc/">Cc</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Распиновка Teyes CC3: схема подключения и нюансы установки</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Распиновка Teyes CC3: полная схема подключения камеры заднего вида</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#официальная-распиновка-разъёма-teyes-cc3-назначение-контактов">Официальная распиновка разъёма Teyes CC3: назначение контактов</a></li><li><a href="#схемы-подключения-для-разных-типов-головных-устройств">Схемы подключения для разных типов головных устройств</a></li><li><a href="#типовые-ошибки-при-подключении-и-их-последствия">Типовые ошибки при подключении и их последствия</a></li><li><a href="#как-проверить-работоспособность-камеры-перед-установкой">Как проверить работоспособность камеры перед установкой</a></li><li><a href="#адаптеры-и-дополнительное-оборудование-для-teyes-cc3">Адаптеры и дополнительное оборудование для Teyes CC3</a></li><li><a href="#настройка-камеры-после-установки">Настройка камеры после установки</a></li><li><a href="#частые-вопросы-и-решения-проблем">Частые вопросы и решения проблем</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body"><p>Камера заднего вида <em>Teyes CC3</em> стала популярным решением для владельцев автомобилей <strong>Volkswagen CC</strong> (и других моделей группы VAG) благодаря сочетанию доступной цены, хорошего качества изображения и совместимости с штатными мультимедийными системами. Однако при самостоятельной установке многие сталкиваются с проблемой <strong>некорректной распиновки</strong> — неправильное подключение контактов приводит к мерцанию изображения, отсутствию синхронизации с бортовой электроникой или даже выходу устройства из строя.</p>
+
+<p>В этой статье мы разберём <strong>официальную распиновку разъёма Teyes CC3</strong>, объясним назначение каждого контакта и приведём типовые схемы подключения для автомобилей с <em>CAN-шиной</em> и аналоговым видеовходом. Особое внимание уделим нюансам интеграции с <code>RNS 510</code>, <code>RCD 310/510</code> и другими головными устройствами, а также разберём распространённые ошибки, которые допускают при монтаже. Если вы планируете установить камеру самостоятельно — этот гайд поможет избежать типичных проблем и сэкономить время на диагностике.</p>
+
+<h2 id="официальная-распиновка-разъёма-teyes-cc3-назначение-контактов">Официальная распиновка разъёма Teyes CC3: назначение контактов</h2>
+
+<p>Разъём <em>Teyes CC3</em> представляет собой 8-пиновый коннектор стандарта <strong>JST XH 2.54 мм</strong>, где каждый контакт отвечает за определённую функцию. Ниже приведена таблица с официальной распиновкой от производителя (актуальна для ревизий 2020–2026 годов). Обратите внимание: цвета проводов могут незначительно отличаться в зависимости от партии, но нумерация контактов остаётся неизменной.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Номер контакта</th>
+      <th>Цвет провода</th>
+      <th>Назначение</th>
+      <th>Примечания</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>Красный</td>
+      <td><strong>+12V (питание)</strong></td>
+      <td>Подключается к <code>ACC</code> или постоянному плюсу (в зависимости от схемы).</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Чёрный</td>
+      <td><strong>GND (масса)</strong></td>
+      <td>Обязательно подключать к металлической части кузова или минусовой клемме АКБ.</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Жёлтый</td>
+      <td><strong>Видео (CVBS)</strong></td>
+      <td>Аналоговый композитный сигнал. Подключается к видеовходу головного устройства.</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Зелёный</td>
+      <td><strong>CAN-High</strong></td>
+      <td>Подключается к <em>CAN-шине</em> автомобиля (при наличии поддержки).</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>Белый</td>
+      <td><strong>CAN-Low</strong></td>
+      <td>Второй провод <em>CAN-шины</em>. Необходим для синхронизации с бортовой электроникой.</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>Синий</td>
+      <td><strong>Reverse Trigger</strong></td>
+      <td>Сигнал включения задней передачи (подключается к лампе заднего хода).</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>Оранжевый</td>
+      <td><strong>Audio L</strong></td>
+      <td>Левый аудиоканал (не используется в большинстве установок).</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>Коричневый</td>
+      <td><strong>Audio R</strong></td>
+      <td>Правый аудиоканал (также обычно не задействован).</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><mark>Важно: в камерах Teyes CC3 ревизии 2023+ года контакты CAN-High (4) и CAN-Low (5) могут быть поменяны местами с видеовыходом (3) и массой (2). Перед подключением сверьтесь с маркировкой на плате устройства!</mark></p>
+
+<p>Если ваша камера не оснащена <em>CAN-модулем</em> (например, бюджетная версия <em>Teyes CC3 Basic</em>), контакты 4 и 5 будут пустыми. В этом случае синхронизация с бортовой электроникой осуществляется только через сигнал задней передачи (контакт 6).</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой тип подключения вы используете для Teyes CC3?</strong><ul><li>CAN-шина (цифровое)</li><li>Аналоговый видеовход</li><li>Не знаю, ещё не устанавливал</li><li>Другой вариант</li></ul></div></div>
+
+<h2 id="схемы-подключения-для-разных-типов-головных-устройств">Схемы подключения для разных типов головных устройств</h2>
+
+<p>Способ интеграции <em>Teyes CC3</em> зависит от модели мультимедийной системы вашего автомобиля. Ниже мы рассмотрим три наиболее распространённых сценария: подключение к штатным головным устройствам <strong>VW</strong> (<code>RNS 510</code>, <code>RCD 310/510</code>), универсальным 2DIN-магнитолам с <em>AV-in</em>, а также к системам с поддержкой <em>CAN-шины</em> (например, <em>MIB2</em>).</p>
+
+<h3>1. Подключение к RNS 510 / RCD 310/510 (аналоговый видеовход)</h3>
+<p>Для головных устройств <code>RNS 510</code> и <code>RCD 510</code> потребуется:</p>
+<ul>
+  <li>🔌 Подключить <strong>жёлтый провод</strong> (видео) к контакту <code>AV-in</code> на разъёме <em>Quadlock</em> (пин 19 или 20, в зависимости от ревизии).</li>
+  <li>🔋 Соединить <strong>красный провод</strong> (+12V) с <code>ACC</code> или постоянным плюсом (например, от прикуривателя).</li>
+  <li>🔌 Подключить <strong>синий провод</strong> (Reverse Trigger) к проводу лампы заднего хода (обычно фиолетовый или зелёный в жгуте задней оптики).</li>
+  <li>⚫ Замкнуть <strong>чёрный провод</strong> (масса) на кузов автомобиля.</li>
+</ul>
+
+<p>Для активации видеовхода в меню <code>RNS 510</code> необходимо:</p>
+<ol>
+  <li>Перейти в <code>Настройки → Звук/Изображение → Видео</code>.</li>
+  <li>Выбрать источник <code>AV-in</code>.</li>
+  <li>Включить опцию <code>Автоматическое переключение при движении задним ходом</code>.</li>
+</ol>
+
+<details class="faq-item"><summary>Как найти провод лампы заднего хода?</summary><div class="faq-answer"><p>Обычно это фиолетовый или зелёный провод в жгуте, идущем к задней оптике. Его можно идентифицировать с помощью мультиметра: при включении задней передачи на проводе должно появляться +12V. В автомобилях VW Group этот провод частоmarked как "50R" в электросхемах.</p></div></details>
+
+<h3>2. Подключение к MIB2 (с CAN-шиной)</h3>
+<p>Если ваш автомобиль оснащён системой <em>MIB2</em> (например, <em>Discover Pro</em> или <em>Composition Media</em>), подключение <em>Teyes CC3</em> осуществляется через <em>CAN-шину</em>. Это позволяет камере автоматически активироваться при включении задней передачи и передавать сигнал без дополнительных адаптеров.</p>
+
+<p>Порядок подключения:</p>
+<ul>
+  <li>🔌 Подключите <strong>зелёный (CAN-High)</strong> и <strong>белый (CAN-Low)</strong> провода к соответствующим контактам на <em>CAN-шине</em> автомобиля. Обычно это контакты 6 (CAN-H) и 14 (CAN-L) в разъёме <code>T16</code> (под рулём).</li>
+  <li>📹 Соедините <strong>жёлтый провод</strong> (видео) с видеовходом головного устройства (может потребоваться адаптер <em>CAN-to-AV</em>).</li>
+  <li>⚡ Подключите <strong>красный (+12V)</strong> и <strong>чёрный (GND)</strong> провода к блоку предохранителей или напрямую к АКБ.</li>
+</ul>
+
+<blockquote>⚠️ <strong>Внимание:</strong> При подключении к <em>CAN-шине</em> необходимо использовать <strong>резисторы 120 Ом</strong> между CAN-H и CAN-L, если они не установлены на плате камеры. Отсутствие резисторов может привести к ошибкам шины и нестабильной работе электроники автомобиля.</blockquote>
+
+<h3>3. Универсальное подключение к 2DIN-магнитоле</h3>
+<p>Для большинства послеmarket-магнитол (например, <em>Pioneer</em>, <em>Sony</em>, <em>JVC</em>) схема подключения упрощается:</p>
+<ul>
+  <li>🔌 Жёлтый провод (видео) → <code>AV-in</code> на задней панели магнитолы.</li>
+  <li>🔋 Красный провод (+12V) → к проводу <code>ACC</code> или <code>IGN</code> (зажигание).</li>
+  <li>⚫ Чёрный провод (GND) → к массе автомобиля.</li>
+  <li>🔄 Синий провод (Reverse Trigger) → к проводу лампы заднего хода.</li>
+</ul>
+
+<p>Если ваша магнитола не поддерживает автоматическое переключение на камеру, потребуется дополнительный <em>реле-контроллер</em> или ручное переключение источника видео.</p>
+
+
+<p>- Проверить целостность изоляции проводов</p>
+<p>- Убедиться в совместимости разъёмов</p>
+<p>- Отключить минусовую клемму АКБ</p>
+<p>- Подготовить инструменты: обжимные клещи, мультиметр, изоленту--></p>
+
+<h2 id="типовые-ошибки-при-подключении-и-их-последствия">Типовые ошибки при подключении и их последствия</h2>
+
+<p>Даже при точном следовании схемам многие сталкиваются с проблемами после установки <em>Teyes CC3</em>. Рассмотрим наиболее распространённые ошибки и их симптомы:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Ошибка</th>
+      <th>Последствия</th>
+      <th>Как исправить</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Перепутаны CAN-High и CAN-Low</td>
+      <td>Камера не активируется при включении задней передачи, ошибки CAN-шины на приборной панели.</td>
+      <td>Поменять провода местами или проверить распиновку мультиметром.</td>
+    </tr>
+    <tr>
+      <td>Неправильное подключение массы</td>
+      <td>Помехи на изображении, мерцание, самопроизвольные перезагрузки камеры.</td>
+      <td>Подключить чёрный провод к чистой массе (например, болту крепления сиденья).</td>
+    </tr>
+    <tr>
+      <td>Отсутствует резистор 120 Ом на CAN-шине</td>
+      <td>Ошибки связи с бортовым компьютером, нестабильная работа электроники.</td>
+      <td>Добавить резистор между CAN-H и CAN-L или использовать готовую плату адаптера.</td>
+    </tr>
+    <tr>
+      <td>Питание подключено к постоянному +12V вместо ACC</td>
+      <td>Камера работает постоянно, разряжая АКБ.</td>
+      <td>Перенести красный провод на <code>ACC</code> или установить дополнительное реле.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Одна из самых коварных ошибок — <strong>использование неэкранированного видеокабеля</strong>. Это приводит к наводкам от других электроприборов автомобиля (например, генератора), что проявляется в виде горизонтальных полос на изображении. Решение — заменить кабель на экранированный с ферритовым кольцом.</p>
+
+<blockquote>⚠️ <strong>Внимание:</strong> Если после подключения на приборной панели загорелся значок <code>ESP</code> или <code>ABS</code>, немедленно отключите камеру! Это указывает на конфликт с <em>CAN-шиной</em>, который может привести к сбоям в работе систем безопасности.</blockquote>
+
+<h2 id="как-проверить-работоспособность-камеры-перед-установкой">Как проверить работоспособность камеры перед установкой</h2>
+
+<p>Прежде чем монтировать <em>Teyes CC3</em> в автомобиль, рекомендуется проверить её работоспособность на столе. Это позволит избежать проблем с гарантией и сэкономить время на диагностике. Вам понадобятся:</p>
+<ul>
+  <li>🔋 Источник питания 12V (например, блок питания от ноутбука или зарядное устройство для АКБ).</li>
+  <li>📺 Монитор с <em>AV-in</em> (или телевизор с композитным входом).</li>
+  <li>🔌 Провода типа "папа-мама" для подключения разъёмов.</li>
+</ul>
+
+<p>Порядок проверки:</p>
+<ol>
+  <li>Подключите <strong>красный провод</strong> камеры к <code>+12V</code>, а <strong>чёрный</strong> — к <code>GND</code> источника питания.</li>
+  <li>Соедините <strong>жёлтый провод</strong> (видео) с <code>AV-in</code> монитора.</li>
+  <li>Кратковременно подайте <code>+12V</code> на <strong>синий провод</strong> (Reverse Trigger) — камера должна включиться.</li>
+  <li>Проверьте качество изображения: отсутствие помех, корректную цветопередачу и угол обзора.</li>
+</ol>
+
+<p>Если изображение отсутствует или искажено:</p>
+<ul>
+  <li>🔍 Проверьте целостность видеокабеля (особенно если он был обжат или паян).</li>
+  <li>🔄 Убедитесь, что монитор поддерживает <em>PAL/NTSC</em> (камера по умолчанию работает в <code>PAL</code>).</li>
+  <li>🛠️ Проверьте напряжение на контактах мультиметром (должно быть <code>11.5–12.5V</code>).</li>
+</ul>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если камера не реагирует на подачу +12V на Reverse Trigger, попробуйте замкнуть синий провод на массу. Некоторые ревизии Teyes CC3 используют инверсную логику включения.</p></div>
+
+<h2 id="адаптеры-и-дополнительное-оборудование-для-teyes-cc3">Адаптеры и дополнительное оборудование для Teyes CC3</h2>
+
+<p>В зависимости от комплектации автомобиля может потребоваться дополнительное оборудование для корректной работы камеры. Рассмотрим наиболее востребованные адаптеры и их назначение:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Адаптер</th>
+      <th>Назначение</th>
+      <th>Когда нужен</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><em>CAN-to-AV конвертер</em></td>
+      <td>Преобразует сигнал с <em>CAN-шины</em> в аналоговый видеосигнал для магнитол без поддержки цифрового входа.</td>
+      <td>Для автомобилей с <em>MIB2</em>, но без штатного видеовхода.</td>
+    </tr>
+    <tr>
+      <td><em>Реле задержки</em></td>
+      <td>Обеспечивает задержку выключения камеры после перевода рычага из положения "R".</td>
+      <td>Если камера выключается слишком быстро, не успевая показать обстановку сзади.</td>
+    </tr>
+    <tr>
+      <td><em>Стабилизатор напряжения</em></td>
+      <td>Защищает камеру от скачков напряжения в бортовой сети.</td>
+      <td>Для автомобилей с нестабильной электрикой (например, после установки мощной акустики).</td>
+    </tr>
+    <tr>
+      <td><em>Удлинитель видеокабеля</em></td>
+      <td>Позволяет увеличить длину кабеля без потери качества сигнала.</td>
+      <td>Если штатного кабеля недостаточно для прокладки от бампера до магнитолы.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Для автомобилей <strong>Volkswagen CC</strong> (и других моделей на платформе <em>PQ46</em>) часто требуется адаптер для интеграции с <code>CAN-Gateway</code>. Популярное решение — <em>Teyes CAN-Bus Adapter V3</em>, который поддерживает протокол <code>KWP2000</code> и совместим с большинством головных устройств группы VAG.</p>
+
+<p>При выборе адаптера обращайте внимание на:</p>
+<ul>
+  <li>🔧 Совместимость с вашей моделью <em>ECU</em> (можно уточнить по VIN-коду).</li>
+  <li>📡 Поддержку протокола <em>CAN</em> (например, <code>500 Кбит/с</code> для <em>MIB2</em>).</li>
+  <li>🔌 Наличие всех необходимых разъёмов (например, <code>OBD-II</code> или <code>Quadlock</code>).</li>
+</ul>
+
+<h2 id="настройка-камеры-после-установки">Настройка камеры после установки</h2>
+
+<p>После механического подключения <em>Teyes CC3</em> необходимо выполнить программную настройку. В зависимости от головного устройства процесс может отличаться, но общие принципы следующие:</p>
+
+<h3>1. Настройка угла обзора и линии парковки</h3>
+<p>Многие камеры <em>Teyes CC3</em> поддерживают регулировку угла наклона и отображения парковочных линий через <em>OSD-меню</em>. Чтобы войти в меню:</p>
+<ol>
+  <li>Включите камеру (подайте сигнал на Reverse Trigger).</li>
+  <li>Нажмите и удерживайте кнопку <code>Menu</code> (если она есть на корпусе камеры) или используйте пульт ДУ (в комплекте поставки).</li>
+  <li>В меню выберите пункты:
+    <ul>
+      <li>🔄 <code>Flip Image</code> — переворот изображения (если камера установлена вверх ногами).</li>
+      <li>📏 <code>Parking Lines</code> — включение/выключение линий.</li>
+      <li>🎯 <code>Angle Adjust</code> — регулировка угла наклона линий.</li>
+    </ol>
+  </li>
+</ol>
+
+<h3>2. Калибровка парковочных линий</h3>
+<p>Для корректного отображения траектории движения:</p>
+<ol>
+  <li>Поставьте автомобиль на ровную поверхность.</li>
+  <li>Включите заднюю передачу и войдите в <em>OSD-меню</em> камеры.</li>
+  <li>Выберите <code>Line Calibration</code> и следуйте инструкциям на экране (обычно нужно подъехать к препятствию на определённое расстояние).</li>
+</ol>
+
+<p>Если линии отображаются некорректно даже после калибровки, проверьте:</p>
+<ul>
+  <li>📐 Угол установки камеры (должен быть строго горизонтально).</li>
+  <li>📏 Высоту крепления (рекомендуется 50–70 см от земли).</li>
+  <li>🔧 Настройки <code>Aspect Ratio</code> в меню головного устройства (должно быть <code>4:3</code> для <em>Teyes CC3</em>).</li>
+</ul>
+
+<blockquote>⚠️ <strong>Внимание:</strong> Если после настройки линии парковки "уезжают" влево или вправо при повороте руля, это указывает на несовместимость камеры с системой <em>Park Assist</em> вашего автомобиля. Решение — отключить отображение линий в меню камеры или установить адаптер с поддержкой динамических линий.</blockquote>
+
+<h2 id="частые-вопросы-и-решения-проблем">Частые вопросы и решения проблем</h2>
+
+<p>Ниже мы собрали ответы на наиболее частые вопросы, возникающие при эксплуатации <em>Teyes CC3</em>. Если вашей проблемы здесь нет — проверьте раздел с типовыми ошибками или обратитесь к диагностическому меню камеры.</p>
+
+<details>
+  <summary>🔍 Камера включается, но изображение чёрно-белое или с помехами. В чём причина?</summary>
+  <p>Эта проблема обычно связана с несовпадением стандартов видео. <em>Teyes CC3</em> по умолчанию работает в режиме <code>PAL</code>, тогда как некоторые головные устройства (особенно китайские) ожидают <code>NTSC</code>. Решение:</p>
+  <ol>
+    <li>Войдите в <em>OSD-меню</em> камеры (кнопка <code>Menu</code> или пульт).</li>
+    <li>Найдите пункт <code>Video System</code> и переключите на <code>NTSC</code>.</li>
+    <li>Если меню недоступно — проверьте подключение видеокабеля (возможно, обрыв экранировки).</li>
+  </ol>
+  <p>Также причиной помех может быть близкое расположение кабеля к источникам электромагнитных наводок (например, проводам зажигания). Попробуйте проложить видеокабель вдали от силовой проводки.</p>
+</details>
+
+<details>
+  <summary>⚡ Камера работает постоянно, даже когда задняя передача выключена. Как исправить?</summary>
+  <p>Это указывает на две возможные проблемы:</p>
+  <ol>
+    <li><strong>Неправильное подключение Reverse Trigger:</strong> синий провод замкнут на постоянный <code>+12V</code> вместо провода лампы заднего хода. Проверьте подключение мультиметром — на проводе должно появляться напряжение только при включении задней передачи.</li>
+    <li><strong>Залипание реле:</strong> если используется внешнее реле для управления питанием, оно могло выйти из строя. Проверьте его работоспособность или замените.</li>
+  </ol>
+  <p>Временное решение: отключите синий провод (камера будет включаться только при подаче питания).</p>
+</details>
+
+<details>
+  <summary>🔌 После подключения перестали работать датчики парковки. Что делать?</summary>
+  <p>Эта проблема типична для автомобилей с системой <em>Park Pilot</em>. Причина — конфликт сигналов между камерой и штатными датчиками. Решения:</p>
+  <ul>
+    <li>🔧 Отключите провода <code>CAN-High</code> и <code>CAN-Low</code> (если они подключены). Камера будет работать в аналоговом режиме.</li>
+    <li>🛠️ Установите <em>CAN-фильтр</em> между камерой и шиной (например, <em>Teyes CAN-Filter V2</em>).</li>
+    <li>📡 Обновите прошивку головного устройства (для <em>MIB2</em> актуальны версии 0250+).</li>
+  </ul>
+  <p>Если датчики парковки подключены к тому же блоку управления, что и камера (например, <code>J791</code>), может потребоваться перекодировка через <em>VCDS</em>.</p>
+</details>
+
+<details>
+  <summary>📵 Камера не включается при движении задним ходом, но питание есть. В чём дело?</summary>
+  <p>Скорее всего, проблема в сигнале Reverse Trigger. Проверьте следующее:</p>
+  <ol>
+    <li>Убедитесь, что синий провод подключён к правильному контакту лампы заднего хода (проверьте по электросхеме автомобиля).</li>
+    <li>Проверьте напряжение на синем проводе мультиметром — должно быть <code>0V</code> в нейтральном положении и <code>+12V</code> при включении задней передачи.</li>
+    <li>Если напряжение есть, но камера не реагирует — возможно, неисправен внутренний транзистор камеры (требуется ремонт).</li>
+  </ol>
+  <p>В некоторых автомобилях сигнал заднего хода инвертирован (например, <code>0V</code> при включении). В этом случае используйте реле для инверсии сигнала.</p>
+</details>
+
+<details>
+  <summary>🔄 Как сбросить настройки Teyes CC3 к заводским?</summary>
+  <p>Для сброса настроек:</p>
+  <ol>
+    <li>Включите камеру (подайте сигнал на Reverse Trigger).</li>
+    <li>Войдите в <em>OSD-меню</em> (кнопка <code>Menu</code> или пульт).</li>
+    <li>Найдите пункт <code>Reset</code> или <code>Default</code> и подтвердите сброс.</li>
+  </ol>
+  <p>Если меню недоступно, можно сбросить настройки аппаратным способом:</p>
+  <ol>
+    <li>Отключите питание камеры.</li>
+    <li>Замкните контакты <code>GND</code> и <code>Reverse Trigger</code> (чёрный и синий провода).</li>
+    <li>Подайте питание и удерживайте замыкание 10 секунд.</li>
+  </ol>
+  <p>После сброса все настройки (включая угол линий парковки) вернутся к заводским.</p>
+</details>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Перед покупкой адаптеров или заменой камеры всегда проверяйте совместимость с вашей моделью ECU. Например, для автомобилей с <em>MIB3</em> (2020+) может потребоваться прошивка камеры с поддержкой <code>UDS</code> протокола.</p></div></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#официальная-распиновка-разъёма-teyes-cc3-назначение-контактов">Официальная распиновка разъёма Teyes CC3: назначение контактов</a></li><li><a href="#схемы-подключения-для-разных-типов-головных-устройств">Схемы подключения для разных типов головных устройств</a></li><li><a href="#типовые-ошибки-при-подключении-и-их-последствия">Типовые ошибки при подключении и их последствия</a></li><li><a href="#как-проверить-работоспособность-камеры-перед-установкой">Как проверить работоспособность камеры перед установкой</a></li><li><a href="#адаптеры-и-дополнительное-оборудование-для-teyes-cc3">Адаптеры и дополнительное оборудование для Teyes CC3</a></li><li><a href="#настройка-камеры-после-установки">Настройка камеры после установки</a></li><li><a href="#частые-вопросы-и-решения-проблем">Частые вопросы и решения проблем</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/f/fo/folksvagen-ss-universal.html" class="related-card">Volkswagen CC Universal: характеристики, цены и отзывы владельцев</a></li><li><a href="/articles/t/te/teyes-tiajs-cc3.html" class="related-card">Teyes CC3: обзор, настройка и скрытые функции камеры для авто</a></li><li><a href="/articles/b/bm/bmw-etk-cc.html" class="related-card">BMW ETK CC: полное руководство по диагностике и ремонту</a></li><li><a href="/articles/k/ko/kod-razrabotchika-teyes-cc3.html" class="related-card">Код разработчика Teyes CC3: как активировать и использовать скрытые функции</a></li><li><a href="/articles/c/cc/cc3-2k-teyes-kharakteristiki.html" class="related-card">Teyes CC3 2K: полные характеристики и обзор камеры для авто</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/f/fo/folksvagen-ss-universal.html" class="related-bottom-card"><span class="related-bottom-title">Volkswagen CC Universal: характеристики, цены и отзывы владельцев</span><span class="related-bottom-desc">Подробный обзор универсала Volkswagen CC: технические параметры, сравнение с седаном, плюсы и минусы</span></a><a href="/articles/t/te/teyes-tiajs-cc3.html" class="related-bottom-card"><span class="related-bottom-title">Teyes CC3: обзор, настройка и скрытые функции камеры для авто</span><span class="related-bottom-desc">Полный гайд по &lt;em&gt;Teyes CC3&lt;/em&gt;: как подключить, настроить и использовать все возможности этой вид</span></a><a href="/articles/b/bm/bmw-etk-cc.html" class="related-bottom-card"><span class="related-bottom-title">BMW ETK CC: полное руководство по диагностике и ремонту</span><span class="related-bottom-desc">Что такое &lt;em&gt;BMW ETK CC&lt;/em&gt;? Как пользоваться каталогом запчастей для &lt;em&gt;BMW CC&lt;/em&gt;? Пошаговые и</span></a><a href="/articles/k/ko/kod-razrabotchika-teyes-cc3.html" class="related-bottom-card"><span class="related-bottom-title">Код разработчика Teyes CC3: как активировать и использовать скрытые функции</span><span class="related-bottom-desc">Пошаговая инструкция по разблокировке режима разработчика на Teyes CC3, секретные коды, настройки и </span></a><a href="/articles/c/cc/cc3-2k-teyes-kharakteristiki.html" class="related-bottom-card"><span class="related-bottom-title">Teyes CC3 2K: полные характеристики и обзор камеры для авто</span><span class="related-bottom-desc">Подробный разбор технических параметров Teyes CC3 2K: разрешение, углы обзора, ночная съёмка, функци</span></a><a href="/articles/n/na/nastrojka-teyes-cc2-plus.html" class="related-bottom-card"><span class="related-bottom-title">Настройка Teyes CC2 Plus: полное руководство для авто 2026</span><span class="related-bottom-desc">Пошаговая инструкция по настройке мультимедийной системы Teyes CC2 Plus: обновление ПО, калибровка к</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

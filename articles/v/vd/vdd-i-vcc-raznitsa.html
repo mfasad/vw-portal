@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>VDD и VCC: ключевые отличия и правильное подключение — VW-portal</title>
+    <meta name="description" content="Чем отличаются VDD и VCC в схемах питания? Разбор терминов, схем подключения и типичных ошибок для электронных устройств.">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/v/vd/vdd-i-vcc-raznitsa.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="VDD и VCC: ключевые отличия и правильное подключение">
+    <meta property="og:description" content="Чем отличаются VDD и VCC в схемах питания? Разбор терминов, схем подключения и типичных ошибок для электронных устройств.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">VDD и VCC: ключевые отличия и правильное подключение</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>VDD и VCC: разница, назначение и как не перепутать при подключении</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#1-историческое-происхождение-почему-vcc-и-vdd-называются-по-разному">1. Историческое происхождение: почему VCC и VDD называются по-разному</a></li><li><a href="#2-техническая-разница-что-питает-vcc-а-что-vdd">2. Техническая разница: что питает VCC, а что — VDD</a></li><li><a href="#3-типичные-схемы-подключения-как-не-перепутать-выводы">3. Типичные схемы подключения: как не перепутать выводы</a></li><li><a href="#4-практические-ошибки-и-их-последствия">4. Практические ошибки и их последствия</a></li><li><a href="#5-как-правильно-фильтровать-питание-для-vcc-и-vdd">5. Как правильно фильтровать питание для VCC и VDD</a></li><li><a href="#6-vdd-и-vcc-в-современных-устройствах-тенденции">6. VDD и VCC в современных устройствах: тенденции</a></li><li><a href="#7-как-проверить-правильность-подключения-vcc-и-vdd">7. Как проверить правильность подключения VCC и VDD</a></li><li><a href="#faq-частые-вопросы-о-vdd-и-vcc">FAQ: Частые вопросы о VDD и VCC</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body"><p>Если вы когда-нибудь разрабатывали электронные схемы или ремонтировали платы, то наверняка сталкивались с обозначениями <strong>VDD</strong> и <strong>VCC</strong>. На первый взгляд они кажутся взаимозаменяемыми — оба подают питание на микросхему. Но <em>неправильное их использование</em> может привести к выходу устройства из строя, нестабильной работе или даже короткому замыканию. Почему так происходит?</p>
+
+<p>Дело в том, что эти аббревиатуры не просто дублируют друг друга, а отражают <mark>разные подходы к организации питания в аналоговых и цифровых схемах</mark>. VCC традиционно ассоциируется с питанием <em>биполярных транзисторов</em> (например, в логике TTL), тогда как VDD — с <em>полевыми транзисторами</em> (CMOS, MOSFET). Но это лишь вершина айсберга. В современных микроконтроллерах (например, <em>STM32</em> или <em>ESP32</em>) вы можете встретить оба обозначения на одной плате — и здесь важно понимать, что они питают <strong>разные внутренние цепи</strong>.</p>
+
+<p>В этой статье мы разберём не только теоретическую разницу, но и практические нюансы: как правильно подключать питание, какие ошибки приводят к поломкам, и почему в некоторых схемах VDD может быть выше VCC. А если вы уже сталкивались с проблемами при пайке или проектировании — в конце статьи найдёте FAQ с ответами на типичные вопросы.</p>
+
+<h2 id="1-историческое-происхождение-почему-vcc-и-vdd-называются-по-разному">1. Историческое происхождение: почему VCC и VDD называются по-разному</h2>
+
+<p>Обозначения VCC и VDD уходят корнями в <strong>1960–1970-е годы</strong>, когда формировались стандарты для первых интегральных схем. Тогда инженеры столкнулись с проблемой: как унифицировать маркировку питания для разных типов транзисторов, чтобы избежать путаницы на схемах.</p>
+
+<p><strong>VCC</strong> появилось благодаря <em>биполярным транзисторам</em> (BJT), которые использовались в логике <em>TTL (Transistor-Transistor Logic)</em>. Буква <code>C</code> здесь обозначает <em>collector</em> (коллектор) — один из трёх выводов транзистора, к которому подключалось питание. Например, в классических микросхемах серии <em>74xx</em> (如 <em>74LS00</em>) вы всегда найдёте контакт VCC.</p>
+
+<p>С другой стороны, <strong>VDD</strong> связано с <em>полевыми транзисторами</em> (MOSFET), которые лежат в основе <em>CMOS-логики</em>. Здесь буква <code>D</code> означает <em>drain</em> (сток) — аналог коллектора для MOSFET. Когда в 1980-х CMOS-технологии стали доминировать (например, в микроконтроллерах <em>Intel 8051</em> или <em>Motorola 68HC11</em>), обозначение VDD закрепилось за питанием цифровых цепей.</p>
+
+<p>Интересно, что в некоторых старых схемах можно встретить и другие обозначения, например:
+<ul>
+  <li>🔋 <strong>VEE</strong> — питание для <em>n-канальных</em> MOSFET (от <em>emitter</em> или <em>source</em>), часто отрицательное;</li>
+  <li>🔌 <strong>VSS</strong> — "общий" или земля (от <em>source</em> для MOSFET или <em>substrate</em>);</li>
+  <li>⚡ <strong>VBB</strong> — питание подложки (встречается в старых CMOS-схемах).</li>
+</ul>
+</p>
+
+<div class="attention-box attention-info"><div><strong>📊 С какими обозначениями питания вы чаще сталкиваетесь?</strong><ul><li>VCC</li><li>VDD</li><li>Оба варианта</li><li>Другие (VEE, VBB и т.д.)</li></ul></div></div>
+
+<h2 id="2-техническая-разница-что-питает-vcc-а-что-vdd">2. Техническая разница: что питает VCC, а что — VDD</h2>
+
+<p>Главное отличие между VCC и VDD кроется в <strong>типе цепей</strong>, которые они питают. В современных микросхемах (например, <em>STM32F4</em> или <em>ATmega328P</em>) оба вывода могут присутствовать одновременно, но подключать их нужно к <em>разным источникам</em> или фильтровать отдельно.</p>
+
+<p><strong>VCC обычно подаёт питание на:</strong>
+<ul>
+  <li>🔄 <em>Аналоговые цепи</em> (например, АЦП, компараторы, операционные усилители);</li>
+  <li>📡 <em>Входы/выходы с TTL-уровнями</em> (5 В или 3.3 В);</li>
+  <li>🛠️ <em>Внутренние генераторы тактовой частоты</em> (если они не цифровые).</li>
+</ul>
+</p>
+
+<p><strong>VDD, как правило, отвечает за:</strong>
+<ul>
+  <li>🖥️ <em>Цифровую логику</em> (процессорное ядро, память, шины данных);</li>
+  <li>🔄 <em>ЦАП/АЦП</em> (если они интегрированы в цифровую часть);</li>
+  <li>📶 <em>Высокочастотные цепи</em> (например, USB-контроллеры или Ethernet-PHY).</li>
+</ul>
+</p>
+
+<p>Ключевой момент: в некоторых микросхемах VDD может быть <strong>выше по напряжению</strong>, чем VCC. Например, в <em>ESP8266</em> VDD ядра составляет <code>3.3 В</code>, а VCC для аналоговых цепей — <code>5 В</code>. Это связано с тем, что цифровые цепи часто требуют более стабильного и "чистого" питания, тогда как аналоговые могут работать с большими пульсациями.</p>
+
+<details class="faq-item"><summary>Почему в некоторых схемах VDD и VCC замыкают вместе?</summary><div class="faq-answer"><p>В простых устройствах (например, Arduino Uno) VCC и VDD часто объединяют на плате для упрощения схемы. Однако это допустимо только если:
+<p>1. Микросхема рассчитана на единое питание (например, ATmega328P в DIP-корпусе).</p>
+<p>2. Нет критичных к шуму цепей (например, высокоточных АЦП).</p>
+<p>3. Напряжения совпадают (обычно 5 В или 3.3 В).</p>
+<p>В профессиональных устройствах (осциллографы, медицинская техника) такое объединение недопустимо!</p></div></details></p>
+
+<h2 id="3-типичные-схемы-подключения-как-не-перепутать-выводы">3. Типичные схемы подключения: как не перепутать выводы</h2>
+
+<p>Ошибки при подключении VCC и VDD — одна из самых распространённых причин выхода микросхем из строя. Рассмотрим несколько типовых схем и разберём, на что обращать внимание.</p>
+
+<p><strong>Случай 1: Микроконтроллер с раздельным питанием (например, STM32F103).</strong>
+<p>Здесь VDD питает ядро (обычно <code>3.3 В</code>), а VCC (если есть) — периферию (например, <code>5 В</code> для USB). <strong>Никогда не подавайте 5 В на VDD</strong> — это приведёт к пробою внутренних цепей!</p></p>
+
+<p><strong>Случай 2: Аналоговые микросхемы (например, операционный усилитель LM358).</strong>
+<p>Тут VCC (или V+) питает сам усилитель, а VDD может обозначать питание для внутреннего стабилизатора. В даташитах таких микросхем часто указывают допустимый диапазон напряжений для каждого вывода.</p></p>
+
+<p><strong>Случай 3: Модули с единым питанием (например, Arduino Nano).</strong>
+<p>На плате может быть только один вывод <code>Vin</code> или <code>5V</code>, но внутри он разветвляется на VCC (для аналоговой части) и VDD (для цифровой). Здесь главное — следить за <strong>максимальным током</strong>, так как тонкие дорожки могут не выдержать нагрузки.</p></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Микросхема</th>
+      <th>VDD (назначение)</th>
+      <th>VCC (назначение)</th>
+      <th>Типичное напряжение</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><em>ATmega328P</em> (Arduino)</td>
+      <td>Питание ядра</td>
+      <td>Питание портов ввода-вывода</td>
+      <td>5 В (или 3.3 В в низковольтных версиях)</td>
+    </tr>
+    <tr>
+      <td><em>STM32F407</em></td>
+      <td>Цифровое ядро (1.8–3.3 В)</td>
+      <td>Аналоговые периферийные устройства (до 5 В)</td>
+      <td>VDD: 3.3 В; VCC: 5 В</td>
+    </tr>
+    <tr>
+      <td><em>ESP8266</em></td>
+      <td>Цифровая логика (3.3 В)</td>
+      <td>Модуль Wi-Fi (3.3 В, но с отдельным фильтром)</td>
+      <td>3.3 В (критичен к пульсациям!)</td>
+    </tr>
+    <tr>
+      <td><em>LM358</em> (ОУ)</td>
+      <td>Нет (используется V+)</td>
+      <td>Питание усилителя</td>
+      <td>5–30 В (двуполярное)</td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>⚠️ <strong>Внимание:</strong> В микросхемах с <em>двойным питанием</em> (например, <em>AD9850</em>) никогда не подавайте напряжение на VDD, если не подключён VCC, и наоборот. Это может привести к <strong>лавинообразному пробою</strong> внутренних диодов!</blockquote>
+
+
+<p>Изучите даташит на микросхему (раздел "Power Supply")|Проверьте максимальное напряжение для VDD и VCC|Убедитесь, что земля (GND) подключена первой|Используйте стабилизаторы с низким уровнем шума для VDD|Не превышайте суммарный ток потребления--></p>
+
+<h2 id="4-практические-ошибки-и-их-последствия">4. Практические ошибки и их последствия</h2>
+
+<p>Даже опытные инженеры иногда допускают ошибки при работе с VCC и VDD. Вот самые распространённые из них и чем они грозят:</p>
+
+<p><strong>Ошибка 1: Подача 5 В на VDD микроконтроллера, рассчитанного на 3.3 В.</strong>
+<p>Результат: пробой транзисторов в цифровом ядре. Симптомы: микросхема греется, не отвечает на команды, или полностью "умирает". Особенно критично для <em>ARM Cortex-M</em> (например, <em>STM32</em>), где ядро работает на пониженном напряжении.</p></p>
+
+<p><strong>Ошибка 2: Объединение VCC и VDD без фильтрации.</strong>
+<p>Если аналоговые цепи (VCC) создают шум, он может проникнуть в цифровую часть (VDD) и вызвать сбои в работе АЦП или нестабильность тактового генератора. Например, в <em>осциллографах</em> это приводит к "дрожанию" сигнала.</p></p>
+
+<p><strong>Ошибка 3: Игнорирование последовательности включения.</strong>
+<p>В некоторых микросхемах (например, <em>FPGA</em> или <em>high-speed ADC</em>) сначала нужно подать питание на VDD, а затем на VCC. Нарушение порядка может привести к <strong>логическим сбоям</strong> или даже физическому повреждению.</p></p>
+
+<p><strong>Ошибка 4: Использование общего стабилизатора для VCC и VDD.</strong>
+<p>Если у вас на плате есть и <em>STM32</em>, и <em>мощный драйвер мотора</em>, никогда не питайте их от одного источника без развязки. Скачки тока от двигателя могут сбросить микроконтроллер.</p></p>
+
+<blockquote>⚠️ <strong>Внимание:</strong> В схемотехнике <em>автомобильной электроники</em> (например, <em>CAN-контроллеры</em>) VCC часто подключают к <code>12 В</code> бортовой сети через стабилизатор, а VDD — к <code>5 В</code> или <code>3.3 В</code> от отдельного DC-DC. <strong>Путаница здесь приводит к выходу устройства из строя при запуске двигателя</strong> (из-за скачков напряжения).</blockquote>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>При пайке SMD-микросхем всегда проверяйте маркировку выводов под лупой — на некоторых корпусах (например, TQFP) VCC и VDD могут располагаться рядом, и их легко перепутать при ручной сборке.</p></div>
+
+<h2 id="5-как-правильно-фильтровать-питание-для-vcc-и-vdd">5. Как правильно фильтровать питание для VCC и VDD</h2>
+
+<p>Качество питания напрямую влияет на стабильность работы устройства. Для VDD (цифровых цепей) критичны <strong>пульсации и высокочастотные помехи</strong>, тогда как VCC (аналоговые цепи) более чувствителен к <strong>низкочастотному шуму</strong> и дрейфу напряжения.</p>
+
+<p><strong>Базовые правила фильтрации:</strong>
+<ul>
+  <li>🔋 Для VDD: используйте <em>керамические конденсаторы</em> (0.1 мкФ) максимально близко к выводу микросхемы + <em>электролитический</em> (10–100 мкФ) для подавления высокочастотных помех;</li>
+  <li>📉 Для VCC: добавьте <em>LC-фильтр</em> (дроссель + конденсатор) если цепь чувствительна к наводкам (например, аудиоусилители);</li>
+  <li>⚡ Для обоих: разделяйте земляные плоскости ("звезда" или <em>split ground</em>) чтобы избежать взаимных наводок.</li>
+</ul>
+</p>
+
+<p>Пример правильной разводки для <em>STM32</em>:
+<pre><code>
+<p>VDD (3.3V) ---[100nF]---|---[10uF]--- Стабилизатор</p>
+<p>|</p>
+<p>GND (цифровая земля)</p>
+
+<p>VCC (5V) ---[100nF]---[100uF]---[LC-фильтр]--- Стабилизатор</p>
+<p>|</p>
+<p>GND (аналоговая земля)</p>
+</code></pre>
+</p>
+
+<p>В высокочастотных устройствах (например, <em>SDR-приёмники</em> на <em>RTL-SDR</em>) для VDD дополнительно устанавливают <em>ферритовые бусы</em> на линии питания, чтобы подавить ВЧ-помехи от процессора.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Для критичных приложений (медицинская техника, измерительные приборы) используйте <strong>раздельные стабилизаторы</strong> для VCC и VDD, даже если их напряжения совпадают. Это исключит взаимное влияние цепей.</p></div>
+
+<h2 id="6-vdd-и-vcc-в-современных-устройствах-тенденции">6. VDD и VCC в современных устройствах: тенденции</h2>
+
+<p>С развитием технологий границы между VCC и VDD начинают размываться, но их раздельное использование остаётся актуальным. Рассмотрим несколько современных примеров:</p>
+
+<p><strong>Микроконтроллеры ARM Cortex-M (STM32, NXP LPC).</strong>
+<p>Здесь VDD часто делится на несколько доменов:</p>
+<ul>
+  <li>🖥️ <code>VDD_CORE</code> — питание ядра (1.8–3.3 В);</li>
+  <li>🔌 <code>VDD_IO</code> — питание портов ввода-вывода (может быть 5 В);</li>
+  <li>📡 <code>VDD_ANALOG</code> — для АЦП/ЦАП.</li>
+</ul>
+</p>
+
+<p><strong>FPGA (Xilinx, Intel Altera).</strong>
+<p>В этих чипах может быть до <code>10 разных VDD</code> для ядра, ввода-вывода, PLL, памяти и т.д. Например, в <em>Xilinx Artix-7</em> есть:</p>
+<ul>
+  <li>🔄 <code>VCC_INT</code> — внутренняя логика (1.0 В);</li>
+  <li>📤 <code>VCC_O</code> — выходные буферы (3.3 В);</li>
+  <li>🔄 <code>VCC_AUX</code> — вспомогательные цепи (2.5 В).</li>
+</ul>
+</p>
+
+<p><strong>SoC для IoT (ESP32, Nordic nRF52).</strong>
+<p>В этих чипах VDD часто отвечает за <em>радиомодуль</em> (Wi-Fi/BLE), который требует отдельной фильтрации во избежание помех. Например, в <em>ESP32</em> рекомендуется использовать <em>LC-фильтр</em> на линии <code>VDD_SDIO</code> (питание для Wi-Fi).</p></p>
+
+<p>Тенденция последних лет — <strong>уменьшение напряжения VDD</strong> для цифровых цепей (до 1.8 В и ниже) при сохранении VCC на уровне 3.3–5 В для совместимости с периферией. Это усложняет разводку плат, но позволяет снизить энергопотребление.</p>
+
+<h2 id="7-как-проверить-правильность-подключения-vcc-и-vdd">7. Как проверить правильность подключения VCC и VDD</h2>
+
+<p>Если устройство ведёт себя нестабильно (например, микроконтроллер периодически сбрасывается или АЦП выдаёт неверные значения), первым делом проверьте питание. Вот пошаговая инструкция:</p>
+
+<p><strong>Шаг 1: Визуальный осмотр.</strong>
+<ul>
+  <li>🔍 Проверьте, не замкнуты ли дорожки VCC и VDD (особенно если паяли вручную);</li>
+  <li>🔋 Убедитесь, что все конденсаторы фильтрации установлены и не имеют вздутий;</li>
+  <li>📏 Измерьте сопротивление между VCC/VDD и землёй — оно должно быть <code>>10 кОм</code> (если меньше — возможен пробой).</li>
+</ul>
+</p>
+
+<p><strong>Шаг 2: Проверка напряжений.</strong>
+<p>Используйте мультиметр или осциллограф:</p>
+<ul>
+  <li>⚡ Измерьте напряжение на VCC и VDD — оно должно соответствовать даташиту (допуск обычно ±5%);</li>
+  <li>📉 Проверьте пульсации на осциллографе (для VDD они не должны превышать <code>50 мВ</code>);</li>
+  <li>🔄 Убедитесь, что при включении сначала появляется VDD, а затем VCC (если это требуется по даташиту).</li>
+</ul>
+</p>
+
+<p><strong>Шаг 3: Тест под нагрузкой.</strong>
+<ul>
+  <li>🖥️ Запустите устройство в штатном режиме и проверьте, не проседает ли напряжение;</li>
+  <li>🔌 Если используете внешние модули (например, <em>GPS или LoRa</em>), проверьте, не создают ли они помехи по питанию;</li>
+  <li>📡 Для беспроводных устройств (Wi-Fi, BLE) проверьте уровень шума на VDD с помощью спектрального анализатора.</li>
+</ul>
+</p>
+
+<blockquote>⚠️ <strong>Внимание:</strong> Если после подачи питания микросхема начинает греться, <strong>немедленно отключите её</strong> — это признак короткого замыкания внутри кристалла. Дальнейшая работа может привести к <strong>необратимому повреждению</strong>!</blockquote>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Для диагностики проблем с питанием в <em>STM32</em> можно использовать встроенный <code>ADC</code> для мониторинга напряжения на VDD. Например, в <em>CubeMX</em> есть функция <code>VDD Monitoring</code>, которая генерирует прерывание при просадке напряжения.</p></div>
+
+<h2 id="faq-частые-вопросы-о-vdd-и-vcc">FAQ: Частые вопросы о VDD и VCC</h2>
+
+<details>
+  <summary>Можно ли подавать на VDD и VCC одно напряжение, если они равны?</summary>
+  <p>В большинстве случаев — <strong>да</strong>, но с оговорками:</p>
+  <ul>
+    <li>🔹 Если даташит явно разрешает объединение (например, в <em>ATmega328P</em>);</li>
+    <li>🔹 Если цепи не критичны к шуму (например, простая светодиодная мигалка);</li>
+    <li>🔹 Если вы использовали <strong>достаточную фильтрацию</strong> (конденсаторы, ферритовые бусы).</li>
+  </ul>
+  <p>Однако в прецизионных устройствах (осциллографы, медицинская техника) даже при равных напряжениях VCC и VDD разделяют.</p>
+</details>
+
+<details>
+  <summary>Почему в некоторых схемах VDD выше, чем VCC?</summary>
+  <p>Это характерно для микросхем, где цифровая логика работает на <strong>пониженном напряжении</strong> (например, 1.8 В), а аналоговые цепи требуют стандартных 3.3 В или 5 В. Примеры:</p>
+  <ul>
+    <li>🔹 <em>STM32L</em> (низкопотребляющая серия): VDD_CORE = 1.8 В, VCC_IO = 3.3 В;</li>
+    <li>🔹 <em>AD9280</em> (быстрый АЦП): VDD = 3.3 В (цифра), VCC = 5 В (аналог).</li>
+  </ul>
+  <p>В таких случаях используют <strong>раздельные стабилизаторы</strong> или <em>LDO</em> для понижения напряжения.</p>
+</details>
+
+<details>
+  <summary>Что будет, если перепутать VCC и VDD при подключении?</summary>
+  <p>Последствия зависят от микросхемы:</p>
+  <ul>
+    <li>🔥 <strong>Короткое замыкание</strong>: если VDD рассчитано на 3.3 В, а вы подали 5 В (как на VCC);</li>
+    <li>📉 <strong>Нестабильная работа</strong>: если аналоговый шум с VCC попадёт в цифровую часть;</li>
+    <li>🚨 <strong>Отказ отдельных блоков</strong>: например, перестанет работать АЦП или USB-контроллер.</li>
+  </ul>
+  <p>В лучшем случае устройство не включится, в худшем — микросхема сгорит.</p>
+</details>
+
+<details>
+  <summary>Как правильно подключить питание к Arduino, где есть и VCC, и VDD?</summary>
+  <p>В большинстве плат Arduino (например, <em>Uno</em>, <em>Nano</em>) VCC и VDD внутренне объединены на плате и подключены к <code>5 В</code> или <code>3.3 В</code> в зависимости от модели. Однако:</p>
+  <ul>
+    <li>🔹 На <em>Arduino Mega</em> есть отдельные выводы <code>5V</code> (для периферии) и <code>3.3V</code> (для ядра);</li>
+    <li>🔹 В <em>ESP8266/ESP32</em> VDD часто отвечает за ядро (3.3 В), а VCC — за питание модуля Wi-Fi;</li>
+    <li>🔹 Всегда проверяйте схему платы перед подключением внешних модулей!</li>
+  </ul>
+</details>
+
+<details>
+  <summary>Нужно ли разделять земли для VCC и VDD?</summary>
+  <p>Это зависит от чувствительности устройства:</p>
+  <ul>
+    <li>🔹 Для простых устройств (светодиодные гирлянды, кнопки) — <strong>нет</strong>, можно использовать общую землю;</li>
+    <li>🔹 Для прецизионных схем (аудио, измерения) — <strong>да</strong>, используйте <em>звезду</em> или <em>раздельные плоскости</em>;</li>
+    <li>🔹 В высокочастотных устройствах (SDR, радиопередатчики) — <strong>обязательно</strong>, иначе будут наводки.</li>
+  </ul>
+  <p>В многослойных платах для развязки используют отдельные слои для аналоговой и цифровой земли.</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#1-историческое-происхождение-почему-vcc-и-vdd-называются-по-разному">1. Историческое происхождение: почему VCC и VDD называются по-разному</a></li><li><a href="#2-техническая-разница-что-питает-vcc-а-что-vdd">2. Техническая разница: что питает VCC, а что — VDD</a></li><li><a href="#3-типичные-схемы-подключения-как-не-перепутать-выводы">3. Типичные схемы подключения: как не перепутать выводы</a></li><li><a href="#4-практические-ошибки-и-их-последствия">4. Практические ошибки и их последствия</a></li><li><a href="#5-как-правильно-фильтровать-питание-для-vcc-и-vdd">5. Как правильно фильтровать питание для VCC и VDD</a></li><li><a href="#6-vdd-и-vcc-в-современных-устройствах-тенденции">6. VDD и VCC в современных устройствах: тенденции</a></li><li><a href="#7-как-проверить-правильность-подключения-vcc-и-vdd">7. Как проверить правильность подключения VCC и VDD</a></li><li><a href="#faq-частые-вопросы-о-vdd-и-vcc">FAQ: Частые вопросы о VDD и VCC</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/3/3-/3-polosnaya-doroga.html" class="related-card">3-полосная дорога: правила, разметка и безопасность в 2026 году</a></li><li><a href="/articles/a/ar/arduino-cc-skachat-na-russkom.html" class="related-card">Arduino CC скачать на русском — официальные версии и инструкции 2026</a></li><li><a href="/articles/p/p0/p0229-oshibka-vw.html" class="related-card">Ошибка P0229 на VW: причины, диагностика и ремонт</a></li><li><a href="/articles/v/vw/vw-id-6-crozz.html" class="related-card">Volkswagen ID.6 Crozz: характеристики, цены и отзывы 2026</a></li><li><a href="/articles/u/us/ustranit-skrip-polov.html" class="related-card">Как устранить скрип полов в машине: пошаговая инструкция</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/3/3-/3-polosnaya-doroga.html" class="related-bottom-card"><span class="related-bottom-title">3-полосная дорога: правила, разметка и безопасность в 2026 году</span><span class="related-bottom-desc">Как правильно ездить по 3-полосной дороге? Разбор разметки, ПДД, опасных ситуаций и штрафов. Советы </span></a><a href="/articles/a/ar/arduino-cc-skachat-na-russkom.html" class="related-bottom-card"><span class="related-bottom-title">Arduino CC скачать на русском — официальные версии и инструкции 2026</span><span class="related-bottom-desc">Где безопасно скачать Arduino IDE на русском языке? Официальные источники, альтернативные сборки и п</span></a><a href="/articles/p/p0/p0229-oshibka-vw.html" class="related-bottom-card"><span class="related-bottom-title">Ошибка P0229 на VW: причины, диагностика и ремонт</span><span class="related-bottom-desc">Код ошибки P0229 на Volkswagen: что означает, как устранить неисправность датчика положения дроссель</span></a><a href="/articles/v/vw/vw-id-6-crozz.html" class="related-bottom-card"><span class="related-bottom-title">Volkswagen ID.6 Crozz: характеристики, цены и отзывы 2026</span><span class="related-bottom-desc">Полный обзор электромобиля VW ID.6 Crozz: технические параметры, комплектации, плюсы и минусы, сравн</span></a><a href="/articles/u/us/ustranit-skrip-polov.html" class="related-bottom-card"><span class="related-bottom-title">Как устранить скрип полов в машине: пошаговая инструкция</span><span class="related-bottom-desc">Экспертный гайд по диагностике и ремонту скрипов пола в автомобиле. Причины, инструменты и проверенн</span></a><a href="/articles/k/ki/kirpich-na-avtobusnoj-polose.html" class="related-bottom-card"><span class="related-bottom-title">Кирпич на автобусной полосе: причины, последствия и как избежать</span><span class="related-bottom-desc">Почему автомобили становятся «кирпичами» на выделенных полосах, как это влияет на трафик и что делат</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

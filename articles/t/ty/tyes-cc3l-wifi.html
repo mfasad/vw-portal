@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>TYES CC3L WiFi: настройка, проблемы и обновление прошивки — VW-portal</title>
+    <meta name="description" content="Подробное руководство по подключению и настройке WiFi в TYES CC3L: разбор ошибок, обновление ПО, альтернативные методы соединения и FAQ.">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/t/ty/tyes-cc3l-wifi.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="TYES CC3L WiFi: настройка, проблемы и обновление прошивки">
+    <meta property="og:description" content="Подробное руководство по подключению и настройке WiFi в TYES CC3L: разбор ошибок, обновление ПО, альтернативные методы соединения и FAQ.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/cc/">Cc</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">TYES CC3L WiFi: настройка, проблемы и обновление прошивки</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>TYES CC3L и WiFi: как подключить, настроить и устранить неполадки</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#что-такое-tyes-cc3l-и-зачем-ей-wifi">Что такое TYES CC3L и зачем ей WiFi?</a></li><li><a href="#требования-к-wifi-сети-для-tyes-cc3l">Требования к WiFi-сети для TYES CC3L</a></li><li><a href="#пошаговая-инструкция-по-подключению-к-wifi">Пошаговая инструкция по подключению к WiFi</a></li><li><a href="#обновление-прошивки-через-wifi-пошаговый-гайд">Обновление прошивки через WiFi: пошаговый гайд</a></li><li><a href="#альтернативные-способы-подключения-к-интернету">Альтернативные способы подключения к интернету</a></li><li><a href="#распространённые-ошибки-и-их-решения">Распространённые ошибки и их решения</a></li><li><a href="#faq-частые-вопросы-по-tyes-cc3l-и-wifi">FAQ: Частые вопросы по TYES CC3L и WiFi</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body"><p>Мультимедийная система <em>TYES CC3L</em> — популярное решение для владельцев автомобилей <strong>Volkswagen CC</strong>, предлагающее расширенные функции навигации, мультимедиа и связи. Однако многие пользователи сталкиваются с трудностями при настройке <strong>WiFi-модуля</strong>, который необходим для обновления карт, прошивки или использования онлайн-сервисов. В отличие от штатных систем <em>MIB2</em> или <em>Discover Media</em>, <em>TYES CC3L</em> требует специфического подхода к конфигурации сети.</p>
+
+<p>В этой статье мы разберём не только стандартные способы подключения к WiFi, но и <mark>уникальные методы обхода типичных ошибок (например, код 1006 или "нет IP-адреса")</mark>, которые производитель часто умалчивает в официальной документации. Вы узнаете, как обновлять прошивку через альтернативные каналы, если штатный WiFi отказывается работать, и какие настройки роутера критически важны для стабильной связи. Материал будет полезен как новичкам, так и опытным пользователям, столкнувшимся с неочевидными багами системы.</p>
+
+<h2 id="что-такое-tyes-cc3l-и-зачем-ей-wifi">Что такое TYES CC3L и зачем ей WiFi?</h2>
+
+<p><em>TYES CC3L</em> — это послепродажная мультимедийная система, устанавливаемая вместо штатных головных устройств в автомобили <strong>Volkswagen</strong>, <strong>Audi</strong> и <strong>Skoda</strong>. Она построена на базе <strong>Android</strong> (обычно версии 8.1–10) и оснащена процессором <em>Rockchip PX5</em> или <em>PX6</em>. WiFi-модуль в устройстве выполняет несколько ключевых функций:</p>
+
+<ul>
+  <li>📡 <strong>Обновление прошивки и карт</strong> — без подключения к сети невозможно загрузить актуальные версии ПО или навигационных данных (например, для <em>iGO</em> или <em>Sygic</em>).</li>
+  <li>🎵 <strong>Стриминг музыки и видео</strong> — доступ к <em>YouTube</em>, <em>Spotify</em> или <em>Tidal</em> напрямую с экрана магнитолы.</li>
+  <li>📱 <strong>Зеркалирование экрана</strong> — работа с <em>Apple CarPlay</em> (проводным/беспроводным) или <em>Android Auto</em> через WiFi.</li>
+  <li>🔧 <strong>Диагностика и отладка</strong> — удалённое подключение к системе для настройки или устранения неисправностей.</li>
+</ul>
+
+<p>Отличие <em>TYES CC3L</em> от штатных систем (например, <em>RNS 510</em> или <em>MIB2</em>) — в гибкости настроек, но это же становится и слабым местом. Производитель часто экономит на качестве WiFi-модулей, что приводит к проблемам с подключением, особенно в условиях слабого сигнала или при использовании современных стандартов безопасности (<em>WPA3</em>).</p>
+
+<blockquote>⚠️ <strong>Внимание:</strong> Если ваша магнитола <em>TYES CC3L</em> выпуска до 2021 года, она может не поддерживать сети с шириной канала <code>80 МГц</code> или <code>160 МГц</code>. Принудительно установите на роутере режим <code>20/40 МГц</code> в настройках 2.4 ГГц.</blockquote>
+
+<h2 id="требования-к-wifi-сети-для-tyes-cc3l">Требования к WiFi-сети для TYES CC3L</h2>
+
+<p>Перед подключением убедитесь, что ваша сеть соответствует техническим ограничениям устройства. <em>TYES CC3L</em> предъявляет следующие требования:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Параметр</th>
+      <th>Рекомендуемое значение</th>
+      <th>Последствия несоответствия</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Частота</td>
+      <td><code>2.4 ГГц</code> (5 ГГц не поддерживается)</td>
+      <td>Сеть не отображается в списке доступных</td>
+    </tr>
+    <tr>
+      <td>Стандарт безопасности</td>
+      <td><code>WPA2-PSK (AES)</code></td>
+      <td>Ошибка аутентификации (код 1006)</td>
+    </tr>
+    <tr>
+      <td>Ширина канала</td>
+      <td><code>20 МГц</code> или <code>20/40 МГц</code></td>
+      <td>Нестабильное соединение, обрывы</td>
+    </tr>
+    <tr>
+      <td>SSID (имя сети)</td>
+      <td>Латинские символы, без пробелов и спецзнаков</td>
+      <td>Сеть не обнаруживается или подключение сбрасывается</td>
+    </tr>
+    <tr>
+      <td>DHCP</td>
+      <td>Включён (автоматическое получение IP)</td>
+      <td>Ошибка "Нет IP-адреса" (<code>0.0.0.0</code>)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Особое внимание стоит уделить <strong>настройкам роутера</strong>. Многие современные маршрутизаторы по умолчанию используют <em>WPA3</em> или смешанный режим <em>WPA2/WPA3</em>, который <em>TYES CC3L</em> не поддерживает. Также проблемы могут возникать из-за:</p>
+
+<ul>
+  <li>🔄 <strong>Включённого "Быстрого переключения" (802.11r)</strong> — отключите эту функцию в панели администратора роутера.</li>
+  <li>🛡️ <strong>Фильтрации MAC-адресов</strong> — добавьте MAC магнитолы в белый список или отключите фильтрацию.</li>
+  <li>📶 <strong>Скрытой сети (скрытый SSID)</strong> — <em>TYES CC3L</em> не умеет подключаться к скрытым сетям.</li>
+</ul>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой роутер вы используете для подключения TYES CC3L?</strong><ul><li>TP-Link</li><li>Asus</li><li>Xiaomi</li><li>Keenetic</li><li>D-Link</li><li>Другой</li></ul></div></div>
+
+<h2 id="пошаговая-инструкция-по-подключению-к-wifi">Пошаговая инструкция по подключению к WiFi</h2>
+
+<p>Процесс подключения кажется простым, но на практике пользователи сталкиваются с ошибками на каждом этапе. Следуйте этой инструкции, чтобы минимизировать риски:</p>
+
+<ol>
+  <li><strong>Активируйте WiFi на магнитоле:</strong> Перейдите в <code>Настройки → Сеть → WiFi</code> и включите модуль. Дождитесь появления списка сетей (может занять до 30 секунд).</li>
+  <li><strong>Выберите сеть:</strong> Найдите в списке ваш SSID. Если сети нет — проверьте частоту (только <code>2.4 ГГц</code>) и видимость SSID.</li>
+  <li><strong>Введите пароль:</strong> Используйте <strong>только латинские символы</strong>. Кириллица или спецзнаки приведут к ошибке <code>1006</code>.</li>
+  <li><strong>Подтвердите подключение:</strong> Нажмите <code>OK</code> и дождитесь получения IP-адреса. Если процесс завис на этапе "Получение IP" — перезагрузите магнитолу (удерживайте кнопку питания 10 секунд).</li>
+</ol>
+
+<p>Если подключение не удалось, проверьте следующие моменты:</p>
+
+<div class="checklist-block"><h4>☑️ Диагностика проблем с WiFi</h4><label class="check-item"><input type="checkbox"><span>Проверьте частоту сети (2.4 ГГц)</span></label><label class="check-item"><input type="checkbox"><span>Отключите WPA3 в настройках роутера</span></label><label class="check-item"><input type="checkbox"><span>Убедитесь, что DHCP включён</span></label><label class="check-item"><input type="checkbox"><span>Перезагрузите роутер и магнитолу</span></label><label class="check-item"><input type="checkbox"><span>Попробуйте другой пароль (без спецзнаков)</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 5</div></div>
+
+<blockquote>⚠️ <strong>Внимание:</strong> Некоторые прошивки <em>TYES CC3L</em> (например, версии <code>MCU: 1.05</code>) имеют баг с подключением к сетям, имя которых начинается с цифры. Переименуйте SSID, чтобы он начинался с буквы (например, <code>MyWiFi_24</code> вместо <code>24GHz_Net</code>).</blockquote>
+
+<p>Для ускорения процесса можно использовать <strong>горячую точку с телефона</strong>. Настройте точку доступа на смартфоне с параметрами:</p>
+<ul>
+  <li>📶 Частота: <code>2.4 ГГц</code></li>
+  <li>🔐 Безопасность: <code>WPA2-PSK</code></li>
+  <li>🆔 Имя: <code>TYES_Hotspot</code> (без пробелов)</li>
+</ul>
+
+<h2 id="обновление-прошивки-через-wifi-пошаговый-гайд">Обновление прошивки через WiFi: пошаговый гайд</h2>
+
+<p>Обновление ПО — критически важная процедура для <em>TYES CC3L</em>, так как новые версии исправляют баги с WiFi, добавляют поддержку современных стандартов безопасности и улучшают стабильность. Однако процесс имеет нюансы:</p>
+
+<ol>
+  <li><strong>Проверьте текущую версию:</strong> Перейдите в <code>Настройки → О системе → Версия ПО</code>. Запишите значения <code>MCU</code>, <code>Android</code> и <code>Launcher</code>.</li>
+  <li><strong>Скачайте прошивку:</strong> Официальные файлы можно найти на сайте <a href="https://tyes.ru" target="_blank">TYES</a> (раздел "Поддержка"). Выбирайте версию строго для вашей модели (<em>CC3L</em> или <em>CC3L Pro</em>).</li>
+  <li><strong>Подключитесь к WiFi:</strong> Используйте сеть с минимальными настройками безопасности (см. раздел выше).</li>
+  <li><strong>Запустите обновление:</strong> В меню <code>Настройки → Обновление ПО → Обновить по сети</code> выберите скачанный файл. Процесс займёт 10–20 минут.</li>
+</ol>
+
+<p>Если обновление прерывается или выдаёт ошибку <code>Update Failed (Error 404)</code>, попробуйте альтернативные методы:</p>
+
+<details class="faq-item"><summary>Что делать если обновление зависло?</summary><div class="faq-answer"><p>Если процесс обновления застопорился на этапе "Проверка файла" или "Установка", не выключайте питание! Дождитесь 30 минут — иногда система "задумывается". Если изменений нет, принудительно перезагрузите магнитолу (удерживайте кнопку питания 15 секунд). После перезагрузки повторите процедуру или попробуйте обновиться через USB-накопитель.</p></div></details>
+
+<table>
+  <thead>
+    <tr>
+      <th>Ошибка</th>
+      <th>Причина</th>
+      <th>Решение</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Error 1006</code></td>
+      <td>Неправильный пароль или стандарт безопасности</td>
+      <td>Переподключитесь с паролем из латинских символов, отключите WPA3</td>
+    </tr>
+    <tr>
+      <td><code>No IP Address</code></td>
+      <td>DHCP отключён или конфликт IP</td>
+      <td>Включите DHCP на роутере или назначьте статический IP вручную</td>
+    </tr>
+    <tr>
+      <td><code>Update Failed (404)</code></td>
+      <td>Файл прошивки повреждён или несовместим</td>
+      <td>Скачайте файл заново, проверьте модель устройства</td>
+    </tr>
+    <tr>
+      <td><code>WiFi Disconnected</code></td>
+      <td>Слабый сигнал или перегрузка сети</td>
+      <td>Поднесите роутер ближе к машине или используйте репитер</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Перед обновлением отключите все энергоёмкие приложения (навигацию, музыку) и закройте фоновые процессы через <code>Настройки → Приложения</code>. Это снизит риск сбоя из-за нехватки памяти.</p></div>
+
+<h2 id="альтернативные-способы-подключения-к-интернету">Альтернативные способы подключения к интернету</h2>
+
+<p>Если WiFi-модуль <em>TYES CC3L</em> отказывается работать despite всех усилий, рассмотрите альтернативные варианты подключения к сети:</p>
+
+<ul>
+  <li>📱 <strong>USB-модем:</strong> Подключите смартфон по USB и активируйте режим модема. В настройках магнитолы выберите <code>USB-тетеринг</code>.</li>
+  <li>🖥️ <strong>Ethernet-адаптер:</strong> Через переходник <code>USB-to-Ethernet</code> можно подключить магнитолу к роутеру кабелем (требуется прошивка с поддержкой OTG).</li>
+  <li>📡 <strong>4G-модем:</strong> USB-модемы <em>Huawei E3372</em> или <em>ZTE MF823</em> совместимы с <em>TYES CC3L</em> при правильных настройках APN.</li>
+  <li>🔄 <strong>Обновление через USB:</strong> Скачайте прошивку на флешку (FAT32), подключите к магнитоле и запустите обновление через <code>Настройки → Обновление ПО → Локальное обновление</code>.</li>
+</ul>
+
+<p>Для использования <strong>USB-модема</strong> потребуется:</p>
+<ol>
+  <li>Активировать на телефоне режим <code>USB-тетеринг</code> (в настройках "Точка доступа и модем").</li>
+  <li>Подключить телефон к магнитоле через кабель <em>USB-TypeC</em> (в зависимости от модели).</li>
+  <li>В настройках <em>TYES CC3L</em> выбрать <code>USB Network</code> в разделе <code>Сеть</code>.</li>
+</ol>
+
+<blockquote>⚠️ <strong>Внимание:</strong> При подключении через USB-модем некоторые прошивки <em>TYES CC3L</em> могут блокировать доступ к Google Play. Чтобы разблокировать, перейдите в <code>Настройки → Безопасность</code> и включите опцию <code>Неизвестные источники</code>.</blockquote>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>USB-тетеринг — самый надёжный способ подключения к интернету для TYES CC3L, но требует качественного кабеля и достаточного заряда телефона.</p></div>
+
+<h2 id="распространённые-ошибки-и-их-решения">Распространённые ошибки и их решения</h2>
+
+<p>Даже после успешного подключения к WiFi пользователи <em>TYES CC3L</em> сталкиваются с периодическими сбоями. Вот типичные проблемы и способы их устранения:</p>
+
+<ul>
+  <li>🔌 <strong>"WiFi подключён, но нет интернета":</strong>
+    <ul>
+      <li>Проверьте, выдаёт ли роутер IP-адрес (в настройках магнитолы посмотрите <code>Статус сети</code>).</li>
+      <li>Отключите на роутере <code>AP Isolation</code> (изоляция клиентов).</li>
+      <li>Попробуйте вручную прописать DNS: <code>8.8.8.8</code> (Google) или <code>1.1.1.1</code> (Cloudflare).</li>
+    </ul>
+  </li>
+  <li>🔄 <strong>"Сеть постоянно отключается":</strong>
+    <ul>
+      <li>Уменьшите ширину канала на роутере до <code>20 МГц</code>.</li>
+      <li>Отключите энергосбережение WiFi в настройках магнитолы (<code>Настройки → Сеть → Режим сна WiFi</code>).</li>
+      <li>Обновите прошивку роутера.</li>
+    </ul>
+  </li>
+  <li>🚫 <strong>"Не удаётся подключиться к скрытой сети":</strong>
+    <ul>
+      <li><em>TYES CC3L</em> не поддерживает скрытые SSID. Сделайте сеть видимой.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Если проблема сохраняется, попробуйте <strong>сбросить настройки сети</strong> на магнитоле:</p>
+<ol>
+  <li>Перейдите в <code>Настройки → Система → Сброс</code>.</li>
+  <li>Выберите <code>Сброс настроек сети</code>.</li>
+  <li>Подтвердите действие и перезагрузите устройство.</li>
+</ol>
+
+<p>Для диагностики также полезно просматривать <strong>логи системы</strong>. Включите режим разработчика (<code>Настройки → О системе → Номер сборки</code> — нажмите 7 раз) и используйте приложение <em>Logcat</em> для анализа ошибок.</p>
+
+<h2 id="faq-частые-вопросы-по-tyes-cc3l-и-wifi">FAQ: Частые вопросы по TYES CC3L и WiFi</h2>
+
+<details>
+  <summary><strong>Можно ли подключить TYES CC3L к WiFi 5 ГГц?</strong></summary>
+  <p>Нет, <em>TYES CC3L</em> поддерживает только сети <code>2.4 ГГц</code>. Это аппаратное ограничение WiFi-модуля. Если ваш роутер работает в dual-band режиме, создайте отдельную сеть для 2.4 ГГц или отключите 5 ГГц временно.</p>
+</details>
+
+<details>
+  <summary><strong>Почему магнитола не видит мою WiFi-сеть?</strong></summary>
+  <p>Причин несколько:</p>
+  <ul>
+    <li>Сеть работает на частоте <code>5 ГГц</code> (не поддерживается).</li>
+    <li>SSID содержит кириллицу или спецсимволы (переименуйте сеть).</li>
+    <li>Скрытый SSID (сделайте сеть видимой).</li>
+    <li>Слабый сигнал (попробуйте поднести роутер ближе).</li>
+  </ul>
+</details>
+
+<details>
+  <summary><strong>Как обновить прошивку без WiFi?</strong></summary>
+  <p>Есть три способа:</p>
+  <ol>
+    <li><strong>Через USB:</strong> Скачайте прошивку (файл <code>.img</code> или <code>.zip</code>) на флешку (FAT32), подключите к магнитоле и запустите обновление через <code>Настройки → Обновление ПО → Локальное обновление</code>.</li>
+    <li><strong>Через OTG-адаптер:</strong> Подключите флешку или жёсткий диск по USB-OTG (требуется поддержка в прошивке).</li>
+    <li><strong>Через SD-карту:</strong> Некоторые модели <em>TYES CC3L</em> поддерживают обновление с карты памяти (раздел <code>SD Update</code>).</li>
+  </ol>
+  <p>Важно: файл прошивки должен быть предназначен именно для вашей модели (<em>CC3L</em> или <em>CC3L Pro</em>) и версии <code>MCU</code>.</p>
+</details>
+
+<details>
+  <summary><strong>Что делать, если после обновления пропал WiFi?</strong></summary>
+  <p>Это типичная проблема при некорректной прошивке. Решения:</p>
+  <ul>
+    <li>Откатитесь на предыдущую версию ПО (если есть бэкап).</li>
+    <li>Сбросьте настройки до заводских (<code>Настройки → Система → Полный сброс</code>).</li>
+    <li>Перепрошейте магнитолу через <code>USB</code> с использованием официального файла от производителя.</li>
+    <li>Обратитесь в сервисный центр — возможно, повреждён WiFi-модуль.</li>
+  </ul>
+  <p>Если WiFi-модуль сгорел, его можно заменить самостоятельно (модули <em>RLT8188</em> или <em>AP6255</em> совместимы с большинством версий <em>TYES CC3L</em>).</p>
+</details>
+
+<details>
+  <summary><strong>Как ускорить загрузку карт через WiFi?</strong></summary>
+  <p>Скорость загрузки зависит от нескольких факторов:</p>
+  <ul>
+    <li>Используйте роутер с поддержкой <code>MIMO</code> и установите его рядом с автомобилем.</li>
+    <li>Отключите другие устройства от сети во время загрузки.</li>
+    <li>Выберите канал с минимальными помехами (используйте приложения вроде <em>WiFi Analyzer</em>).</li>
+    <li>Если загружаете карты для <em>iGO</em> или <em>Sygic</em>, скачивайте их частями (по регионам).</li>
+  </ul>
+  <p>Средняя скорость загрузки на <em>TYES CC3L</em> — 1–3 Мб/с. Если скорость ниже, проверьте настройки QoS на роутере.</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#что-такое-tyes-cc3l-и-зачем-ей-wifi">Что такое TYES CC3L и зачем ей WiFi?</a></li><li><a href="#требования-к-wifi-сети-для-tyes-cc3l">Требования к WiFi-сети для TYES CC3L</a></li><li><a href="#пошаговая-инструкция-по-подключению-к-wifi">Пошаговая инструкция по подключению к WiFi</a></li><li><a href="#обновление-прошивки-через-wifi-пошаговый-гайд">Обновление прошивки через WiFi: пошаговый гайд</a></li><li><a href="#альтернативные-способы-подключения-к-интернету">Альтернативные способы подключения к интернету</a></li><li><a href="#распространённые-ошибки-и-их-решения">Распространённые ошибки и их решения</a></li><li><a href="#faq-частые-вопросы-по-tyes-cc3l-и-wifi">FAQ: Частые вопросы по TYES CC3L и WiFi</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/r/ra/raspinovka-teyes-cc2.html" class="related-card">Распиновка Teyes CC2: схема подключения и нюансы установки</a></li><li><a href="/articles/t/te/termokontejner-avs-comfort-cc-24nb.html" class="related-card">AVS Comfort CC 24NB: термоконтейнер для авто с умным управлением</a></li><li><a href="/articles/p/pa/passat-cc-predokhraniteli.html" class="related-card">Passat CC: схема предохранителей, блоки и замена 2026</a></li><li><a href="/articles/t/te/teyes-cc3-proshivka-2025.html" class="related-card">Teyes CC3 прошивка 2026: как обновить и что нового в последней версии</a></li><li><a href="/articles/p/pa/passat-cc-r20.html" class="related-card">Passat CC R20: Характеристики, Тюнинг и История VW</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/r/ra/raspinovka-teyes-cc2.html" class="related-bottom-card"><span class="related-bottom-title">Распиновка Teyes CC2: схема подключения и нюансы установки</span><span class="related-bottom-desc">Подробная распиновка разъёмов камеры заднего вида Teyes CC2 для Volkswagen CC: цветовая схема, назна</span></a><a href="/articles/t/te/termokontejner-avs-comfort-cc-24nb.html" class="related-bottom-card"><span class="related-bottom-title">AVS Comfort CC 24NB: термоконтейнер для авто с умным управлением</span><span class="related-bottom-desc">Обзор термоконтейнера &lt;em&gt;AVS Comfort CC 24NB&lt;/em&gt;: технические характеристики, особенности установк</span></a><a href="/articles/p/pa/passat-cc-predokhraniteli.html" class="related-bottom-card"><span class="related-bottom-title">Passat CC: схема предохранителей, блоки и замена 2026</span><span class="related-bottom-desc">Где находятся предохранители в &lt;em&gt;Passat CC&lt;/em&gt; (357)? Распиновка блоков, расшифровка реле, инстру</span></a><a href="/articles/t/te/teyes-cc3-proshivka-2025.html" class="related-bottom-card"><span class="related-bottom-title">Teyes CC3 прошивка 2026: как обновить и что нового в последней версии</span><span class="related-bottom-desc">Полное руководство по обновлению прошивки Teyes CC3 в 2026 году: официальные версии, инструкции, нов</span></a><a href="/articles/p/pa/passat-cc-r20.html" class="related-bottom-card"><span class="related-bottom-title">Passat CC R20: Характеристики, Тюнинг и История VW</span><span class="related-bottom-desc">Полный обзор Volkswagen Passat CC R20. Технические характеристики, потенциал тюнинга, реальный расхо</span></a><a href="/articles/z/za/zamena-radiatora-pechki-passat-ss.html" class="related-bottom-card"><span class="related-bottom-title">Замена радиатора печки Пассат СС: пошаговая инструкция</span><span class="related-bottom-desc">Как заменить радиатор отопителя Volkswagen Passat CC без снятия торпеды. Разбор методов, выбор запча</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

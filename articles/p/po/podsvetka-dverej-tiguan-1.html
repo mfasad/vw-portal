@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>Подсветка дверей Тигуан 1: установка и настройка — VW-portal</title>
+    <meta name="description" content="Как сделать подсветку дверей Тигуан 1. Выбор LED, схема подключения, установка в штатные места и активация через CAN-шину.">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/p/po/podsvetka-dverej-tiguan-1.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Подсветка дверей Тигуан 1: установка и настройка">
+    <meta property="og:description" content="Как сделать подсветку дверей Тигуан 1. Выбор LED, схема подключения, установка в штатные места и активация через CAN-шину.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/tiguan/">Tiguan</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Подсветка дверей Тигуан 1: установка и настройка</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Подсветка дверей Тигуан 1: профессиональный монтаж</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#выбор-типа-подсветки-и-необходимого-оборудования">Выбор типа подсветки и необходимого оборудования</a></li><li><a href="#инструменты-и-подготовка-к-монтажным-работам">Инструменты и подготовка к монтажным работам</a></li><li><a href="#демонтаж-дверных-карт-тигуан-первого-поколения">Демонтаж дверных карт Тигуан первого поколения</a></li><li><a href="#схемы-подключения-и-электрические-нюансы">Схемы подключения и электрические нюансы</a></li><li><a href="#установка-светодиодных-модулей-и-лент">Установка светодиодных модулей и лент</a></li><li><a href="#проверка-работы-и-сборка-дверных-карт">Проверка работы и сборка дверных карт</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Владельцы <em>Volkswagen Tiguan</em> первого поколения часто сталкиваются с желанием добавить индивидуальности своему кроссоверу. Одним из самых эффективных способов улучшить визуальное восприятие автомобиля является модернизация освещения. <strong>Подсветка дверей Тигуан 1</strong> — это не просто декоративный элемент, но и функциональное решение, повышающее безопасность при посадке и высадке в темное время суток. Грамотно реализованная система создает ощущение премиальности, характерное для более дорогих комплектаций.</p>
+
+<p>Современный рынок автоаксессуаров предлагает множество вариантов решения этой задачи. Это может быть как простая замена ламп в плафонах, так и сложный проект с интеграцией в <em>CAN-шину</em> и управлением с брелока. Важно понимать, что вмешательство в электрику немецкого автомобиля требует точности и соблюдения полярности. Неправильный монтаж может привести к ошибкам в бортовой сети или даже выходу из строя блоков управления комфортом.</p>
+
+<p>В данной статье мы подробно разберем все этапы процесса. Вы узнаете о типах используемых светодиодов, способах их подключения и нюансах, которые часто упускают новички. Мы рассмотрим как бюджетные решения, так и профессиональные комплекты. Качество материалов и надежность соединений — это ключевые факторы долговечности любой доработки в <em>Tiguan</em>.</p>
+
+<h2 id="выбор-типа-подсветки-и-необходимого-оборудования">Выбор типа подсветки и необходимого оборудования</h2>
+
+<p>Первым шагом к созданию качественной иллюминации является выбор концепции. <strong>Подсветка порогов</strong> может быть реализована различными способами, каждый из которых имеет свои преимущества. Наиболее популярным вариантом остается использование LED-лент или готовых модулей, устанавливаемых в нижнюю часть дверной карты. Также востребованы проекторы, выводящие логотип <em>Volkswagen</em> на землю.</p>
+
+<p>При выборе источников света необходимо обращать внимание на цветовую температуру. Для создания гармоничного интерьера лучше всего подходит холодный белый или синий спектр, который сочетается со штатным освещением салона. Дешевые китайские аналоги часто имеют неприятный зеленоватый оттенок, который портит общее впечатление. <strong>RGB-подсветка</strong> позволяет менять цвета, но требует более сложной проводки и контроллера.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Использование слишком ярких светодиодов без рассеивателей может создавать слепящий эффект для водителя через боковые зеркала, что опасно в движении.</p>
+</blockquote>
+
+<p>Для реализации проекта вам потребуется не только свет, но и качественная проводка. Стандартные автомобильные провода должны иметь сечение не менее 0.75 мм² для обеспечения стабильного тока. Изоляция должна быть устойчива к перепадам температур и механическому воздействию. Не экономьте на расходных материалах, так как скрытая проводка внутри двери должна служить весь срок жизни автомобиля.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой цвет подсветки вы предпочитаете?</strong><ul><li>Белый (штатный)</li><li>Синий</li><li>Красный</li><li>RGB (меняющийся)</li><li>Зеленый</li></ul></div></div>
+
+<h2 id="инструменты-и-подготовка-к-монтажным-работам">Инструменты и подготовка к монтажным работам</h2>
+
+<p>Качественная установка невозможна без правильного инструментария. Для работы с интерьером <em>Tiguan</em> первого поколения вам понадобится набор пластиковых лопаток для снятия обшивок. Металлические инструменты использовать категорически нельзя, так как они оставляют царапины на мягком пластике и коже. Также потребуется набор отверток Torx различных размеров, так как именно такими винтами крепятся основные узлы.</p>
+
+<p>Для электрической части незаменим мультиметр. С его помощью вы сможете найти постоянный плюс, массу и сигнальные провода. Паяльник с тонким жалом или набор для пайки в труднодоступных местах позволит сделать соединения надежными. Использование скруток и изоленты в современном автомобиле недопустимо — только термоусадка и пайка обеспечивают герметичность контакта.</p>
+
+<ul>
+<li>🛠️ Набор пластиковых съемников для аккуратного демонтажа карт дверей.</li>
+<li>⚡ Мультиметр для прозвонки цепей и проверки напряжения.</li>
+<li>🔥 Паяльник, припой и качественный флюс для создания контактов.</li>
+<li>🧵 Термоусадочные трубки разных диаметров для изоляции.</li>
+</ul>
+
+<p>Перед началом работ рекомендуется отключить минусовую клемму аккумулятора. Это мера предосторожности, которая защитит электронику от случайных коротких замыканий. Даже если вы уверены в своих силах, статическое электричество или соскользнувший инструмент могут нанести ущерб блокам управления. <strong>Безопасность</strong> всегда должна быть приоритетом.</p>
+
+<div class="checklist-block"><h4>☑️ Подготовка к установке</h4><label class="check-item"><input type="checkbox"><span>Снять минусовую клемму АКБ</span></label><label class="check-item"><input type="checkbox"><span>Подготовить съемники и отвертки</span></label><label class="check-item"><input type="checkbox"><span>Проверить мультиметр</span></label><label class="check-item"><input type="checkbox"><span>Разложить схему подключения</span></label><label class="check-item"><input type="checkbox"><span>Очистить рабочие поверхности</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 5</div></div>
+
+<h2 id="демонтаж-дверных-карт-тигуан-первого-поколения">Демонтаж дверных карт Тигуан первого поколения</h2>
+
+<p>Процесс снятия дверных карт на <em>VW Tiguan 1</em> имеет свои особенности. Начинать следует с нижнего угла двери, где расположена ручка открывания. Аккуратно поддев пластиковую заглушку, вы получите доступ к винту крепления. Также винты часто скрыты под декоративными накладками в нише для рук и в районе ручки открывания двери.</p>
+
+<p>После выкручивания всех видимых крепежей необходимо отщелкнуть пистоны по периметру карты. Делать это нужно резким, но уверенным движением, используя широкую пластиковую лопатку. Характерный щелчок сообщит об успешном отсоединении. Не бойтесь приложить усилие, но контролируйте его, чтобы не сломать пластиковые направляющие пистонов.</p>
+
+<p>Когда карта освобождена от защелок, ее нельзя просто оторвать. Она держится на тросике привода ручки и разъеме динамиков. Сначала отсоединяется тросик, затем разъемы. Важно запомнить расположение всех элементов, чтобы при сборке не возникло проблем. <strong>Дверная карта</strong> — сложный узел, требующий бережного обращения.</p>
+
+<details class="faq-item"><summary>Нюансы крепления динамиков</summary><div class="faq-answer"><p>Динамики в дверях Тигуан часто крепятся на специальных пластиковых направляющих или винтах, скрытых под декоративной сеткой. Будьте осторожны при их снятии, пластик со временем становится хрупким.</p></div></details>
+
+<h2 id="схемы-подключения-и-электрические-нюансы">Схемы подключения и электрические нюансы</h2>
+
+<p>Электрическая схема подключения подсветки зависит от выбранного типа управления. Простейший вариант — запитка от габаритных огней или от провода, идущего к штатному плафону освещения. В этом случае свет будет загораться при открытии двери или включении габаритов. Более сложный вариант подразумевает использование отдельного блока управления, реагирующего на концевик двери.</p>
+
+<p>Для подключения к штатному плафону необходимо найти провод, на котором появляется плюс при открытии двери. На <em>Tiguan</em> первого поколения цветовая маркировка проводов может отличаться в зависимости от года выпуска и рынка сбыта. Поэтому reliance на цвет без проверки мультиметром — ошибка. Найдите провод, где напряжение появляется только при открытой двери.</p>
+
+<p>Если вы устанавливаете RGB-ленту, вам потребуется контроллер. Его можно спрятать внутри дверной карты, закрепив на двусторонний скотч. Питание на контроллер лучше брать через предохранитель, установленный в разрыв плюсового провода. Это защитит проводку в случае замыкания. <strong>Предохранитель</strong> — обязательный элемент любой дополнительной цепи.</p>
+
+<table>
+<thead>
+<tr>
+<th>Тип подключения</th>
+<th>Источник сигнала</th>
+<th>Сложность</th>
+<th>Функционал</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Прямое</td>
+<td>Штатный плафон</td>
+<td>Низкая</td>
+<td>Вкл/Выкл с дверью</td>
+</tr>
+<tr>
+<td>От габаритов</td>
+<td>Цепь габаритных огней</td>
+<td>Средняя</td>
+<td>Свет при парковке</td>
+</tr>
+<tr>
+<td>Контроллер</td>
+<td>Отдельный блок + концевик</td>
+<td>Высокая</td>
+<td>RGB, плавное затухание</td>
+</tr>
+</tbody>
+</table>
+
+<p>Все соединения проводов должны быть тщательно заизолированы. В дверях автомобиля высокая влажность и перепады температур, что создает агрессивную среду для контактов. Использование термоусадки с клеевым слоем обеспечивает герметичность соединения. Не оставляйте оголенных участков провода, даже если они кажутся безопасными.</p>
+
+<h2 id="установка-светодиодных-модулей-и-лент">Установка светодиодных модулей и лент</h2>
+
+<p>Монтаж самих источников света требует аккуратности. Если вы используете LED-ленту, ее необходимо приклеить в специальный паз или на подготовленную площадку в нижней части двери. Поверхность должна быть обезжирена спиртом или обезжиривателем перед приклеиванием. Это гарантирует, что лента не отклеится со временем от вибрации.</p>
+
+<p>Для проекторов логотипа в двери сверлится отверстие или используется штатное место плафона подсветки зоны ног. Важно правильно сфокусировать линзу, чтобы изображение логотипа <em>VW</em> было четким и не размывалось. Угол наклона проектора также играет роль: луч должен падать на землю под оптимальным углом, создавая эффект парения.</p>
+
+<ul>
+<li>💡 Обезжирьте поверхность перед приклеиванием ленты для надежной фиксации.</li>
+<li>📐 Проверьте угол падения света проектора до окончательного монтажа.</li>
+<li>🔌 Убедитесь, что провода не пережимаются механизмом стеклоподъемника.</li>
+</ul>
+
+<p>Проводку внутри двери необходимо закрепить стяжками к существующим жгутам. Провода не должны болтаться или тереться о металл двери при ее открытии и закрытии. Места прохода проводов через гофру (трубу между дверью и кузовом) требуют особого внимания. Используйте дополнительную защиту, чтобы избежать перетирания изоляции.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Прокладывайте новые провода параллельно штатному жгуту и фиксируйте их пластиковыми стяжками каждые 10-15 см. Это предотвратит дребезжание и перетирание изоляции о металл двери.</p></div>
+
+<h2 id="проверка-работы-и-сборка-дверных-карт">Проверка работы и сборка дверных карт</h2>
+
+<p>Прежде чем окончательно защелкивать дверные карты, необходимо провести тестовый запуск системы. Подключите аккумулятор и проверьте работу подсветки при открытии и закрытии двери. Обратите внимание на отсутствие моргания или тусклого свечения, что может указывать на плохой контакт или недостаточное сечение проводов.</p>
+
+<p>Проверьте работу стеклоподъемников и центрального замка. Убедитесь, что новые провода не мешают движению механизмов. Если все работает корректно, можно приступать к сборке. Дверная карта устанавливается в обратном порядке: сначала надевается на верхний край, затем защелкиваются пистоны по периметру.</p>
+
+<p>При закручивании винтов не прилагайте чрезмерных усилий, чтобы не сорвать резьбу в пластике. Пластик на <em>Tiguan</em> первого поколения уже не новый и может быть хрупким. После сборки протрите все поверхности и проверьте отсутствие зазоров между картой и кузовом. <strong>Качество сборки</strong> напрямую влияет на отсутствие скрипов в будущем.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Если после установки подсветки перестал работать центральный замок или стеклоподъемник, немедленно проверьте разъемы. Вероятно, какой-то коннектор был вставлен не до конца или перепутан.</p>
+</blockquote>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+
+<details>
+<summary>Сгорят ли диоды, если подключить их напрямую к аккумулятору?</summary>
+<p>Да, если они не имеют встроенного стабилизатора или резистора. Для подключения к бортовой сети 12В необходимо использовать светодиоды, предназначенные для автомобилей, или добавлять гасящие резисторы в цепь. Прямое подключение обычных LED без защиты приведет к их мгновенному выходу из строя из-за скачков напряжения.</p>
+</details>
+
+<details>
+<summary>Нужно ли вносить изменения в документы при установке подсветки?</summary>
+<p>Согласно законодательству РФ, установка дополнительного освещения, если оно не меняет цвет штатных световых приборов (фар, поворотников) и не слепит других участников движения, обычно не требует внесения изменений в конструкцию. Однако использование красного цвета спереди или синего сзади запрещено. Подсветка зоны ног и порогов, как правило, не вызывает вопросов у инспекторов, если она не мигает.</p>
+</details>
+
+<details>
+<summary>Может ли подсветка разрядить аккумулятор за ночь?</summary>
+<p>Современные светодиоды потребляют крайне мало энергии (несколько ватт). Если схема подключения корректна и свет выключается при закрытии двери, то разряд аккумулятора невозможен. Проблемы могут возникнуть только при неправильном подключении (постоянный плюс без управления), когда свет горит постоянно. В таком случае аккумулятор может сесть за 1-2 суток.</p>
+</details>
+
+<details>
+<summary>Как убрать ошибку на приборной панели после подключения?</summary>
+<p>На <em>Tiguan</em> первого поколения подключение маломощной нагрузки (LED) вместо штатных ламп может вызвать ошибку "Check Control" из-за изменения сопротивления цепи. Для устранения ошибки необходимо установить обманки (резисторы), которые имитируют нагрузку штатной лампы, или прошить блок комфорта для игнорирования проверки ламп в этой цепи.</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#выбор-типа-подсветки-и-необходимого-оборудования">Выбор типа подсветки и необходимого оборудования</a></li><li><a href="#инструменты-и-подготовка-к-монтажным-работам">Инструменты и подготовка к монтажным работам</a></li><li><a href="#демонтаж-дверных-карт-тигуан-первого-поколения">Демонтаж дверных карт Тигуан первого поколения</a></li><li><a href="#схемы-подключения-и-электрические-нюансы">Схемы подключения и электрические нюансы</a></li><li><a href="#установка-светодиодных-модулей-и-лент">Установка светодиодных модулей и лент</a></li><li><a href="#проверка-работы-и-сборка-дверных-карт">Проверка работы и сборка дверных карт</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/t/ti/tiguan-podsvetka-salona.html" class="related-card">Подсветка салона Tiguan: как выбрать, установить и настроить</a></li><li><a href="/articles/0/01/01155-oshibka-polnogo-privoda-tiguan.html" class="related-card">Ошибка 01155 Tiguan: Полный привод и раздатка</a></li><li><a href="/articles/t/ti/tiguan-2-zamena-batarejki-v-klyuche.html" class="related-card">Замена батарейки в ключе Tiguan 2: пошаговая инструкция 2026</a></li><li><a href="/articles/t/ti/tiguan-1-razmery-koles.html" class="related-card">Размеры колёс для Tiguan 1: таблица, рекомендации, подбор</a></li><li><a href="/articles/t/ti/tiguan-2-akkumulyator-kakoj.html" class="related-card">Аккумулятор для Tiguan 2: какой выбрать, параметры, советы</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/t/ti/tiguan-podsvetka-salona.html" class="related-bottom-card"><span class="related-bottom-title">Подсветка салона Tiguan: как выбрать, установить и настроить</span><span class="related-bottom-desc">Полное руководство по подсветке салона Volkswagen Tiguan: виды LED, схемы подключения, ошибки монтаж</span></a><a href="/articles/0/01/01155-oshibka-polnogo-privoda-tiguan.html" class="related-bottom-card"><span class="related-bottom-title">Ошибка 01155 Tiguan: Полный привод и раздатка</span><span class="related-bottom-desc">Детальный разбор ошибки 01155 на VW Tiguan. Причины неисправности муфты Haldex, диагностика CAN-шины</span></a><a href="/articles/t/ti/tiguan-2-zamena-batarejki-v-klyuche.html" class="related-bottom-card"><span class="related-bottom-title">Замена батарейки в ключе Tiguan 2: пошаговая инструкция 2026</span><span class="related-bottom-desc">Как самостоятельно поменять батарейку в ключе Фольксваген Тигуан 2: выбор элемента питания, разбор к</span></a><a href="/articles/t/ti/tiguan-1-razmery-koles.html" class="related-bottom-card"><span class="related-bottom-title">Размеры колёс для Tiguan 1: таблица, рекомендации, подбор</span><span class="related-bottom-desc">Официальные размеры колёс для &lt;em&gt;Volkswagen Tiguan 1&lt;/em&gt; (2007-2016): штатные параметры, допустимы</span></a><a href="/articles/t/ti/tiguan-2-akkumulyator-kakoj.html" class="related-bottom-card"><span class="related-bottom-title">Аккумулятор для Tiguan 2: какой выбрать, параметры, советы</span><span class="related-bottom-desc">Какой аккумулятор подходит для Volkswagen Tiguan 2 (2016-2026)? Размеры, емкость, полярность, бренды</span></a><a href="/articles/a/ak/aktivatsiya-adaptivnogo-kruiz-kontrolya-tiguan-2.html" class="related-bottom-card"><span class="related-bottom-title">Активация адаптивного круиз-контроля на Tiguan 2: пошаговая инструкция</span><span class="related-bottom-desc">Как включить и настроить адаптивный круиз-контроль (ACC) на Volkswagen Tiguan 2 (2016–2023). Подробн</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

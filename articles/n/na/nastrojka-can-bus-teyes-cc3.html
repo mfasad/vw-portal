@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>Настройка CAN-BUS в Teyes CC3: пошаговое руководство 2026 — VW-portal</title>
+    <meta name="description" content="Как правильно настроить CAN-BUS на мультимедийной системе Teyes CC3 для Volkswagen CC: подключение, калибровка и устранение ошибок. Инструкция с фото и советами экспертов.">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/n/na/nastrojka-can-bus-teyes-cc3.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Настройка CAN-BUS в Teyes CC3: пошаговое руководство 2026">
+    <meta property="og:description" content="Как правильно настроить CAN-BUS на мультимедийной системе Teyes CC3 для Volkswagen CC: подключение, калибровка и устранение ошибок. Инструкция с фото и советами экспертов.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/cc/">Cc</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Настройка CAN-BUS в Teyes CC3: пошаговое руководство 2026</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>CAN-BUS в Teyes CC3: полная настройка для Volkswagen CC с разбором ошибок</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#1-подготовка-к-настройке-что-нужно-знать-до-начала">1. Подготовка к настройке: что нужно знать до начала</a></li><li><a href="#2-подключение-can-bus-адаптера-схема-и-нюансы">2. Подключение CAN-BUS адаптера: схема и нюансы</a></li><li><a href="#3-настройка-параметров-can-bus-в-меню-teyes-cc3">3. Настройка параметров CAN-BUS в меню Teyes CC3</a></li><li><a href="#4-калибровка-и-тестирование-работы-can-bus">4. Калибровка и тестирование работы CAN-BUS</a></li><li><a href="#5-типичные-ошибки-и-их-устранение">5. Типичные ошибки и их устранение</a></li><li><a href="#6-обновление-прошивки-can-bus-адаптера">6. Обновление прошивки CAN-BUS адаптера</a></li><li><a href="#7-оптимизация-работы-can-bus-для-продвинутых-пользователей">7. Оптимизация работы CAN-BUS для продвинутых пользователей</a></li><li><a href="#faq-частые-вопросы-по-настройке-can-bus-в-teyes-cc3">FAQ: Частые вопросы по настройке CAN-BUS в Teyes CC3</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body"><p>Мультимедийная система <em>Teyes CC3</em> стала популярным выбором для владельцев <em>Volkswagen CC</em> благодаря широкому функционалу и поддержке Android. Однако без правильной настройки <strong>CAN-BUS адаптера</strong> вы не сможете использовать штатные кнопки руля, отображение данных с бортового компьютера или управление климатом через экран. Эта статья поможет разобраться в нюансах подключения и калибровки CAN-BUS для <em>Teyes CC3</em>, избежав типичных ошибок, которые приводят к сбоям системы.</p>
+
+<p>Мы детально рассмотрим: как определить версию CAN-шины вашего автомобиля, какие настройки отвечают за интеграцию с рулевыми кнопками, как настроить отображение данных двигателя, и что делать, если система не видит подключенные устройства. Особое внимание уделим <mark>уникальным параметрам для Volkswagen CC 2010-2017 годов, которые часто упускают в стандартных инструкциях</mark>. Если вы уже пытались настроить CAN-BUS, но столкнулись с проблемами — здесь найдете решения для 90% типичных случаев.</p>
+
+<h2 id="1-подготовка-к-настройке-что-нужно-знать-до-начала">1. Подготовка к настройке: что нужно знать до начала</h2>
+
+<p>Прежде чем приступать к настройке, убедитесь, что ваша система <em>Teyes CC3</em> совместима с CAN-BUS адаптером. Не все версии прошивок поддерживают работу с шинами данных <em>Volkswagen</em>. Проверьте:</p>
+
+<ul>
+  <li>📱 <strong>Версию прошивки</strong> (актуальная на 2026 год — <code>CC3_V4.4.8_20231215</code> или новее)</li>
+  <li>🚗 <strong>Год выпуска автомобиля</strong> (для <em>VW CC</em> критично различие между моделями до и после 2012 года)</li>
+  <li>🔌 <strong>Тип CAN-шины</strong> (<code>High-Speed CAN</code> или <code>Low-Speed CAN</code> — определяется по расположению разъемов)</li>
+</ul>
+
+<p>Для автомобилей <em>Volkswagen CC</em> 2010-2011 годов часто требуется дополнительный резистор 120 Ом в цепи CAN-BUS, так как штатная сеть не всегда корректно распознает подключенные устройства. Если у вас модель 2012+ года, этот шаг можно пропустить — современные адаптеры (например, <em>CAN-BUS Box V3.1</em>) уже имеют встроенную защиту от помех.</p>
+
+<blockquote>⚠️ <strong>Внимание:</strong> Подключение CAN-BUS адаптера к нестабилизированному источнику питания (например, прикуривателю) может привести к сбоям в работе штатной электроники. Всегда используйте <code>ACC</code> или <code>IGN</code> линии для питания!</blockquote>
+
+<p>Также подготовьте:</p>
+<ul>
+  <li>🔧 Отвертку TORX T20 для демонтажа панели</li>
+  <li>📡 Мультиметр для проверки напряжения на CAN-шине (должно быть <code>2.5В</code> в состоянии покоя)</li>
+  <li>💾 Флешку с резервной копией настроек (на случай сброса)</li>
+</ul>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой год выпуска вашего Volkswagen CC?</strong><ul><li>До 2010</li><li>2010-2011</li><li>2012-2014</li><li>2015-2017</li><li>Не знаю</li></ul></div></div>
+
+<h2 id="2-подключение-can-bus-адаптера-схема-и-нюансы">2. Подключение CAN-BUS адаптера: схема и нюансы</h2>
+
+<p>Для <em>Teyes CC3</em> используется два типа подключения CAN-BUS:</p>
+
+<ol>
+  <li><strong>Прямое подключение</strong> через разъем <code>QUADLOCK</code> (для моделей с заводской подготовкой под мультимедиа)</li>
+  <li><strong>Через переходник</strong> на <code>ISO коннектор</code> (для базовых комплектаций)</li>
+</ol>
+
+<p>Распиновка для <em>Volkswagen CC</em> (разъем <code>QUADLOCK 16-pin</code>):</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Контакт</th>
+      <th>Назначение</th>
+      <th>Цвет провода</th>
+      <th>Примечание</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>6</code></td>
+      <td>CAN-High</td>
+      <td>Оранжево-черный</td>
+      <td>Подключается к <code>CAN_H</code> адаптера</td>
+    </tr>
+    <tr>
+      <td><code>14</code></td>
+      <td>CAN-Low</td>
+      <td>Оранжево-коричневый</td>
+      <td>Подключается к <code>CAN_L</code> адаптера</td>
+    </tr>
+    <tr>
+      <td><code>7</code></td>
+      <td>ACC (12В)</td>
+      <td>Красный</td>
+      <td>Питание при включенном зажигании</td>
+    </tr>
+    <tr>
+      <td><code>4</code></td>
+      <td>GND</td>
+      <td>Коричневый</td>
+      <td>Общий минус</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Если в вашем автомобиле используется <code>Low-Speed CAN</code> (например, для управления стеклоподъемниками), потребуется дополнительный адаптер <em>CAN-LS to HS</em>. Его подключают параллельно основной шине, но с отдельным питанием от <code>IGN</code> линии.</p>
+
+<blockquote>⚠️ <strong>Внимание:</strong> При подключении CAN-BUS к <em>Teyes CC3</em> никогда не используйте скрутки! Только пайка или обжимные клеммы с термоусадкой. Плохой контакт на CAN-шине приводит к ошибкам <code>U1121</code> и <code>U1123</code> в блоке комфорта.</blockquote>
+
+<p>После подключения физических проводов:</p>
+
+<p>Прозвонить CAN-High и CAN-Low на обрыв|Измерить напряжение между CAN_H и CAN_L (должно быть 2.5В)|Проверить питание адаптера (12В на ACC)|Убедиться в отсутствии короткого замыкания на массу--></p>
+
+<h2 id="3-настройка-параметров-can-bus-в-меню-teyes-cc3">3. Настройка параметров CAN-BUS в меню Teyes CC3</h2>
+
+<p>После механического подключения необходимо настроить программную часть. Зайдите в инженерное меню <em>Teyes CC3</em>:</p>
+
+<ol>
+  <li>Нажмите и удерживайте кнопку <code>SETUP</code> на пульте 5 секунд</li>
+  <li>Введите код <code>3368</code> (для прошивок 2023 года)</li>
+  <li>Перейдите в раздел <code>CANBUS Settings</code></li>
+</ol>
+
+<p>Основные параметры для <em>Volkswagen CC</em>:</p>
+
+<ul>
+  <li>🔄 <code>CAN Type</code>: выберите <code>VW_MQB</code> (даже если у вас PQ35 платформа)</li>
+  <li>📡 <code>Baud Rate</code>: установите <code>500 kbps</code> (для High-Speed CAN)</li>
+  <li>🔌 <code>Wake-Up Line</code>: активируйте, если кнопки руля не работают при выключенном зажигании</li>
+  <li>🚗 <code>Vehicle Model</code>: выберите <code>Passat B6/B7</code> (наиболее совместимый профиль)</li>
+</ul>
+
+<p>Для корректной работы климат-контроля через экран <em>Teyes CC3</em> необходимо:</p>
+<ol>
+  <li>Включить опцию <code>Climate Control Enable</code></li>
+  <li>Установить <code>Climate CAN ID</code> на <code>0x3D1</code></li>
+  <li>Активировать <code>Auto AC Sync</code> (если у вас автоматический климат)</li>
+</ol>
+
+<p>Если после сохранения настроек кнопки руля работают некорректно (например, <code>MODE</code> не переключает источники звука), проверьте:</p>
+<ul>
+  <li>🔍 Правильность подключения <code>KEY1</code> и <code>KEY2</code> проводов к адаптеру</li>
+  <li>📋 Соответствие назначенных функций в меню <code>Steering Wheel Keys</code></li>
+  <li>🔄 Версию прошивки адаптера (обновите через <em>CAN-BUS Tool</em> если ниже <code>v1.8.5</code>)</li>
+</ul>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если после настройки перестали работать штатные часы на панели приборов, сбросьте настройки CAN-BUS до заводских и настройте заново, начиная с выбора модели автомобиля.</p></div>
+
+<h2 id="4-калибровка-и-тестирование-работы-can-bus">4. Калибровка и тестирование работы CAN-BUS</h2>
+
+<p>После сохранения настроек выполните калибровку:</p>
+
+<ol>
+  <li>Выключите зажигание на 30 секунд</li>
+  <li>Включите зажигание (не запуская двигатель)</li>
+  <li>Нажмите и удерживайте кнопку <code>MODE</code> на руле 10 секунд</li>
+  <li>Дождитесь звукового сигнала из динамиков (указывает на успешную синхронизацию)</li>
+</ol>
+
+<p>Проверьте работу следующих функций:</p>
+<table>
+  <thead>
+    <tr>
+      <th>Функция</th>
+      <th>Ожидаемое поведение</th>
+      <th>Возможная проблема</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Кнопки руля</td>
+      <td>Переключение треков, регулировка громкости</td>
+      <td>Не работают отдельные кнопки (проверьте <code>Key Mapping</code>)</td>
+    </tr>
+    <tr>
+      <td>Отображение данных</td>
+      <td>Температура двигателя, уровень топлива на экране</td>
+      <td>Некорректные значения (проверьте <code>CAN ID</code> для датчиков)</td>
+    </tr>
+    <tr>
+      <td>Климат-контроль</td>
+      <td>Регулировка температуры и скорости вентилятора с экрана</td>
+      <td>Не синхронизируется с физическими регуляторами (обновите прошивку адаптера)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Если данные с бортового компьютера отображаются с задержкой (более 2 секунд), уменьшите <code>CAN Polling Interval</code> до <code>200ms</code> в инженерном меню. Однако это может увеличить нагрузку на шину, поэтому не рекомендуется для автомобилей с большим количеством электронных блоков.</p>
+
+<details class="faq-item"><summary>Что делать если CAN-BUS адаптер греется?</summary><div class="faq-answer"><p>
+<p>Сильный нагрев адаптера (более 60°C) указывает на:</p>
+<p>1) Короткое замыкание в CAN-шине (проверьте мультиметром сопротивление между CAN_H и CAN_L — должно быть 60 Ом)</p>
+<p>2) Несовместимую версию прошивки (откатитесь на v1.7.9 для старых автомобилей)</p>
+<p>3) Проблемы с питанием (проверьте напряжение на линии ACC — должно быть 12В ±0.5В)</p></div></details></p>
+
+<h2 id="5-типичные-ошибки-и-их-устранение">5. Типичные ошибки и их устранение</h2>
+
+<p>Даже при правильном подключении могут возникать проблемы. Рассмотрим наиболее частые:</p>
+
+<ul>
+  <li>🚨 <strong>Ошибка <code>CAN Bus Error (0x04)</code></strong>: указывает на проблемы с физическим подключением. Проверьте целостность проводов и правильность распиновки.</li>
+  <li>⚠️ <strong>Кнопки руля работают только при включенном зажигании</strong>: активируйте <code>Permanent CAN Wake-Up</code> в настройках адаптера.</li>
+  <li>📉 <strong>Данные с датчиков обновляются раз в 5-10 секунд</strong>: увеличьте приоритет CAN-сообщений в меню <code>Advanced CAN Settings</code>.</li>
+  <li>🔊 <strong>Посторонние звуки при нажатии кнопок руля</strong>: отключите <code>Key Beep</code> в настройках звука.</li>
+</ul>
+
+<p>Для диагностики сложных проблем используйте <em>CAN-BUS анализатор</em> (например, <em>USBCAN</em> или <em>PCAN-USB</em>). Подключите его параллельно адаптеру и проверьте:</p>
+<ul>
+  <li>📊 Наличие трафика на шине (должно быть 50-200 сообщений в секунду)</li>
+  <li>🔍 Корректность идентификаторов (<code>ID</code>) для вашей модели автомобиля</li>
+  <li>⚡ Отсутствие ошибок <code>CRC</code> или <code>Stuff Error</code></li>
+</ul>
+
+<p>Если в логах анализатора вы видите повторяющиеся ошибки <code>CAN ERROR PASSIVE</code>, это указывает на проблемы с терминацией шины. В этом случае:</p>
+<ol>
+  <li>Проверьте наличие резисторов 120 Ом на обоих концах CAN-шины</li>
+  <li>Убедитесь, что длина проводов не превышает 2 метров</li>
+  <li>Замените экран провода (если используется неэкранированный кабель)</li>
+</ol>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Более 70% проблем с CAN-BUS в Teyes CC3 связаны с некорректной терминацией шины или конфликтом идентификаторов сообщений. Всегда начинайте диагностику с проверки физического уровня!</p></div>
+
+<h2 id="6-обновление-прошивки-can-bus-адаптера">6. Обновление прошивки CAN-BUS адаптера</h2>
+
+<p>Если ваш адаптер работает нестабильно, возможно, требуется обновление прошивки. Для <em>Teyes CC3</em> рекомендуется версия <code>v1.8.5</code> или новее. Инструкция по обновлению:</p>
+
+<ol>
+  <li>Скачайте прошивку с <a href="https://teyes.ru/support" target="_blank">официального сайта Teyes</a> (раздел <code>CAN-BUS Firmware</code>)</li>
+  <li>Распакуйте архив и скопируйте файл <code>canbox.bin</code> на пустую флешку (FAT32)</li>
+  <li>Вставьте флешку в USB-порт <em>Teyes CC3</em></li>
+  <li>Зажмите кнопку <code>RESET</code> на адаптере и удерживайте 5 секунд</li>
+  <li>Дождитесь звукового сигнала (3 коротких писка) и сообщения <code>Update Success</code> на экране</li>
+</ol>
+
+<p>После обновления:</p>
+<ul>
+  <li>🔄 Выполните сброс настроек CAN-BUS до заводских</li>
+  <li>📋 Повторноconfigure настройки для вашей модели автомобиля</li>
+  <li>🚗 Проведите тестовый заезд для проверки стабильности</li>
+</ul>
+
+<blockquote>⚠️ <strong>Внимание:</strong> Не прерывайте процесс обновления! Если адаптер завис на этапе <code>Erasing Flash</code>, подождите 10 минут. Если по истечении этого времени ничего не происходит — отключите питание на 30 секунд и повторите процедуру.</blockquote>
+
+<p>Для адаптеров старше 2020 года выпуска может потребоваться ручная прошивка через <em>ST-Link</em>. В этом случае:</p>
+<ol>
+  <li>Подключите <em>ST-Link</em> к разъему <code>SWD</code> на плате адаптера</li>
+  <li>Запустите <em>ST-Link Utility</em> и выберите файл прошивки</li>
+  <li>Нажмите <code>Target → Program & Verify</code></li>
+</ol>
+
+<h2 id="7-оптимизация-работы-can-bus-для-продвинутых-пользователей">7. Оптимизация работы CAN-BUS для продвинутых пользователей</h2>
+
+<p>Если вы хотите получить максимальную функциональность от <em>Teyes CC3</em>, рассмотрите следующие доработки:</p>
+
+<ul>
+  <li>📊 <strong>Кастомизация CAN-сообщений</strong>: с помощью <em>CAN-Do</em> или <em>SavvyCAN</em> можно переназначить идентификаторы для отображения дополнительных параметров (например, давление турбины или угол опережения зажигания)</li>
+  <li>🔄 <strong>Интеграция с OBD2</strong>: подключите <em>ELM327</em> адаптер для расширенной диагностики и отображения ошибок двигателя прямо на экране мультимедиа</li>
+  <li>🎛️ <strong>Настройка пользовательских кнопок</strong>: в прошивках <code>v4.4.8+</code> появилась возможность назначать макросы на длинное нажатие кнопок руля (например, запуск голосового помощника)</li>
+</ul>
+
+<p>Для реализации кастомизации CAN-сообщений:</p>
+<ol>
+  <li>Подключите <em>CAN-адаптер</em> к ПК</li>
+  <li>Запустите <em>SavvyCAN</em> и запишите лог работы штатной системы</li>
+  <li>Идентифицируйте нужные <code>CAN ID</code> и <code>Data Bytes</code></li>
+  <li>Отредактируйте файл конфигурации <code>can_config.ini</code> на флешке</li>
+  <li>Загрузите новый конфиг через инженерное меню</li>
+</ol>
+
+<p>Пример конфигурации для отображения давления турбины (для двигателей <code>2.0 TSI</code>):</p>
+<pre><code>[CAN_3D1]
+<p>Description=Boost Pressure</p>
+<p>ID=0x3D1</p>
+<p>Byte=4</p>
+<p>Formula=(x*0.07)-100</p>
+<p>Unit=kPa</code></pre></p>
+
+<p>Для интеграции с <em>OBD2</em>:</p>
+<ul>
+  <li>🔌 Подключите <em>ELM327</em> к <code>OBD-II</code> разъему автомобиля</li>
+  <li>📱 Установите приложение <em>Torque Pro</em> или <em>OBD Auto Doctor</em></li>
+  <li>🔗 В настройках <em>Teyes CC3</em> активируйте <code>OBD2 Data Sharing</code></li>
+  <li>📊 Настройте виджеты для отображения параметров на главном экране</li>
+</ul>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Для двигателей 1.8 TSI и 2.0 TSI в Volkswagen CC можно активировать отображение давления наддува, температуры интеркулера и коррекции топливоподачи через кастомизированные CAN-сообщения. Это требует ручного редактирования конфигурационного файла!</p></div>
+
+<h2 id="faq-частые-вопросы-по-настройке-can-bus-в-teyes-cc3">FAQ: Частые вопросы по настройке CAN-BUS в Teyes CC3</h2>
+
+<details>
+  <summary>❓ После настройки CAN-BUS перестали работать стеклоподъемники. Что делать?</summary>
+  <p>Эта проблема возникает из-за конфликта на <code>Low-Speed CAN</code> шине. Решения:</p>
+  <ol>
+    <li>Отключите опцию <code>Comfort CAN Enable</code> в настройках адаптера</li>
+    <li>Установите резистор 120 Ом между <code>CAN_LS_H</code> и <code>CAN_LS_L</code></li>
+    <li>Обновите прошивку адаптера до версии <code>v1.8.5+</code>, где исправлена эта проблема</li>
+  </ol>
+  <p>Если проблема остается — используйте отдельный адаптер для <code>Low-Speed CAN</code> с гальванической развязкой.</p>
+</details>
+
+<details>
+  <summary>❓ Можно ли подключить CAN-BUS адаптер к Teyes CC3 без пайки?</summary>
+  <p>Да, но с оговорками:</p>
+  <ul>
+    <li>🔌 Для <code>High-Speed CAN</code> можно использовать обжимные клеммы <em>DuPont</em> с термоусадкой</li>
+    <li>⚠️ Для <code>Low-Speed CAN</code> пайка обязательна — этот канал более чувствителен к помехам</li>
+    <li>🛠️ В любом случае избегайте "скруток" — они приведут к сбоям через 1-2 месяца</li>
+  </ul>
+  <p>Для временного подключения (например, для тестирования) можно использовать разъемы <em>T-Tap</em>, но не оставляйте их надолго.</p>
+</details>
+
+<details>
+  <summary>❓ Как сбросить настройки CAN-BUS до заводских?</summary>
+  <p>Выполните следующие шаги:</p>
+  <ol>
+    <li>Зайдите в инженерное меню (<code>SETUP → 3368</code>)</li>
+    <li>Перейдите в <code>CANBUS Settings → Restore Defaults</code></li>
+    <li>Подтвердите сброс (код <code>1234</code>)</li>
+    <li>Выключите зажигание на 30 секунд</li>
+    <li>Повторноconfigure настройки для вашей модели автомобиля</li>
+  </ol>
+  <p>Если после сброса адаптер не определяется — проверьте питание и целостность CAN-шины.</p>
+</details>
+
+<details>
+  <summary>❓ Почему после обновления прошивки перестали работать некоторые функции?</summary>
+  <p>Это типичная проблема при обновлении на несовместимую версию. Решения:</p>
+  <ul>
+    <li>🔙 Откатитесь на предыдущую версию прошивки (скачайте с <a href="https://teyes.ru/firmware/archive" target="_blank">архива</a>)</li>
+    <li>📋 Проверьте соответствие версии прошивки адаптера и основного ПО <em>Teyes CC3</em></li>
+    <li>🔧 Выполните полный сброс настроек CAN-BUS и настройте заново</li>
+  </ul>
+  <p>Для прошивок <code>v4.4.8+</code> требуется адаптер с версией <code>v1.8.5+</code>. Если ваш адаптер старше — его нужно прошить вручную через <em>ST-Link</em>.</p>
+</details>
+
+<details>
+  <summary>❓ Можно ли подключить CAN-BUS адаптер от другой модели Teyes?</summary>
+  <p>Теоретически да, но с оговорками:</p>
+  <ul>
+    <li>🔄 Адаптеры от <em>Teyes CC2</em> и <em>CC3 Plus</em> совместимы, но требуют прошивки <code>v1.7.9+</code></li>
+    <li>⚠️ Адаптеры от <em>Teyes для Toyota</em> или <em>BMW</em> не подойдут — различаются схемы терминации</li>
+    <li>📌 Для адаптеров от <em>Teyes CC1</em> нужно доработать схему питания (добавить стабилизатор на 5В)</li>
+  </ul>
+  <p>Лучше использовать "родной" адаптер — это избавит от проблем с совместимостью и нестабильной работой.</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#1-подготовка-к-настройке-что-нужно-знать-до-начала">1. Подготовка к настройке: что нужно знать до начала</a></li><li><a href="#2-подключение-can-bus-адаптера-схема-и-нюансы">2. Подключение CAN-BUS адаптера: схема и нюансы</a></li><li><a href="#3-настройка-параметров-can-bus-в-меню-teyes-cc3">3. Настройка параметров CAN-BUS в меню Teyes CC3</a></li><li><a href="#4-калибровка-и-тестирование-работы-can-bus">4. Калибровка и тестирование работы CAN-BUS</a></li><li><a href="#5-типичные-ошибки-и-их-устранение">5. Типичные ошибки и их устранение</a></li><li><a href="#6-обновление-прошивки-can-bus-адаптера">6. Обновление прошивки CAN-BUS адаптера</a></li><li><a href="#7-оптимизация-работы-can-bus-для-продвинутых-пользователей">7. Оптимизация работы CAN-BUS для продвинутых пользователей</a></li><li><a href="#faq-частые-вопросы-по-настройке-can-bus-в-teyes-cc3">FAQ: Частые вопросы по настройке CAN-BUS в Teyes CC3</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/d/dl/dlina-volkswagen-passat-cc.html" class="related-card">Длина Volkswagen Passat CC: габариты, сравнение с конкурентами и нюансы выбора</a></li><li><a href="/articles/o/ob/oboi-teyes-cc3-2k.html" class="related-card">Teyes CC3 2K: обзор, настройка и секреты установки в 2026 году</a></li><li><a href="/articles/n/na/nastrojka-radio-na-teyes-cc3.html" class="related-card">Как настроить радио на Teyes CC3: пошаговая инструкция 2026</a></li><li><a href="/articles/f/fo/folksvagen-passat-ss-klirens.html" class="related-card">Фольксваген Пассат CC клиренс: реальный дорожный просвет и замеры</a></li><li><a href="/articles/t/te/teyes-cc3-2k-nastrojka-zadnej-kamery.html" class="related-card">Teyes CC3 2K: настройка задней камеры за 5 шагов (2026)</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/d/dl/dlina-volkswagen-passat-cc.html" class="related-bottom-card"><span class="related-bottom-title">Длина Volkswagen Passat CC: габариты, сравнение с конкурентами и нюансы выбора</span><span class="related-bottom-desc">Подробный разбор длины и габаритов &lt;em&gt;Volkswagen Passat CC&lt;/em&gt; всех поколений. Сравнение с конкуре</span></a><a href="/articles/o/ob/oboi-teyes-cc3-2k.html" class="related-bottom-card"><span class="related-bottom-title">Teyes CC3 2K: обзор, настройка и секреты установки в 2026 году</span><span class="related-bottom-desc">Подробный гайд по &lt;em&gt;обоям Teyes CC3 2K&lt;/em&gt;: как выбрать, установить и оптимизировать под Android </span></a><a href="/articles/n/na/nastrojka-radio-na-teyes-cc3.html" class="related-bottom-card"><span class="related-bottom-title">Как настроить радио на Teyes CC3: пошаговая инструкция 2026</span><span class="related-bottom-desc">Детальное руководство по настройке FM/AM радио на мультимедиа Teyes CC3: поиск станций, ручной ввод,</span></a><a href="/articles/f/fo/folksvagen-passat-ss-klirens.html" class="related-bottom-card"><span class="related-bottom-title">Фольксваген Пассат CC клиренс: реальный дорожный просвет и замеры</span><span class="related-bottom-desc">Узнайте точный клиренс Volkswagen Passat CC. Реальные замеры дорожного просвета, влияние шин и сравн</span></a><a href="/articles/t/te/teyes-cc3-2k-nastrojka-zadnej-kamery.html" class="related-bottom-card"><span class="related-bottom-title">Teyes CC3 2K: настройка задней камеры за 5 шагов (2026)</span><span class="related-bottom-desc">Пошаговая инструкция по подключению и настройке задней камеры на &lt;em&gt;Teyes CC3 2K&lt;/em&gt; с разбором ош</span></a><a href="/articles/f/fo/foto-folksvagen-tsts.html" class="related-bottom-card"><span class="related-bottom-title">Фото Volkswagen CC: 100+ реальных изображений с описанием и советами</span><span class="related-bottom-desc">Ищете качественные фото &lt;em&gt;Volkswagen CC&lt;/em&gt;? У нас 100+ реальных снимков с разных ракурсов, описа</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

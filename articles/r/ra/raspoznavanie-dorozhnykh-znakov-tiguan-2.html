@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>Распознавание дорожных знаков в Tiguan 2: как работает и как настроить — VW-portal</title>
+    <meta name="description" content="Подробный гайд по системе распознавания дорожных знаков в Volkswagen Tiguan 2: принципы работы, настройка, ограничения и советы по эксплуатации.">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/r/ra/raspoznavanie-dorozhnykh-znakov-tiguan-2.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Распознавание дорожных знаков в Tiguan 2: как работает и как настроить">
+    <meta property="og:description" content="Подробный гайд по системе распознавания дорожных знаков в Volkswagen Tiguan 2: принципы работы, настройка, ограничения и советы по эксплуатации.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/tiguan/">Tiguan</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Распознавание дорожных знаков в Tiguan 2: как работает и как настроить</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Распознавание дорожных знаков в Volkswagen Tiguan 2: полное руководство</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#как-работает-система-распознавания-знаков-в-tiguan-2">Как работает система распознавания знаков в Tiguan 2</a></li><li><a href="#какие-дорожные-знаки-распознаёт-tiguan-2">Какие дорожные знаки распознаёт Tiguan 2</a></li><li><a href="#настройка-системы-распознавания-знаков">Настройка системы распознавания знаков</a></li><li><a href="#типичные-ошибки-и-неисправности-tsr-в-tiguan-2">Типичные ошибки и неисправности TSR в Tiguan 2</a></li><li><a href="#обновление-программного-обеспечения-для-tsr">Обновление программного обеспечения для TSR</a></li><li><a href="#сравнение-tsr-в-tiguan-2-и-других-моделях-volkswagen">Сравнение TSR в Tiguan 2 и других моделях Volkswagen</a></li><li><a href="#практические-советы-по-использованию-tsr">Практические советы по использованию TSR</a></li><li><a href="#faq-частые-вопросы-о-распознавании-знаков-в-tiguan-2">FAQ: Частые вопросы о распознавании знаков в Tiguan 2</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body"><p>Система распознавания дорожных знаков (<strong>Traffic Sign Recognition, TSR</strong>) в <em>Volkswagen Tiguan 2</em> (2016–2023 гг.) стала одним из ключевых элементов помощи водителю. Она не только считывает знаки ограничения скорости, но и адаптирует работу других систем автомобиля — например, <strong>круиз-контроля</strong> или <strong>предупреждения о превышении скорости</strong>. Однако многие владельцы <em>Tiguan</em> до сих пор не понимают, как эта система работает на практике, какие у неё есть ограничения и как её правильно настроить.</p>
+
+<p>В этой статье мы разберёмся, как <strong>TSR</strong> взаимодействует с камерами и датчиками автомобиля, какие знаки она распознаёт (а какие — игнорирует), и почему иногда система выдаёт некорректные данные. Также вы узнаете, как обновить программное обеспечение для улучшения точности распознавания и что делать, если знаки отображаются с ошибками. Особое внимание уделим <mark>уникальной особенности <em>Tiguan 2</em>: системе может потребоваться до 30 секунд на "обучение" после запуска двигателя, чтобы начать корректно считывать знаки</mark>.</p>
+
+<h2 id="как-работает-система-распознавания-знаков-в-tiguan-2">Как работает система распознавания знаков в Tiguan 2</h2>
+
+<p>В основе <strong>TSR</strong> лежит фронтальная камера, установленная за ветровым стеклом рядом с зеркалом заднего вида. Она анализирует дорожную обстановку в реальном времени, сравнивая обнаруженные знаки с базой данных. Важно понимать, что система не просто "видит" знак — она учитывает контекст:</p>
+
+<ul>
+  <li>🔍 <strong>Тип дороги</strong>: на автомагистралях приоритет отдаётся знакам <code>130 км/ч</code>, даже если камера временно их не распознаёт.</li>
+  <li>📏 <strong>Расстояние до знака</strong>: если знак находится слишком далеко (более 50 м), система может его проигнорировать.</li>
+  <li>🌓 <strong>Освещение</strong>: в сумерках или при ярком солнце точность падает на 20–30%.</li>
+  <li>🚗 <strong>Движение других автомобилей</strong>: если знак закрыт грузовиком, <em>Tiguan 2</em> использует данные с навигации (если она подключена).</li>
+</ul>
+
+<p>Интересный факт: в <em>Tiguan 2</em> с <code>MIB2</code> (инфотейнмент второго поколения) система распознавания знаков интегрирована с <strong>картами Here</strong>. Это значит, что если камера не увидела знак, автомобиль может взять ограничение скорости из базы навигации. Однако это работает только при активном маршруте.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какую версию Tiguan 2 вы водите?</strong><ul><li>2016–2018 (до рестайлинга)</li><li>2019–2020 (рестайлинг)</li><li>2021–2023 (последние выпуски)</li><li>Не знаю</li></ul></div></div>
+
+<h2 id="какие-дорожные-знаки-распознаёт-tiguan-2">Какие дорожные знаки распознаёт Tiguan 2</h2>
+
+<p>Конкретный список поддерживаемых знаков зависит от года выпуска и комплектации. Базовая версия <strong>TSR</strong> в <em>Tiguan 2</em> распознаёт:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Тип знака</th>
+      <th>Примеры</th>
+      <th>Особенности распознавания</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Ограничение скорости</td>
+      <td><code>20</code>, <code>50</code>, <code>80</code>, <code>110</code>, <code>130</code></td>
+      <td>Распознаёт временные знаки (жёлтый фон) только в дневное время</td>
+    </tr>
+    <tr>
+      <td>Запрещающие знаки</td>
+      <td><code>Обгон запрещён</code>, <code>Стоянка запрещена</code></td>
+      <td>Игнорирует знаки с дополнительными табличками (например, "по чётным дням")</td>
+    </tr>
+    <tr>
+      <td>Предупреждающие знаки</td>
+      <td><code>Пешеходный переход</code>, <code>Опасный поворот</code></td>
+      <td>Отображаются только в <code>Virtual Cockpit</code> (если установлен)</td>
+    </tr>
+    <tr>
+      <td>Знаки приоритета</td>
+      <td><code>Уступи дорогу</code>, <code>Главная дорога</code></td>
+      <td>Работает только при скорости ниже <code>60 км/ч</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Важно: система <strong>не распознаёт</strong> знаки, установленные на временных стойках (например, при ремонте дорог), а также знаки с надписями (<code>"Зона"</code>, <code>"Конец зоны"</code>). Кроме того, в <em>Tiguan 2</em> до 2019 года отсутствует поддержка электронных табло с изменяемой информацией.</p>
+
+<blockquote>⚠️ <strong>Внимание:</strong> Если на дороге установлен знак <code>40 км/ч</code> с табличкой <code>"Влажное покрытие"</code>, система его проигнорирует — она не учитывает погодные условия при распознавании.</blockquote>
+
+<h2 id="настройка-системы-распознавания-знаков">Настройка системы распознавания знаков</h2>
+
+<p>По умолчанию <strong>TSR</strong> в <em>Tiguan 2</em> активирована, но её параметры можно изменить через меню <code>Настройки → Водитель → Помощь при вождении → Распознавание дорожных знаков</code>. Здесь доступны опции:</p>
+
+<ul>
+  <li>🔄 <strong>Автоматическое ограничение скорости</strong>: привязывает адаптивный круиз-контроль к распознанным знакам.</li>
+  <li>🔔 <strong>Звуковое предупреждение</strong>: сигнал при превышении скорости (порог настраивается отдельно).</li>
+  <li>📊 <strong>Отображение в HUD</strong>: показывает знаки на лобовом стекле (только с опцией <code>Head-Up Display</code>).</li>
+  <li>🚫 <strong>Игнорировать знаки на парковках</strong>: полезно для городской эксплуатации.</li>
+</ul>
+
+<p>Для точной настройки рекомендуется:</p>
+<ol>
+  <li>Обновить карты <strong>Here</strong> до последней версии (через <code>VW Car-Net</code> или дилерский центр).</li>
+  <li>Откалибровать камеру после замены лобового стекла (процедура занимает ~10 минут у официального дилера).</li>
+  <li>Вручную сбросить настройки, если система выдаёт ошибку <code>"Sign Recognition Fault"</code> (через <code>Настройки → Система → Сброс</code>).</li>
+</ol>
+
+
+<p>Очистить лобовое стекло от грязи и наклеек|</p>
+<p>Убедиться, что перед автомобилем нет препятствий (расстояние не менее 5 м)|</p>
+<p>Включить зажигание, но не запускать двигатель|</p>
+<p>Следовать инструкциям на экране мультимедиа--></p>
+
+<p>Совет: если после обновления прошивки знаки перестали распознаваться, попробуйте отключить и снова включить систему через <code>Настройки → Водитель → Сброс помощников</code>. Это часто решает проблемы с "зависанием" камеры.</p>
+
+<h2 id="типичные-ошибки-и-неисправности-tsr-в-tiguan-2">Типичные ошибки и неисправности TSR в Tiguan 2</h2>
+
+<p>Даже в исправном автомобиле система распознавания знаков может работать некорректно. Рассмотрим наиболее частые проблемы и их причины:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Проблема</th>
+      <th>Возможная причина</th>
+      <th>Решение</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Знаки не отображаются</td>
+      <td>Загрязнение камеры или лобового стекла</td>
+      <td>Очистить оптику спиртом, проверить герметичность уплотнителя</td>
+    </tr>
+    <tr>
+      <td>Некорректные ограничения скорости</td>
+      <td>Устаревшая версия ПО или карт</td>
+      <td>Обновить через <code>VW Car-Net</code> или у дилера</td>
+    </tr>
+    <tr>
+      <td>Система "зависает"</td>
+      <td>Перегрев камеры (часто летом)</td>
+      <td>Дать автомобилю остыть 10–15 минут</td>
+    </tr>
+    <tr>
+      <td>Ошибка <code>"Camera Malfunction"</code></td>
+      <td>Повреждение разъёмов или кабелей</td>
+      <td>Диагностика у официального дилера</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Особое внимание стоит уделить <strong>ложным срабатываниям</strong>. Например, <em>Tiguan 2</em> иногда принимает за знаки:</p>
+<ul>
+  <li>📛 Рекламные баннеры с цифрами (<code>"50%"</code> может восприняться как <code>50 км/ч</code>).</li>
+  <li>🚧 Разметку на асфальте (например, надпись <code>"STOP"</code> на перекрёстке).</li>
+  <li>📸 Отражения знаков в витринах магазинов.</li>
+</ul>
+
+<blockquote>⚠️ <strong>Внимание:</strong> Если после мойки высоким давлением система перестала работать, проверьте целостность уплотнительной резины камеры. Вода, попавшая внутрь блока, может вызвать коррозию контактов.</blockquote>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>При движении по незнакомому маршруту сравнивайте показания TSR с навигацией — это поможет выявить системные ошибки распознавания.</p></div>
+
+<h2 id="обновление-программного-обеспечения-для-tsr">Обновление программного обеспечения для TSR</h2>
+
+<p>Точность распознавания знаков напрямую зависит от версии прошивки. В <em>Tiguan 2</em> обновления для <strong>TSR</strong> выходят раз в 6–12 месяцев и включают:</p>
+<ul>
+  <li>🗺️ Базу дорожных знаков (актуальна для стран ЕС, России, США).</li>
+  <li>🤖 Алгоритмы машинного обучения для лучшего распознавания в плохих погодных условиях.</li>
+  <li>🚗 Интеграцию с другими системами помощи водителю (<strong>Lane Assist</strong>, <strong>ACC</strong>).</li>
+</ul>
+
+<p>Обновить ПО можно тремя способами:</p>
+<ol>
+  <li><strong>Через VW Car-Net</strong> (требуется подключение к Wi-Fi или мобильному интернету).</li>
+  <li><strong>У официального дилера</strong> (платно, но с гарантией).</li>
+  <li><strong>Самостоятельно</strong> через USB-накопитель (файлы прошивки скачиваются с сайта <code>vw.com</code> по VIN-номеру).</li>
+</ol>
+
+<p>Важно: при самостоятельном обновлении используйте только <strong>оригинальные файлы</strong> от Volkswagen. Прошивки от сторонних разработчиков могут привести к <code>потере гарантии</code> или <code>некорректной работе камеры</code>.</p>
+
+<details class="faq-item"><summary>Что будет если прервать обновление?</summary><div class="faq-answer"><p>
+<p>Если процесс обновления прервать (например, вынуть USB-накопитель или выключить зажигание), система TSR может перестать запускаться. В этом случае потребуется полный сброс через дилерское оборудование (стоимость ~5 000 руб.).</p></div></details></p>
+
+<h2 id="сравнение-tsr-в-tiguan-2-и-других-моделях-volkswagen">Сравнение TSR в Tiguan 2 и других моделях Volkswagen</h2>
+
+<p>Система распознавания знаков в <em>Tiguan 2</em> унаследовала многие решения от <em>Passat B8</em> и <em>Golf Mk7</em>, но имеет несколько уникальных особенностей:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Параметр</th>
+      <th>Tiguan 2 (2016–2023)</th>
+      <th>Passat B8</th>
+      <th>Golf Mk7</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Количество распознаваемых знаков</td>
+      <td>12 типов</td>
+      <td>15 типов</td>
+      <td>10 типов</td>
+    </tr>
+    <tr>
+      <td>Интеграция с навигацией</td>
+      <td>Да (Here Maps)</td>
+      <td>Да (Google Maps)</td>
+      <td>Нет</td>
+    </tr>
+    <tr>
+      <td>Работа при выключенном двигателе</td>
+      <td>Да (до 5 минут)</td>
+      <td>Нет</td>
+      <td>Нет</td>
+    </tr>
+    <tr>
+      <td>Поддержка электронных табло</td>
+      <td>С 2020 года</td>
+      <td>С 2018 года</td>
+      <td>Нет</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Главное преимущество <em>Tiguan 2</em> — <strong>адаптивность</strong>. Например, если вы часто ездите по одному маршруту, система "запоминает" типичные знаки и быстрее на них реагирует. В <em>Passat B8</em> такого нет — там приоритет отдаётся данным с камеры.</p>
+
+<p>А вот по точности распознавания в дождь <em>Tiguan 2</em> проигрывает <em>Touareg 3</em>, где используется камера с инфракрасной подсветкой. В сильный ливень ошибки <strong>TSR</strong> в <em>Tiguan</em> могут достигать 40%.</p>
+
+<h2 id="практические-советы-по-использованию-tsr">Практические советы по использованию TSR</h2>
+
+<p>Чтобы система распознавания знаков работала максимально эффективно, следуйте этим рекомендациям:</p>
+
+<ul>
+  <li>🧹 <strong>Регулярно очищайте камеру</strong> (раз в 2 недели) мягкой тряпкой без ворса. Не используйте агрессивные моющие средства!</li>
+  <li>🔧 <strong>Проверяйте угол наклона камеры</strong> после ремонта или ДТП. Даже небольшое смещение на 2–3° приводит к ошибкам.</li>
+  <li>📱 <strong>Обновляйте карты</strong> не реже раза в год. Устаревшие данные могут конфликтовать с распознанными знаками.</li>
+  <li>⚡ <strong>Следите за напряжением бортовой сети</strong>. При просадках ниже <code>11.8 В</code> система может отключаться.</li>
+</ul>
+
+<p>Если вы часто ездите за границу, учтите: <strong>TSR</strong> в <em>Tiguan 2</em> по умолчанию настроена на стандарты страны первого владельца. Например, если автомобиль покупался в Германии, а вы ездите в России, система может не распознавать местные знаки <code>"Платная парковка"</code> или <code>"Велосипедная зона"</code>.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Для поездок за рубежом рекомендуется вручную переключать регион в настройках TSR (меню <code>Настройки → Водитель → Регион</code>).</p></div>
+
+<p>Ещё один лайфхак: если вы заметили, что система постоянно ошибается на одном и том же знаке (например, принимает <code>70 км/ч</code> за <code>100 км/ч</code>), можно вручную добавить его в "чёрный список" через инженерное меню. Для этого:</p>
+<ol>
+  <li>Включите зажигание, но не запускайте двигатель.</li>
+  <li>Нажмите и удерживайте <code>MENU</code> + <code>OK</code> на руле в течение 10 секунд.</li>
+  <li>В инженерном меню выберите <code>Driver Assistance → TSR → Exclusion List</code>.</li>
+  <li>Добавьте проблемный знак по его коду (список кодов есть в мануале).</li>
+</ol>
+
+<h2 id="faq-частые-вопросы-о-распознавании-знаков-в-tiguan-2">FAQ: Частые вопросы о распознавании знаков в Tiguan 2</h2>
+
+<details>
+  <summary>Можно ли отключить звуковое оповещение о знаках, но оставить их отображение?</summary>
+  <p>Да. Перейдите в <code>Настройки → Водитель → Помощь при вождении → Распознавание дорожных знаков → Звуковые сигналы</code> и деактивируйте опцию. Знаки при этом будут по-прежнему отображаться в <code>Virtual Cockpit</code> или на приборной панели.</p>
+</details>
+
+<details>
+  <summary>Почему система показывает знак <code>60 км/ч</code>, хотя на дороге <code>80 км/ч</code>?</summary>
+  <p>Это типичная ошибка, если:</p>
+  <ul>
+    <li>Камера загрязнена или закрыта снегом.</li>
+    <li>Знак установлен на кривой дороге, и система его "недовидела".</li>
+    <li>В навигации указано устаревшее ограничение (например, после изменения ПДД).</li>
+  </ul>
+  <p>Решение: вручную сбросьте показания, нажав кнопку <code>RESET</code> на руле (если она есть в вашей комплектации).</p>
+</details>
+
+<details>
+  <summary>Работает ли TSR ночью?</summary>
+  <p>Да, но с ограничениями:</p>
+  <ul>
+    <li>Точность падает на 30–50% из-за недостаточной освещённости.</li>
+    <li>Система лучше распознаёт знаки с подсветкой.</li>
+    <li>В туман или при слепящем свете фар встречных машин TSR может полностью отключаться.</li>
+  </ul>
+  <p>Совет: включите <code>автоматический свет фар</code> — это улучшает видимость для камеры.</p>
+</details>
+
+<details>
+  <summary>Можно ли доустановить TSR, если её не было в базовой комплектации?</summary>
+  <p>Технически да, но это потребует:</p>
+  <ul>
+    <li>Покупки и установки камеры (артикул <code>5Q0-980-653</code> для <em>Tiguan 2</code>).</li>
+    <li>Прошивки блока управления <code>J740</code> (только у официального дилера).</li>
+    <li>Активации опции через <code>ODIS</code> или <code>VCDS</code>.</li>
+  </ul>
+  <p>Стоимость такого апгрейда — от 80 000 до 120 000 рублей.</p>
+</details>
+
+<details>
+  <summary>Почему после замены лобового стекла перестала работать камера?</summary>
+  <p>Причины могут быть следующие:</p>
+  <ul>
+    <li>Неправильная установка стекла (нарушено положение камеры).</li>
+    <li>Повреждение разъёмов при демонтаже.</li>
+    <li>Отсутствие калибровки после замены.</li>
+  </ul>
+  <p>Решение: обратитесь к дилеру для <strong>статической калибровки</em> (процедура занимает ~30 минут). Самостоятельно отрегулировать камеру невозможно!</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#как-работает-система-распознавания-знаков-в-tiguan-2">Как работает система распознавания знаков в Tiguan 2</a></li><li><a href="#какие-дорожные-знаки-распознаёт-tiguan-2">Какие дорожные знаки распознаёт Tiguan 2</a></li><li><a href="#настройка-системы-распознавания-знаков">Настройка системы распознавания знаков</a></li><li><a href="#типичные-ошибки-и-неисправности-tsr-в-tiguan-2">Типичные ошибки и неисправности TSR в Tiguan 2</a></li><li><a href="#обновление-программного-обеспечения-для-tsr">Обновление программного обеспечения для TSR</a></li><li><a href="#сравнение-tsr-в-tiguan-2-и-других-моделях-volkswagen">Сравнение TSR в Tiguan 2 и других моделях Volkswagen</a></li><li><a href="#практические-советы-по-использованию-tsr">Практические советы по использованию TSR</a></li><li><a href="#faq-частые-вопросы-о-распознавании-знаков-в-tiguan-2">FAQ: Частые вопросы о распознавании знаков в Tiguan 2</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/v/ve/ves-tiguan-2013.html" class="related-card">Вес Volkswagen Tiguan 2013: полная масса, снаряжённая и грузоподъёмность</a></li><li><a href="/articles/k/ke/keramicheskie-kolodki-tiguan.html" class="related-card">Керамические колодки для Tiguan: плюсы, минусы и выбор лучших</a></li><li><a href="/articles/t/ti/tiguan-kolesnye-bolty.html" class="related-card">Колесные болты на Фольксваген Тигуан: размеры, выбор и замена</a></li><li><a href="/articles/l/li/lisa-rulit-folksvagen-tiguan.html" class="related-card">Liza рулит Volkswagen Tiguan: как это работает?</a></li><li><a href="/articles/z/za/zashchita-dnishcha-tiguan.html" class="related-card">Защита днища Тигуан: выбор и установка защиты картера</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/v/ve/ves-tiguan-2013.html" class="related-bottom-card"><span class="related-bottom-title">Вес Volkswagen Tiguan 2013: полная масса, снаряжённая и грузоподъёмность</span><span class="related-bottom-desc">Подробные данные о весе Tiguan 2013 года: снаряжённая масса, полная масса, допустимая нагрузка. Срав</span></a><a href="/articles/k/ke/keramicheskie-kolodki-tiguan.html" class="related-bottom-card"><span class="related-bottom-title">Керамические колодки для Tiguan: плюсы, минусы и выбор лучших</span><span class="related-bottom-desc">Какие керамические тормозные колодки подходят для Volkswagen Tiguan? Сравнение брендов, особенности </span></a><a href="/articles/t/ti/tiguan-kolesnye-bolty.html" class="related-bottom-card"><span class="related-bottom-title">Колесные болты на Фольксваген Тигуан: размеры, выбор и замена</span><span class="related-bottom-desc">Полный гид по колесным болтам для VW Tiguan: параметры резьбы, различия по поколениям, выбор литых д</span></a><a href="/articles/l/li/lisa-rulit-folksvagen-tiguan.html" class="related-bottom-card"><span class="related-bottom-title">Liza рулит Volkswagen Tiguan: как это работает?</span><span class="related-bottom-desc">Голосовой помощник Лиза в Фольксваген Тигуан: настройка, команды, управление мультимедиа и климатом.</span></a><a href="/articles/z/za/zashchita-dnishcha-tiguan.html" class="related-bottom-card"><span class="related-bottom-title">Защита днища Тигуан: выбор и установка защиты картера</span><span class="related-bottom-desc">Полный гид по защите днища Volkswagen Tiguan. Сравнение материалов, особенности установки, нюансы дл</span></a><a href="/articles/m/ma/maslosemnye-kolpachki-tiguan-20-tsi.html" class="related-bottom-card"><span class="related-bottom-title">Маслосъемные колпачки Tiguan 2.0 TSI: признаки износа и замена</span><span class="related-bottom-desc">Как определить неисправность маслосъемных колпачков на Volkswagen Tiguan 2.0 TSI? Признаки, причины,</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

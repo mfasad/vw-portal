@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>Golf 4 OBD: диагностика, коды ошибок и распиновка разъема — VW-portal</title>
+    <meta name="description" content="Полный гид по OBD2 на VW Golf 4. Где находится разъем, как считать ошибки, расшифровка кодов и выбор сканера для EDC15.">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/g/go/golf-4-obd.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Golf 4 OBD: диагностика, коды ошибок и распиновка разъема">
+    <meta property="og:description" content="Полный гид по OBD2 на VW Golf 4. Где находится разъем, как считать ошибки, расшифровка кодов и выбор сканера для EDC15.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/golf/">Golf</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Golf 4 OBD: диагностика, коды ошибок и распиновка разъема</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Диагностика VW Golf 4 через OBD: полное руководство</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#расположение-и-распиновка-диагностического-разъема">Расположение и распиновка диагностического разъема</a></li><li><a href="#выбор-оборудования-для-диагностики-vag">Выбор оборудования для диагностики VAG</a></li><li><a href="#процедура-подключения-и-считывания-ошибок">Процедура подключения и считывания ошибок</a></li><li><a href="#расшифровка-основных-кодов-неисправностей">Расшифровка основных кодов неисправностей</a></li><li><a href="#адаптация-дроссельной-заслонки-и-базовые-настройки">Адаптация дроссельной заслонки и базовые настройки</a></li><li><a href="#проблемы-с-иммоблайзером-и-их-решение">Проблемы с иммоблайзером и их решение</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body">
+<p>Владельцы легендарного <em>Volkswagen Golf 4</em> часто сталкиваются с необходимостью провести глубокую диагностику автомобиля, особенно когда загорается индикатор Check Engine или появляются плавающие обороты. Система <strong>OBD</strong> (On-Board Diagnostics) на этом кузове имеет свои уникальные особенности, отличающие её от более современных стандартов. Понимание принципов работы бортовой электроники позволяет сэкономить значительные средства на услугах сервисных центров.</p>
+
+<p>Четвертый Гольф, выпускавшийся с 1997 по 2003 год, стал переходным этапом для концерна VAG в плане внедрения цифровых протоколов. Здесь можно встретить как старые K-Line интерфейсы, так и более продвинутые CAN-шины на рестайлинговых моделях. <mark>Точная идентификация протокола связи критически важна для выбора правильного адаптера, так как универсальные китайские сканеры часто не видят специфические блоки комфорта или ABS.</mark> В этой статье мы разберем все нюансы взаимодействия с электроникой вашего автомобиля.</p>
+
+<p>Не стоит недооценивать возможности штатной диагностики через приборную панель. Многие водители годами ездят с ошибками, о которых даже не подозревают, пока машина не встанет посреди дороги. Регулярный мониторинг параметров <strong>ECU</strong> (электронного блока управления двигат) помогает выявить износ компонентов на ранней стадии. Это особенно актуально для дизельных версий с насос-форсунками, где электроника играет ключевую роль.</p>
+
+<h2 id="расположение-и-распиновка-диагностического-разъема">Расположение и распиновка диагностического разъема</h2>
+<p>Поиск диагностического разъема на <em>Golf 4</em> не должен вызывать сложностей, если знать, куда смотреть. В отличие от современных авто, где разъем прячут под заглушками, здесь он часто открыт. Стандартное место расположения — зона ног водителя, слева от рулевой колонки, иногда прикрыто пластиковой крышкой или находится под панелью предохранителей. Конструкция разъема соответствует стандарту <strong>OBD-II</strong>, но распиновка контактов может отличаться в зависимости от года выпуска.</p>
+
+<p>В ранних моделях до 2000 года использовался протокол <em>KWP 81</em>, который требует специфического подключения к контактам. После 2001 года, с введением норм Евро-4, многие автомобили были переведены на протокол <strong>ISO 14230</strong> (K-Line) или даже <em>CAN-bus</em>. Для успешного подключения сканера необходимо понимать, какой пин за что отвечает. Например, контакт 7 — это линия K-Line, через которую идет основной обмен данными с двигателем.</p>
+
+<blockquote>⚠️ Внимание: Никогда не пытайтесь «прозванивать» контакты разъема мультиметром при включенном зажигании без четкого понимания схемы. Короткое замыкание линии K-Line на массу может вывести из строя блок комфорта или сам ЭБУ двигателя.</blockquote>
+
+<p>Ниже приведена таблица, помогающая разобраться в назначении контактов стандартного 16-пинового разъема для большинства модификаций Golf 4:</p>
+
+<table>
+<thead>
+<tr>
+<th>Пин</th>
+<th>Описание</th>
+<th>Протокол/Назначение</th>
+</tr>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Зарезервирован производителем</td>
+<td>Специфично для VAG</td>
+</tr>
+<tr>
+<td>2</td>
+<td>J1850 Bus+</td>
+<td>Не используется в Golf 4</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Заземление кузова</td>
+<td>Общая масса (GND)</td>
+</tr>
+<tr>
+<td>6</td>
+<td>CAN High</td>
+<td>Только для CAN-моделей (после 2003)</td>
+</tr>
+<tr>
+<td>7</td>
+<td>K-Line</td>
+<td>Основная диагностика (ISO/KWP)</td>
+</tr>
+</tbody>
+</table>
+
+<p>Для подключения профессионального оборудования, такого как <em>VCDS</em> (ранее VAG-COM), часто требуется переходник, если ваш адаптер не поддерживает автоматическое переключение линий. Владелец должен быть готов к тому, что в некоторых комплектациях разъем может быть запитан только при включенном зажигании, что требует внимательности при проведении длительных процедур кодирования.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой двигатель установлен на вашем Golf 4?</strong><ul><li>1.4 MPI</li><li>1.6 MPI</li><li>1.8 Turbo</li><li>1.9 TDI</li><li>Другой</li></ul></div></div>
+
+<h2 id="выбор-оборудования-для-диагностики-vag">Выбор оборудования для диагностики VAG</h2>
+<p>Рынок диагностического оборудования перенасыщен предложениями, но для <strong>Volkswagen Golf 4</strong> подходят далеко не все устройства. Дешевые китайские клоны <em>ELM327</em> версии 1.5 и выше часто плохо работают с старыми протоколами VAG, так как не умеют правильно инициировать связь по K-Line. Идеальным решением для глубокого анализа остается кабель на базе чипа FTDI с программным обеспечением <strong>VCDS</strong>.</p>
+
+<p>Если вы планируете заниматься диагностикой регулярно, стоит рассмотреть покупку оригинального интерфейса <em>HEX-NET</em> или его качественных аналогов. Они обеспечивают стабильную связь не только с двигателем, но и позволяют заходить в блоки ABS, Airbag и климат-контроль. Для разовых процедур по гашению ошибок «Check Engine» может хватить и простого Bluetooth-адаптера с телефоном, но функционал будет сильно урезан.</p>
+
+<p>При выборе софта обращайте внимание на поддержку именно старых платформ. Современные версии программ могут уже не содержать драйверов для старых блоков <strong>EDC15</strong> или <em>Marelli</em>. Также важно учитывать операционную систему: многие профессиональные пакеты работают только под Windows, тогда как мобильные приложения ограничены базовым чтением кодов.</p>
+
+<details class="faq-item"><summary>Почему дешевые сканеры не видят все блоки?</summary><div class="faq-answer"><p>Дешевые сканеры часто работают только с протоколом OBDII, который обязателен для двигателя. Специфические блоки VAG (комфорт, коробка передач DSG ранних версий, приборная панель) используют проприетарные команды, которые поддерживают только специализированные адаптеры с правильным переключением линий K и L.</p></div></details>
+
+<h2 id="процедура-подключения-и-считывания-ошибок">Процедура подключения и считывания ошибок</h2>
+<p>Процесс подключения диагностического оборудования требует последовательности действий во избежание программных сбоев. Сначала убедитесь, что аккумулятор автомобиля заряжен, так как падение напряжения ниже 11.5 Вольт во время сеанса связи может привести к зависанию блоков. Затем подключите адаптер к разъему <strong>OBD</strong> и только после этого включайте зажигание.</p>
+
+<p>Запустите диагностическое программное обеспечение и выберите тип подключения. Для Golf 4 чаще всего используется режим «Auto Detect» или ручной выбор протокола <em>KWP 1281/81</em>. Если связь не устанавливается с первого раза, попробуйте переподключить кабель или проверить контакты на окисление. Иногда помогает простое выключение и включение зажигания через 10 секунд.</p>
+
+<p>Для владельцев, использующих мультиметр для первичной проверки, существует простой алгоритм действий:</p>
+<ul>
+<li>🔌 Проверьте наличие 12 Вольт на пине 16 разъема диагностики.</li>
+<li>⚡ Убедитесь в целостности массы на пине 4.</li>
+<li>📡 Замерьте сопротивление между пином 7 и массой (не должно быть короткого замыкания).</li>
+<li>🔋 Проверьте напряжение на аккумуляторе перед началом длительной процедуры.</li>
+</ul>
+
+<p>После успешного соединения программа покажет список доступных блоков. Выберите блок двигателя (обычно Engine или 01) для просмотра сохраненных неисправностей. Запишите или сфотографируйте коды ошибок перед их удалением, чтобы иметь возможность проанализировать их позже, если проблема повторится.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка перед подключением сканера</h4><label class="check-item"><input type="checkbox"><span>Проверить заряд аккумулятора</span></label><label class="check-item"><input type="checkbox"><span>Выключить все потребители энергии</span></label><label class="check-item"><input type="checkbox"><span>Найти надежный источник света</span></label><label class="check-item"><input type="checkbox"><span>Подготовить блокнот для кодов ошибок</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<h2 id="расшифровка-основных-кодов-неисправностей">Расшифровка основных кодов неисправностей</h2>
+<p>Коды ошибок на <em>Golf 4</em> делятся на несколько категорий: P (двигатель и трансмиссия), B (кузов), C (шасси) и U (сеть). Для бензиновых моторов серии <strong>EA111</strong> и <em>EA113</em> характерны ошибки по датчику положения дроссельной заслонки (TPS) и лямбда-зонду. Дизели <strong>TDI</strong> с насос-форсунками часто ругаются на рассогласование начала впрыска или проблемы с клапаном рециркуляции выхлопных газов (EGR).</p>
+
+<p>Частая ошибка <code>P0100</code> указывает на неисправность цепи датчика массового расхода воздуха (ДМРВ). На Golf 4 это критичный узел, так как от его показаний зависит смесеобразование. Грязный или неисправный ДМРВ вызывает потерю мощности и повышенный расход топлива. Ошибка <code>P0300</code> свидетельствует о случайных пропусках зажигания, что может быть вызвано свечами, катушками или форсунками.</p>
+
+<p>Особое внимание стоит уделить ошибкам, связанным с иммоблайзером. Если вы видите коды, указывающие на «Unauthorized Access» или проблемы с ключом, запуск двигателя будет заблокирован. В таких случаях простая замена деталей не поможет, потребуется адаптация ключей через диагностический прибор.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>При частом появлении ошибки по лямбда-зонду не спешите его менять. На Golf 4 часто окисляется фишка проводки, идущей к датчику. Зачистка контактов и проверка целостности проводов решает проблему в 50% случаев.</p></div>
+
+<h2 id="адаптация-дроссельной-заслонки-и-базовые-настройки">Адаптация дроссельной заслонки и базовые настройки</h2>
+<p>После чистки дроссельной заслонки или замены аккумулятора на <strong>Golf 4</strong> часто требуется процедура базовой установки. Без этого холостые обороты могут плавать, а автомобиль — дергаться при движении. Процесс адаптации выравнивает положение заслонки в крайних точках и запоминает объем воздуха на холостом ходу.</p>
+
+<p>Для проведения адаптации через <em>VCDS</em> необходимо зайти в блок 01 (Engine), затем выбрать «Basic Settings» (Базовые настройки). В поле группы введите значение <code>060</code> (для большинства моторов) или <code>098</code> и нажмите «Go» или «Start». Вы услышите характерный звук работы мотора заслонки — она начнет открываться и закрываться несколько раз.</p>
+
+<pre><code>Группа 060: Адаптация дроссельной заслонки
+<p>Статус: ADP RUN (идет процесс) -> ADP OK (успешно)</p>
+<p>Важно: Напряжение АКБ > 11.5V, температура двигателя > 5°C</code></pre></p>
+
+<p>Если статус меняется на <code>ADP ERROR</code> или <code>ADP INT</code> (прервано), процедуру нужно повторить. Частые причины неудачи: включенные потребители энергии (фары, печка), нажатая педаль газа во время процесса или низкий заряд батареи. После успешной адаптации (<code>ADP OK</code>) выключите зажигание на 10-15 секунд, чтобы блок сохранил новые параметры.</p>
+
+<h2 id="проблемы-с-иммоблайзером-и-их-решение">Проблемы с иммоблайзером и их решение</h2>
+<p>Система иммобилайзера на Golf 4 (обычно Immob 2 или Immob 3) тесно связана с приборной панелью и блоком управления двигателем. При замене любого из этих компонентов необходима синхронизация. Если вы видите мигающий значок машинки с ключом на приборной панели и машина глохнет через 2 секунды после старта — это работа защиты.</p>
+
+<p>Для решения проблем часто требуется «привязка» ключей. Это делается через диагностический разъем с использованием пин-кода, который можно вычислить по VIN-номеру (для старых систем) или получить у официального дилера. Процедура требует точного следования инструкциям, так как количество попыток ввода PIN-кода ограничено.</p>
+
+<blockquote>⚠️ Внимание: Многократный неправильный ввод PIN-кода иммобилайзера может заблокировать блок управления на длительное время (до нескольких часов) или полностью. Будьте осторожны и проверяйте код перед вводом.</blockquote>
+
+<p>Иногда проблема кроется не в электронике, а в антенне считывания, надетой на личинку замка зажигания. Если контакт в разъеме антенны нарушен, машина не увидит чип в ключе. Проверка целостности проводов, идущих от замка к блоку комфорта, часто помогает устранить плавающие неисправности запуска.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Успешная диагностика Golf 4 зависит от правильного выбора адаптера (K-Line vs CAN) и стабильного напряжения в бортовой сети во время процедуры.</p></div>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+<details>
+<summary>Где точно находится разъем OBD на Golf 4 1999 года?</summary>
+<p>На большинстве моделей 1999 года разъем расположен под панелью приборов слева от руля, часто скрыт за декоративной заглушкой или находится в нише для мелочей. Ищите 16-контактный трапециевидный штекер.</p>
+</details>
+
+<details>
+<summary>Можно ли прошить чип-тюнинг через OBD на Golf 4?</summary>
+<p>Теоретически возможно, но на старых блоках EDC15 и Motronic это рискованно через OBD из-за низкой скорости и риска обрыва связи. Рекомендуется выпаивать EEPROM или использовать BDM для безопасной перепрошивки.</p>
+</details>
+
+<details>
+<summary>Почему сканер пишет «ошибка связи», хотя разъем целый?</summary>
+<p>Скорее всего, проблема в сгоревшем диагностическом предохранителе (часто № 15 или отдельный Fuse в блоке под капотом) или в обрыве K-Line провода, который идет от разъема к ЭБУ. Также проверьте, не окислились ли контакты в самом разъеме.</p>
+</details>
+
+<details>
+<summary>Какой адаптер лучше купить для новичка с Golf 4?</summary>
+<p>Оптимальный вариант — качественный кабель VAG-COM (409.1 чип FTDI) для ПК. Он дешев, надежен и умеет делать всё необходимое для этого поколения автомобилей, включая кодирование и адаптацию.</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#расположение-и-распиновка-диагностического-разъема">Расположение и распиновка диагностического разъема</a></li><li><a href="#выбор-оборудования-для-диагностики-vag">Выбор оборудования для диагностики VAG</a></li><li><a href="#процедура-подключения-и-считывания-ошибок">Процедура подключения и считывания ошибок</a></li><li><a href="#расшифровка-основных-кодов-неисправностей">Расшифровка основных кодов неисправностей</a></li><li><a href="#адаптация-дроссельной-заслонки-и-базовые-настройки">Адаптация дроссельной заслонки и базовые настройки</a></li><li><a href="#проблемы-с-иммоблайзером-и-их-решение">Проблемы с иммоблайзером и их решение</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/s/sa/salon-golf-r32.html" class="related-card">Салон Гольф R32: тюнинг, перетяжка и особенности VR6</a></li><li><a href="/articles/p/pe/perednij-stupichnyj-podshipnik-golf-3.html" class="related-card">Ступичный подшипник Гольф 3: замена, симптомы, артикулы</a></li><li><a href="/articles/r/re/rejka-rulevaya-golf-2.html" class="related-card">Рулевая рейка Golf 2: признаки неисправности и замена своими руками</a></li><li><a href="/articles/r/re/regulirovka-far-golf-7.html" class="related-card">Регулировка фар Golf 7: пошаговая инструкция и советы</a></li><li><a href="/articles/g/go/golf-4-trojnik-sistemy-okhlazhdeniya.html" class="related-card">Гольф 4 тройник системы охлаждения: замена и выбор детали</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/s/sa/salon-golf-r32.html" class="related-bottom-card"><span class="related-bottom-title">Салон Гольф R32: тюнинг, перетяжка и особенности VR6</span><span class="related-bottom-desc">Экспертный разбор интерьера Golf R32: характеристики, тюнинг салона, перетяжка руля, замена сидений </span></a><a href="/articles/p/pe/perednij-stupichnyj-podshipnik-golf-3.html" class="related-bottom-card"><span class="related-bottom-title">Ступичный подшипник Гольф 3: замена, симптомы, артикулы</span><span class="related-bottom-desc">Как заменить передний ступичный подшипник на VW Golf 3. Симптомы поломки, выбор запчасти, пошаговая </span></a><a href="/articles/r/re/rejka-rulevaya-golf-2.html" class="related-bottom-card"><span class="related-bottom-title">Рулевая рейка Golf 2: признаки неисправности и замена своими руками</span><span class="related-bottom-desc">Подробный гайд по рулевой рейке &lt;em&gt;Volkswagen Golf 2&lt;/em&gt;: как диагностировать поломку, выбрать зап</span></a><a href="/articles/r/re/regulirovka-far-golf-7.html" class="related-bottom-card"><span class="related-bottom-title">Регулировка фар Golf 7: пошаговая инструкция и советы</span><span class="related-bottom-desc">Как правильно отрегулировать фары на &lt;em&gt;Volkswagen Golf 7&lt;/em&gt; своими руками: схемы, инструменты и </span></a><a href="/articles/g/go/golf-4-trojnik-sistemy-okhlazhdeniya.html" class="related-bottom-card"><span class="related-bottom-title">Гольф 4 тройник системы охлаждения: замена и выбор детали</span><span class="related-bottom-desc">Как заменить тройник системы охлаждения на Volkswagen Golf 4. Признаки поломки, выбор материала (пла</span></a><a href="/articles/g/go/golf-r-0-100.html" class="related-bottom-card"><span class="related-bottom-title">Golf R 0 100: Реальные замеры и влияние условий</span><span class="related-bottom-desc">Паспортные данные Golf R 0 100 км/ч против реальности. Как температура, топливо и прошивка влияют на</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>Настройка CANBUS на TEYES CC3: Полная инструкция — VW-portal</title>
+    <meta name="description" content="Подробное руководство по настройке CANBUS на TEYES CC3. Как выбрать модель авто, проверить версию протокола и устранить ошибки руля.">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/n/na/nastrojka-canbus-na-teyes-cc3.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Настройка CANBUS на TEYES CC3: Полная инструкция">
+    <meta property="og:description" content="Подробное руководство по настройке CANBUS на TEYES CC3. Как выбрать модель авто, проверить версию протокола и устранить ошибки руля.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Настройка CANBUS на TEYES CC3: Полная инструкция</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Профессиональная настройка CANBUS на TEYES CC3</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#подготовка-оборудования-и-проверка-соединений">Подготовка оборудования и проверка соединений</a></li><li><a href="#поиск-и-вход-в-заводские-настройки-teyes">Поиск и вход в заводские настройки TEYES</a></li><li><a href="#выбор-модели-автомобиля-и-протокола-canbus">Выбор модели автомобиля и протокола CANBUS</a></li><li><a href="#настройка-кнопок-рулевого-управления">Настройка кнопок рулевого управления</a></li><li><a href="#диагностика-и-устранение-распространенных-ошибок">Диагностика и устранение распространенных ошибок</a></li><li><a href="#обновление-прошивки-can-модуля">Обновление прошивки CAN-модуля</a></li><li><a href="#тонкая-настройка-параметров-отображения">Тонкая настройка параметров отображения</a></li><li><a href="#faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Установка мультимедийной системы <em>TEYES CC3</em> открывает перед владельцем автомобиля широкие возможности, превращая стандартное головное устройство в мощный Android-планшет. Однако, чтобы магнитола не просто воспроизводила музыку, а полноценно взаимодействовала с бортовым компьютером вашего авто, необходима грамотная настройка CAN-шины. Именно этот протокол отвечает за передачу данных о температуре двигателя, открытых дверях, парковочных ассистентах и, что критически важно, за работу кнопок на рулевом колесе.</p>
+
+<p>Процесс конфигурирования может показаться сложным новичку, так как требует внимательности при выборе параметров из огромного списка производителей и моделей. Ошибка на этапе выбора протокола может привести к тому, что кнопки управления громкостью перестанут реагировать, а на дисплее будут отображаться некорректные данные о климате или заряде батареи. <strong>Корректная настройка</strong> — это фундамент стабильной работы всей мультимедийной системы.</p>
+
+<p>В этой статье мы детально разберем алгоритм действий, который позволит вам избежать типичных ошибок и добиться идеальной синхронизации головного устройства с электроникой автомобиля. Мы рассмотрим не только базовые шаги, но и нюансы работы с различными версиями прошивок, которые часто встречаются в устройствах <em>TEYES</em>. Готовьтесь погрузиться в технические детали, чтобы выжать максимум из вашего нового гаджета.</p>
+
+<h2 id="подготовка-оборудования-и-проверка-соединений">Подготовка оборудования и проверка соединений</h2>
+
+<p>Прежде чем переходить к программным настройкам, необходимо убедиться в физической целостности соединений. CAN-шина — это цифровая магистраль, и любой плохой контакт в жгутах проводов может привести к потере пакетов данных. Убедитесь, что разъемы вставлены до щелчка, а провода не пережаты металлическими элементами кузова при установке.</p>
+
+<p>Частой проблемой является использование неоригинальных переходников низкого качества, которые могут не передавать сигналы CAN-High и CAN-Low с нужной точностью. Если вы используете сторонний жгут, проверьте его соответствие распиновке вашей конкретной модели автомобиля. <strong>Физическое соединение</strong> является базой, без которой программные настройки бесполезны.</p>
+
+<blockquote>
+<p>⚠️ <strong>Внимание:</strong> Перед началом любых работ с электрикой автомобиля обязательно снимите минусовую клемму с аккумулятора. Это предотвратит случайное короткое замыкание, которое может вывести из строя блок управления кузовом или саму магнитолу.</p>
+</blockquote>
+
+<p>Также стоит проверить напряжение в бортовой сети. Нестабильное питание может вызывать сбои в работе CAN-фильтра, из-за чего система будет периодически терять связь с автомобилем. Используйте мультиметр для замера напряжения на контактах питания головного устройства; оно должно быть стабильным в диапазоне от 12 до 14.5 Вольт.</p>
+
+<h2 id="поиск-и-вход-в-заводские-настройки-teyes">Поиск и вход в заводские настройки TEYES</h2>
+
+<p>Интерфейс доступа к скрытым настройкам может отличаться в зависимости от версии прошивки и года выпуска устройства. В большинстве случаев для входа требуется перейти в меню настроеок Android, найти раздел "Об устройстве" и несколько раз быстро нажать на поле "Версия ядра" или "Номер сборки".</p>
+
+<p>После этого система запросит пароль. Для устройств <em>TEYES CC3</em> наиболее распространенными кодами являются <code>8878</code>, <code>3368</code> или <code>123456</code>. Если стандартные коды не подходят, попробуйте найти информацию о вашей конкретной прошивке на официальном форуме производителя или в документации к устройству.</p>
+
+<details class="faq-item"><summary>Что делать, если пароль не подходит?</summary><div class="faq-answer"><p>Если стандартные пароли (8878, 3368) не работают, попробуйте ввести текущее время в формате ЧЧММ (например, 1430 для 14:30) или дату в формате ДДММ (например, 2512). Некоторые версии прошивок используют динамические пароли, зависящие от времени системы. Также пароль может быть указан на наклейке под рамкой магнитолы.</p></div></details>
+
+<p>После успешного ввода кода вы попадете в меню "Factory Settings" (Заводские настройки). Здесь сосредоточены все глубокие параметры системы, включая управление аудио- DSP, эквалайзером и, конечно же, конфигурацией CAN-шины. Будьте осторожны: изменение параметров в других вкладках без понимания их назначения может привести к неработоспособности устройства.</p>
+
+<h2 id="выбор-модели-автомобиля-и-протокола-canbus">Выбор модели автомобиля и протокола CANBUS</h2>
+
+<p>В меню заводских настроек найдите вкладку, подписанную как "Car Info", "CANBUS" или "Protocol". Именно здесь происходит магия согласования. Вам откроется список производителей автомобилей. Выберите марку вашего авто, затем модель и год выпуска.</p>
+
+<p>Особое внимание уделите полю "CAN Type" или "Protocol Version". Часто для одной и той же модели автомобиля существует несколько вариантов протоколов, зависящих от комплектации (наличие климат-контроля, тип приборной панели, наличие штатной навигации). <mark>Правильный выбор версии протокола критически важен для отображения данных о климате и состоянии дверей.</mark></p>
+
+<div class="attention-box attention-info"><div><strong>📊 С каким протоколом CAN вы столкнулись?</strong><ul><li>Оригинальный штатный</li><li>Китайский клон</li><li>Проблемы с определением</li><li>Несколько вариантов в списке</li></ul></div></div>
+
+<p>Если ваша модель автомобиля отсутствует в списке, это не всегда означает, что настройка невозможна. Иногда можно выбрать протокол от схожей модели того же года выпуска или использовать универсальные настройки, если устройство поддерживает автоматическое сканирование. Однако в 90% случаев точный выбор модели дает лучший результат.</p>
+
+<h2 id="настройка-кнопок-рулевого-управления">Настройка кнопок рулевого управления</h2>
+
+<p>После выбора протокола CAN-шины необходимо настроить реакцию системы на нажатия кнопок руля. Перейдите в раздел "Steering Wheel Control" (Управление на руле). В современных системах <em>TEYES CC3</em> часто доступна функция автоматического обучения или предзаданных профилей.</p>
+
+<p>Если автоматическая настройка не сработала, используйте ручной режим. Нажимайте кнопку на руле (например, "Громкость +") и удерживайте ее, пока на экране не загорится соответствующий индикатор. Повторите процедуру для всех функциональных клавиш: переключение треков, ответ на звонок, активация голосового помощника.</p>
+
+<ul>
+<li>🎚️ <strong>Аналоговый режим:</strong> используется в старых автомобилях, где сопротивление цепи меняется при нажатии кнопки. Требует калибровки минимального и максимального значений.</li>
+<li>🔢 <strong>Цифровой режим (CAN):</strong> сигналы передаются через шину данных. Здесь не нужно "учить" кнопки, достаточно выбрать правильный протокол, и система сама распознает команды.</li>
+<li>🔄 <strong>Режим ИК-эмуляции:</strong> редкий случай, когда кнопки руля эмулируют инфракрасный пульт. Требует подбора кода пульта из списка.</li>
+</ul>
+
+<p>Важно проверить, не конфликтуют ли назначенные функции. Например, убедитесь, что короткое и длинное нажатие на одну и ту же кнопку выполняют разные действия, если это предусмотрено вашим сценарием использования. <strong>Логика работы</strong> кнопок должна быть интуитивно понятной для водителя.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка кнопок руля</h4><label class="check-item"><input type="checkbox"><span>Нажать Громкость+: звук должен стать тише</span></label><label class="check-item"><input type="checkbox"><span>Нажать Громкость-: звук должен стать громче</span></label><label class="check-item"><input type="checkbox"><span>Нажать След. трек: переключение композиции</span></label><label class="check-item"><input type="checkbox"><span>Нажать Пред. трек: возврат к началу или предыдущий трек</span></label><label class="check-item"><input type="checkbox"><span>Нажать Телефон: открытие интерфейса звонков</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 5</div></div>
+
+<h2 id="диагностика-и-устранение-распространенных-ошибок">Диагностика и устранение распространенных ошибок</h2>
+
+<p>Даже при правильном выборе модели могут возникнуть ситуации, когда часть функций не работает. Например, кнопки руля функционируют, но информация о температуре за бортом не отображается, или наоборот. Это указывает на то, что выбранный протокол частично совместим, но не идеален.</p>
+
+<p>Попробуйте выбрать соседнюю версию протокола в списке (например, если стоит версия 1, попробуйте версию 2 или 3 той же модели). Часто производители обновляют списки протоколов в новых прошивках, добавляя поддержку функций, которые ранее не работали. <em>Обновление прошивки</em> CAN-модуля может решить проблему совместимости.</p>
+
+<table>
+<thead>
+<tr>
+<th>Симптом</th>
+<th>Возможная причина</th>
+<th>Метод решения</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Кнопки руля не работают</td>
+<td>Неверный протокол CAN</td>
+<td>Выбрать другую версию протокола или перепрошить CAN-модуль</td>
+</tr>
+<tr>
+<td>Не отображается температура</td>
+<td>Отсутствие поддержки в протоколе</td>
+<td>Попробовать протокол от комплектации с климат-контролем</td>
+</tr>
+<tr>
+<td>Самопроизвольное включение экрана</td>
+<td>Конфликт сигналов IGN/CAN</td>
+<td>В настройках питания изменить источник сигнала включения</td>
+</tr>
+<tr>
+<td>Задержка реакции кнопок</td>
+<td>Высокая задержка фильтрации</td>
+<td>Уменьшить время задержки в настройках CAN-фильтра</td>
+</tr>
+</tbody>
+</table>
+
+<p>Если после перебора всех доступных протоколов проблема сохраняется, имеет смысл проверить целостность проводов CAN-шины с помощью осциллографа. Наличие сильных помех в сети автомобиля может искажать сигналы, делая нормальную работу невозможной.</p>
+
+<h2 id="обновление-прошивки-can-модуля">Обновление прошивки CAN-модуля</h2>
+
+<p>Производители <em>TEYES</em> периодически выпускают обновления для встроенного CAN-декодера. Эти обновления содержат новые базы данных автомобилей и исправления ошибок в существующих протоколах. Проверить наличие обновлений можно в том же меню заводских настроек, найдя пункт "CAN Update" или "Firmware Update".</p>
+
+<p>Процесс обновления обычно требует подключения устройства к интернету через Wi-Fi или загрузки файла обновления на USB-накопитель. Следуйте инструкциям на экране и ни в коем случае не прерывайте питание устройства во время прошивки CAN-модуля, так как это может привести к его полному отказу.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Перед обновлением CAN-протокола запишите текущие настройки (скриншоты или фото), чтобы в случае сброса параметров вы могли быстро восстановить работоспособную конфигурацию.</p></div>
+
+<p>После успешного обновления система может перезагрузиться. Вернитесь в меню выбора автомобиля и проверьте, появились ли новые варианты для вашей модели или улучшилась ли работа текущей конфигурации. Часто именно свежая база данных решает проблемы с "глючным" поведением кнопок.</p>
+
+<h2 id="тонкая-настройка-параметров-отображения">Тонкая настройка параметров отображения</h2>
+
+<p>Когда базовая функциональность налажена, можно перейти к кастомизации. Многие пользователи не знают, что через CAN-настройки можно менять частоту опроса датчиков и способ отображения информации. Это позволяет сделать вывод данных более плавным или, наоборот, более отзывчивым.</p>
+
+<p>В продвинутых настройках CAN-фильтра можно встретить параметры задержки (delay) и повторения сигналов. Уменьшение задержки делает реакцию кнопок мгновенной, но может привести к ложным срабатываниям при наличии помех. Поиск баланса — ключ к комфортному использованию.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Оптимальная настройка CAN-шины — это баланс между скоростью отклика системы и стабильностью работы в условиях зашумленной бортовой сети автомобиля.</p></div>
+
+<p>Не забывайте, что некоторые функции, такие как отображение давления в шинах или расхода топлива, зависят не только от магнитолы, но и от того, передает ли их ваш конкретный автомобиль по CAN-шине. Если машина не оснащена соответствующими датчиками, магнитола не сможет волшебным образом создать эти данные.</p>
+
+<h2 id="faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</h2>
+
+<details>
+<summary>Можно ли настроить CANBUS без интернета?</summary>
+<p>Да, базовая настройка CAN-шины не требует подключения к интернету, так как база протоколов уже вшита в память устройства. Однако для загрузки обновлений базы данных или новой прошивки CAN-модуля интернет-соединение (через Wi-Fi или USB-модем) будет необходимо.</p>
+</details>
+
+<details>
+<summary>Что делать, если в списке нет моей модели автомобиля?</summary>
+<p>Попробуйте выбрать протокол от автомобиля той же марки и года выпуска, но другой модели. Часто протоколы внутри одного модельного ряда идентичны. Также можно попробовать универсальные протоколы или обратиться в поддержку TEYES с просьбой добавить вашу модель в базу.</p>
+</details>
+
+<details>
+<summary>Почему после настройки CANBUS пропал звук?</summary>
+<p>В некоторых случаях активация определенных CAN-протоколов может переключать аудио-выход на внешний усилитель или менять конфигурацию звукового процессора. Проверьте настройки звука в заводском меню и убедитесь, что выбран правильный тип усилителя (обычно "Built-in Amp" для штатных динамиков).</p>
+</details>
+
+<details>
+<summary>Влияет ли настройка CANBUS на гарантию автомобиля?</summary>
+<p>Настройка программных параметров головного устройства не является вмешательством в электрику автомобиля и не должна влиять на гарантию. Однако, если в процессе настройки вы физически повредите проводку или коротнете контакты, это может стать причиной отказа в гарантийном обслуживании электроники.</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#подготовка-оборудования-и-проверка-соединений">Подготовка оборудования и проверка соединений</a></li><li><a href="#поиск-и-вход-в-заводские-настройки-teyes">Поиск и вход в заводские настройки TEYES</a></li><li><a href="#выбор-модели-автомобиля-и-протокола-canbus">Выбор модели автомобиля и протокола CANBUS</a></li><li><a href="#настройка-кнопок-рулевого-управления">Настройка кнопок рулевого управления</a></li><li><a href="#диагностика-и-устранение-распространенных-ошибок">Диагностика и устранение распространенных ошибок</a></li><li><a href="#обновление-прошивки-can-модуля">Обновление прошивки CAN-модуля</a></li><li><a href="#тонкая-настройка-параметров-отображения">Тонкая настройка параметров отображения</a></li><li><a href="#faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/p/po/polotno-dlya-nozhovki-po-metallu-rejting.html" class="related-card">Топ-10 полотен для ножовки по металлу 2026: рейтинг и советы по выбору</a></li><li><a href="/articles/r/ra/razboltovka-nissan-dzhuk.html" class="related-card">Разболтовка Nissan Juke: параметры, совместимость, подбор дисков</a></li><li><a href="/articles/g/ge/geely-atlas-pro-kak-podnyat-dvorniki.html" class="related-card">Geely Atlas Pro: как поднять дворники в сервисный режим</a></li><li><a href="/articles/s/so/soprotivlenie-datchika-polozheniya-kolenvala.html" class="related-card">Сопротивление датчика положения коленвала: норма, проверка, таблица</a></li><li><a href="/articles/p/po/polozhenie-ruchnogo-tormoza.html" class="related-card">Положение ручного тормоза: что означает и как работает</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/p/po/polotno-dlya-nozhovki-po-metallu-rejting.html" class="related-bottom-card"><span class="related-bottom-title">Топ-10 полотен для ножовки по металлу 2026: рейтинг и советы по выбору</span><span class="related-bottom-desc">Экспертный рейтинг лучших полотен для ножовки по металлу с сравнением брендов, характеристик и цен. </span></a><a href="/articles/r/ra/razboltovka-nissan-dzhuk.html" class="related-bottom-card"><span class="related-bottom-title">Разболтовка Nissan Juke: параметры, совместимость, подбор дисков</span><span class="related-bottom-desc">Подробный гайд по разболтовке Nissan Juke (J10, J11): штатные параметры, таблица совместимости, как </span></a><a href="/articles/g/ge/geely-atlas-pro-kak-podnyat-dvorniki.html" class="related-bottom-card"><span class="related-bottom-title">Geely Atlas Pro: как поднять дворники в сервисный режим</span><span class="related-bottom-desc">Подробная инструкция, как перевести дворники Geely Atlas Pro в сервисное положение для замены щеток.</span></a><a href="/articles/s/so/soprotivlenie-datchika-polozheniya-kolenvala.html" class="related-bottom-card"><span class="related-bottom-title">Сопротивление датчика положения коленвала: норма, проверка, таблица</span><span class="related-bottom-desc">Какое должно быть сопротивление датчика коленвала? Таблицы норм, методы проверки мультиметром и прич</span></a><a href="/articles/p/po/polozhenie-ruchnogo-tormoza.html" class="related-bottom-card"><span class="related-bottom-title">Положение ручного тормоза: что означает и как работает</span><span class="related-bottom-desc">Узнайте все о положении ручного тормоза. Причины блокировки колес, регулировка стояночного тормоза и</span></a><a href="/articles/m/mo/mozhno-li-kleit-polosku-na-lobovoe-steklo.html" class="related-bottom-card"><span class="related-bottom-title">Можно ли клеить полоску на лобовое стекло: закон и правила</span><span class="related-bottom-desc">Разрешены ли тонировочные полоски на лобовом стекле в 2026 году? Разбор ПДД, ГОСТов, штрафов и прави</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>Полосовой фильтр своими руками: схемы, расчет и настройка — VW-portal</title>
+    <meta name="description" content="Соберите полосовой фильтр своими руками: расчет LC-контуров, выбор материалов и пошаговая сборка. Улучшите сигнал антенны и очистите эфир от помех.">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/p/po/polosovoj-filtr-svoimi-rukami.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Полосовой фильтр своими руками: схемы, расчет и настройка">
+    <meta property="og:description" content="Соберите полосовой фильтр своими руками: расчет LC-контуров, выбор материалов и пошаговая сборка. Улучшите сигнал антенны и очистите эфир от помех.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Полосовой фильтр своими руками: схемы, расчет и настройка</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Полосовой фильтр своими руками: от теории к практике</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#принцип-работы-и-основные-параметры-фильтра">Принцип работы и основные параметры фильтра</a></li><li><a href="#выбор-элементной-базы-и-материалов">Выбор элементной базы и материалов</a></li><li><a href="#расчет-параметров-lc-контура">Расчет параметров LC-контура</a></li><li><a href="#практическая-сборка-и-монтаж-схемы">Практическая сборка и монтаж схемы</a></li><li><a href="#настройка-и-согласование-с-антенной">Настройка и согласование с антенной</a></li><li><a href="#типичные-ошибки-и-методы-их-устранения">Типичные ошибки и методы их устранения</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Создание <strong>полосового фильтра</strong> своими руками — это не просто увлекательный эксперимент для радиолюбителя, но и эффективное решение проблем с зашумленностью эфира. В условиях, когда диапазон радиочастот переполнен сигналами различной природы, способность избирательно пропускать только нужный спектр становится критически важной. Самодельные устройства часто превосходят промышленные аналоги по параметрам, так как вы можете адаптировать их под конкретные условия приема и собственную антенную систему.</p>
+
+<p>Процесс разработки требует понимания физики распространения радиоволн и свойств электронных компонентов. Вам предстоит работать с <em>индуктивностями</em> и емкостями, подбирая их параметры с высокой точностью. Ошибки в расчетах могут привести к тому, что устройство будет вносить затухание в полезный сигнал или, наоборот, пропускать мощные помехи, выводящие приемник в насыщение. <mark>Центральная частота пропускания определяется произведением индуктивности и емкости контура, что требует точных измерительных приборов при настройке.</mark></p>
+
+<p>В этой статье мы детально разберем этапы проектирования, сборки и отладки фильтра. Мы рассмотрим различные топологии схем, выбор элементной базы и методики юстировки. Правильно спроектированный фильтр способен кардинально улучшить разборчивость сигнала и снизить уровень шумов на выходе приемного тракта.</p>
+
+<h2 id="принцип-работы-и-основные-параметры-фильтра">Принцип работы и основные параметры фильтра</h2>
+
+<p>Основная задача полосового фильтра (ПФ) заключается в пропускании сигналов в определенном диапазоне частот и подавлении всех остальных. Ключевым параметром здесь является <strong>полоса пропускания</strong>, которая определяется уровнем затухания сигнала, обычно по уровню -3 дБ. Ширина этой полосы напрямую влияет на избирательность устройства: чем уже полоса, тем лучше фильтрация, но тем сложнее техническая реализация.</p>
+
+<p>Важнейшим показателем качества является <strong>добротность</strong> (Q-фактор) используемых компонентов. Высокая добротность катушек индуктивности позволяет получить крутые скаты амплитудно-частотной характеристики (АЧХ). Это означает, что фильтр будет эффективно отсекать близлежащие частоты, не затрагивая полезный сигнал. Использование компонентов с низкой добротностью приведет к "размытию" характеристики и потере эффективности.</p>
+
+<p>Существует несколько классических типов фильтров, каждый из которых имеет свои особенности АЧХ:</p>
+
+<ul>
+<li>📉 <strong>Фильтр Баттерворта</strong> — обеспечивает максимально гладкую АЧХ в полосе пропускания, но имеет пологие скаты.</li>
+<li>⚡ <strong>Фильтр Чебышева</strong> — характеризуется более крутыми скатами, но допускает пульсации в полосе пропускания.</li>
+<li>📉 <strong>Фильтр Бесселя</strong> — оптимален для импульсных сигналов, так как обеспечивает линейность фазо-частотной характеристики.</li>
+</ul>
+
+<p>При проектировании необходимо учитывать <strong>импеданс</strong> источника и нагрузки. Стандартным значением в радиочастотной технике является 50 Ом, однако в любительской практике часто встречается 75 Ом. Несогласованность импедансов приведет к появлению стоячей волны и искажению формы АЧХ, что сведет на нет все усилия по созданию фильтра.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой диапазон вас интересует больше всего?</strong><ul><li>Диапазон FM (88-108 МГц)</li><li>Любительские диапазоны (HF/VHF)</li><li>Спутниковые частоты (L/S-диапазон)</li><li>Цифровое ТВ (DVB-T2)</li></ul></div></div>
+
+<h2 id="выбор-элементной-базы-и-материалов">Выбор элементной базы и материалов</h2>
+
+<p>Качество самодельного фильтра напрямую зависит от выбранных компонентов. Для катушек индуктивности критически важен материал каркаса и провода. Наилучшие результаты показывают посеребренные провода, так как на высоких частотах ток течет преимущественно по поверхности проводника (скин-эффект). Использование обычного медного провода может существенно снизить добротность контура.</p>
+
+<p>Диэлектрические свойства каркаса катушки играют не меньшую роль. <strong>Полистиирол</strong>, <em>фторопласт</em> или специальная керамика имеют минимальные диэлектрические потери. Обычный пластик или текстолит могут вносить паразитные емкости и потери, особенно в диапазонах УКВ и выше. Каркас должен быть жестким, чтобы исключить микрофонный эффект и изменение параметров от вибраций.</p>
+
+<p>Конденсаторы должны иметь высокую стабильность номинала и низкий ТКЕ (температурный коэффициент емкости). Для ВЧ-контуров идеально подходят конденсаторы типов <em>NP0</em> (C0G) или слюдяные. Керамические конденсаторы общего назначения (типа X7R, Z5U) категорически не подходят из-за сильной зависимости емкости от температуры и напряжения, что приведет к "плытию" частоты настройки.</p>
+
+<p>Для соединения компонентов на высоких частотах нельзя использовать обычные длинные выводы. Паразитная индуктивность даже короткого вывода может исказить работу схемы. Все соединения должны быть минимально короткими, а монтаж — выполнен на печатной плате из фольгированного стеклотекстолита или методом "на пятачках".</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Используйте провод ПЭЛШО или посеребренную медь для намотки катушек — это увеличит добротность контура на 15-20% по сравнению с обычным медным проводом.</p></div>
+
+<h2 id="расчет-параметров-lc-контура">Расчет параметров LC-контура</h2>
+
+<p>Расчет фильтра начинается с определения резонансной частоты. Базовая формула Томсона связывает частоту, индуктивность и емкость: $f = \frac{1}{2\pi\sqrt{LC}}$. Однако для сложных фильтров (3-го, 5-го порядка и выше) ручной расчет становится трудоемким и подверженным ошибкам. В современной практике целесообразно использовать специализированный софт.</p>
+
+<p>Программы вроде <em>ELSI</em>, <em>RF.Sim99</em> или онлайн-калькуляторы позволяют быстро получить номиналы компонентов для заданной топологии. Вы задаете центральную частоту, полосу пропускания и требуемое затухание в полосе задерживания, а алгоритм рассчитывает точные значения. Это особенно важно для фильтров Чебышева, где значения емкостей и индуктивностей не симметричны.</p>
+
+<p>При расчете необходимо учитывать паразитные параметры. Собственная емкость катушки и монтажная емкость вносят коррективы в работу схемы. Поэтому расчетные значения всегда являются отправной точкой, требующей экспериментальной доводки. Реальные номиналы конденсаторов часто приходится подбирать из параллельно соединенных элементов.</p>
+
+<p>Важно помнить о допустимой мощности. Если фильтр планируется использовать на передачу, то конденсаторы и катушки должны выдерживать высокие токи и напряжения. Пробой конденсатора или нагрев катушки могут привести к выходу из строя всего передатчика.</p>
+
+<details class="faq-item"><summary>Формула для быстрого расчета одновитковой катушки</summary><div class="faq-answer"><p>Для однослойной катушки без сердечника индуктивность (мкГн) можно оценить по формуле L = (D² * n²) / (18D + 40l), где D - диаметр, l - длина намотки, n - число витков. Все размеры в дюймах.</p></div></details>
+
+<h2 id="практическая-сборка-и-монтаж-схемы">Практическая сборка и монтаж схемы</h2>
+
+<p>Сборка фильтра требует аккуратности и соблюдения технологии ВЧ-монтажа. Первым шагом всегда является изготовление катушек индуктивности. Намотка должна быть виток к витку, без зазоров, если в расчетах не указано иное. Для стабилизации параметров витки часто фиксируют каплей клея или парафина, либо используют каркасы с подстроечными сердечниками.</p>
+
+<p>Монтаж лучше всего выполнять на фольгированной плате, используя фольгу в качестве экрана. Компоненты припаиваются непосредственно к контактным площадкам, выводы должны быть обрезаны максимально коротко. Для конденсаторов малой емкости (пикофарады) длину выводов нужно сводить к нулю, так как каждый миллиметр провода добавляет наносгенри индуктивности.</p>
+
+<p>Ниже приведена таблица ориентировочных параметров катушек для диапазона 144 МГц (2 метра):</p>
+
+<table>
+<thead>
+<tr>
+<th>Тип катушки</th>
+<th>Диаметр каркаса (мм)</th>
+<th>Провод (мм)</th>
+<th>Кол-во витков</th>
+<th>Индуктивность (нГн)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Входная</td>
+<td>10</td>
+<td>1.0</td>
+<td>3.5</td>
+<td>45-50</td>
+</tr>
+<tr>
+<td>Средняя</td>
+<td>10</td>
+<td>1.0</td>
+<td>4.0</td>
+<td>55-60</td>
+</tr>
+<tr>
+<td>Выходная</td>
+<td>10</td>
+<td>1.0</td>
+<td>3.5</td>
+<td>45-50</td>
+</tr>
+<tr>
+<td>Связная</td>
+<td>8</td>
+<td>0.8</td>
+<td>2.5</td>
+<td>20-25</td>
+</tr>
+</tbody>
+</table>
+
+<p>Корпус фильтра должен быть выполнен из металла (алюминий, латунь) и выполнять функцию экрана. Внутри корпуса могут возникать паразитные резонансы, поэтому объем корпуса должен быть достаточно большим, а внутренняя поверхность — гладкой. Разделение секций фильтра металлическими перегородками с отверстиями для связи улучшает прямоугольность АЧХ.</p>
+
+<div class="checklist-block"><h4>☑️ Контрольный список сборки</h4><label class="check-item"><input type="checkbox"><span>Проверка номиналов конденсаторов тестером</span></label><label class="check-item"><input type="checkbox"><span>Фиксация витков катушек клеем</span></label><label class="check-item"><input type="checkbox"><span>Контроль длины выводов компонентов</span></label><label class="check-item"><input type="checkbox"><span>Проверка качества пайки контактов</span></label><label class="check-item"><input type="checkbox"><span>Установка экрана между секциями</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 5</div></div>
+
+<h2 id="настройка-и-согласование-с-антенной">Настройка и согласование с антенной</h2>
+
+<p>Настройка собранного устройства — самый ответственный этап. Без измерителя АЧХ (например, <em>NanoVNA</em> или <em>TinySA</em>) процесс превращается в гадание. Подключив прибор, вы увидите реальную кривую пропускания. Задача — с помощью подстроечных конденсаторов или сердечников катушек сместить резонанс на нужную частоту.</p>
+
+<p>Процесс настройки итеративный: изменяя один элемент, вы влияете на всю характеристику. Сначала грубо настраивают центральную частоту, затем расширяют или сужают полосу пропускания, регулируя связь между контурами. Если фильтр многосекционный, настройку начинают с центральной секции, постепенно подключая остальные.</p>
+
+<blockquote>
+<p>⚠️ Внимание: При использовании мощного передатчика для настройки (через детекторную головку) убедитесь, что выходная мощность минимальна. Высокая мощность может мгновенно пробить конденсаторы малой емкости или расплавить тонкий провод катушки.</p>
+</blockquote>
+
+<p>Согласование с антенной проверяется по коэффициенту стоячей волны (КСВ). Идеальный фильтр в полосе пропускания должен иметь КСВ близкий к 1.0-1.2. Если КСВ высокий, необходимо подобрать отводы на катушках или добавить согласующие трансформаторы. Плохое согласование приведет к тому, что часть мощности уйдет в нагрев, а не в излучение.</p>
+
+<p>Стабильность параметров во времени обеспечивается правильной конструкцией. Если частота "плывет" при нагреве, возможно, выбраны конденсаторы с неподходящим ТКЕ. В таких случаях применяют температурную компенсацию, включая параллельно конденсаторы с противоположными знаками ТКЕ.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Настройка фильтра возможна только с помощью измерительного оборудования (VNA, ГИР), визуальная оценка или настройка "на слух" не дает гарантий попадания в частоту.</p></div>
+
+<h2 id="типичные-ошибки-и-методы-их-устранения">Типичные ошибки и методы их устранения</h2>
+
+<p>Одной из самых частых ошибок является пренебрежение экранировкой. Открытый фильтр работает как антенна, принимая все окружающие помехи и излучая гармонки передатчика. Это сводит на нет всю избирательность. Экран должен быть сплошным, без щелей, с хорошим электрическим контактом по периметру.</p>
+
+<p>Использование ферритовых сердечников на частотах выше 30-50 МГц часто является ошибкой. Ферриты на высоких частотах имеют низкую добротность и вносят значительные потери. Для диапазонов УКВ и выше применяются только воздушные или медные каркасы. Феррит допустим только на НЧ (KB диапазон).</p>
+
+<p>Неправильный выбор точки подключения разъема также может испортить АЧХ. Подключение должно быть симметричным, если фильтр симметричный, или через согласующую петлю связи. Резкое изменение геометрии подводки к разъему создает скачок волнового сопротивления, вызывая отражения сигнала.</p>
+
+<p>Если фильтр "звенит" (имеет резкие пики на АЧХ внутри полосы), значит, нарушена связь между контурами или возникла паразитная обратная связь. Необходимо проверить экраны и расстояния между катушками. Иногда помогает введение небольших потерь (резисторов) для сглаживания пиков, хотя это и ухудшает общую добротность.</p>
+
+<details>
+<summary>Можно ли использовать фильтр на передачу без доработок?</summary>
+<p>Только если все компоненты рассчитаны на соответствующую мощность. Конденсаторы должны быть высоковольтными, а провод катушки — достаточного сечения, чтобы не сгореть от тока. Для мощностей выше 50 Вт часто требуется принудительное охлаждение или увеличение габаритов элементов.</p>
+</details>
+
+<details>
+<summary>Как влияет влажность на работу фильтра?</summary>
+<p>Влажность изменяет диэлектрическую проницаемость воздуха и материалов каркаса, что приводит к уходу частоты. Для уличных антенн фильтр должен быть герметично загерметизирован или залит компаундом с низкими диэлектрическими потерями.</p>
+</details>
+
+<details>
+<summary>Нужно ли пересчитывать фильтр при смене диапазона?</summary>
+<p>Да, параметры LC-контуров жестко привязаны к рабочей частоте. Переделка фильтра с 100 МГц на 400 МГц потребует полной замены катушек и конденсаторов, так как меняются не только номиналы, но и требования к конструкции (размеры, паразитные связи).</p>
+</details>
+
+<details>
+<summary>Почему фильтр греется при работе?</summary>
+<p>Нагрев указывает на потери в контуре. Это может быть вызвано низкодобротными компонентами, плохой пайкой (окислы), вихревыми токами в близкорасположенном металле корпуса или работой на частоте, где материал сердечника имеет большие потери.</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#принцип-работы-и-основные-параметры-фильтра">Принцип работы и основные параметры фильтра</a></li><li><a href="#выбор-элементной-базы-и-материалов">Выбор элементной базы и материалов</a></li><li><a href="#расчет-параметров-lc-контура">Расчет параметров LC-контура</a></li><li><a href="#практическая-сборка-и-монтаж-схемы">Практическая сборка и монтаж схемы</a></li><li><a href="#настройка-и-согласование-с-антенной">Настройка и согласование с антенной</a></li><li><a href="#типичные-ошибки-и-методы-их-устранения">Типичные ошибки и методы их устранения</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/p/pa/pandora-ne-pokazyvaet-mestopolozhenie-avtomobilya.html" class="related-card">Пандора не показывает местоположение авто: причины и решения</a></li><li><a href="/articles/o/os/ostanovka-na-dvukhpolosnoj-doroge.html" class="related-card">Остановка на двухполосной дороге: ПДД, штрафы и безопасность</a></li><li><a href="/articles/t/te/teyes-cc3-kody-dlya-nastroek.html" class="related-card">TEYES CC3: секретные коды для настроек и скрытые функции (2026)</a></li><li><a href="/articles/n/ni/nissan-dzhuk-zamena-masla-v-variatore.html" class="related-card">Замена масла в вариаторе Nissan Juke: пошаговая инструкция 2026</a></li><li><a href="/articles/k/ko/korichnevyj-zhuk-s-dlinnymi-usami.html" class="related-card">Коричневый жук с длинными усами: виды, фото и опасность</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/p/pa/pandora-ne-pokazyvaet-mestopolozhenie-avtomobilya.html" class="related-bottom-card"><span class="related-bottom-title">Пандора не показывает местоположение авто: причины и решения</span><span class="related-bottom-desc">Разбираемся, почему &lt;em&gt;Pandora&lt;/em&gt; не отображает координаты машины и как исправить проблему на &lt;em</span></a><a href="/articles/o/os/ostanovka-na-dvukhpolosnoj-doroge.html" class="related-bottom-card"><span class="related-bottom-title">Остановка на двухполосной дороге: ПДД, штрафы и безопасность</span><span class="related-bottom-desc">Правила остановки на двухполосной дороге в 2026 году: где можно останавливаться, какие знаки запреща</span></a><a href="/articles/t/te/teyes-cc3-kody-dlya-nastroek.html" class="related-bottom-card"><span class="related-bottom-title">TEYES CC3: секретные коды для настроек и скрытые функции (2026)</span><span class="related-bottom-desc">Полный список инженерных кодов для &lt;em&gt;TEYES CC3&lt;/em&gt;: как активировать скрытые меню, откалибровать </span></a><a href="/articles/n/ni/nissan-dzhuk-zamena-masla-v-variatore.html" class="related-bottom-card"><span class="related-bottom-title">Замена масла в вариаторе Nissan Juke: пошаговая инструкция 2026</span><span class="related-bottom-desc">Как правильно поменять масло в вариаторе Nissan Juke: периодичность, выбор масла, инструменты и ошиб</span></a><a href="/articles/k/ko/korichnevyj-zhuk-s-dlinnymi-usami.html" class="related-bottom-card"><span class="related-bottom-title">Коричневый жук с длинными усами: виды, фото и опасность</span><span class="related-bottom-desc">Встретили коричневого жука с длинными усами? Узнайте, как отличить безопасного усача от вредителя др</span></a><a href="/articles/i/in/invertor-dlya-ccfl-lamp.html" class="related-bottom-card"><span class="related-bottom-title">Инвертор для CCFL ламп: выбор, подключение и ремонт</span><span class="related-bottom-desc">Как выбрать инвертор для CCFL-подсветки монитора или телевизора? Схемы подключения, неисправности, о</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

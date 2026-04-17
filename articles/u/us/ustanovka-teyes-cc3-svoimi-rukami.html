@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>Установка Teyes CC3 своими руками: пошаговая инструкция — VW-portal</title>
+    <meta name="description" content="Полное руководство по установке магнитолы Teyes CC3. Схемы подключения, настройка CAN-bus, калибровка экрана и решение проблем. Советы экспертов.">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/u/us/ustanovka-teyes-cc3-svoimi-rukami.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Установка Teyes CC3 своими руками: пошаговая инструкция">
+    <meta property="og:description" content="Полное руководство по установке магнитолы Teyes CC3. Схемы подключения, настройка CAN-bus, калибровка экрана и решение проблем. Советы экспертов.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Установка Teyes CC3 своими руками: пошаговая инструкция</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Установка Teyes CC3 своими руками: полное руководство</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#подготовка-инструментов-и-проверка-комплектации">Подготовка инструментов и проверка комплектации</a></li><li><a href="#демонтаж-штатной-магнитолы-и-подготовка-места">Демонтаж штатной магнитолы и подготовка места</a></li><li><a href="#схема-подключения-и-электрическая-часть">Схема подключения и электрическая часть</a></li><li><a href="#настройка-can-bus-и-кнопок-руля">Настройка CAN-bus и кнопок руля</a></li><li><a href="#калибровка-экрана-и-установка-драйверов">Калибровка экрана и установка драйверов</a></li><li><a href="#финальная-сборка-и-тестирование-систем">Финальная сборка и тестирование систем</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Замена штатной мультимедийной системы на современную Android-платформу — это один из самых эффективных способов обновить автомобиль, не меняя его внешнего облика. Головные устройства серии <em>Teyes CC3</em> завоевали популярность благодаря высокой производительности, качественным IPS-экранам и поддержке управления с руля через CAN-bus. Однако процесс инсталляции требует внимательности, понимания основ электрики и точного соблюдения последовательности действий. Неправильное подключение может привести к выходу из строя предохранителей или некорректной работе бортовых систем.</p>
+
+<p>Прежде чем приступать к демонтажу панелей, необходимо подготовить рабочее место и убедиться в наличии всех необходимых компонентов в комплекте поставки. Успех мероприятия на 80% зависит от <strong>качества подготовки</strong> и проверки совместимости разъемов. В этой статье мы подробно разберем каждый этап, от выбора инструментов до финальной программной настройки, чтобы вы могли выполнить работу профессионально.</p>
+
+<p>Особое внимание стоит уделить безопасности: все работы с электрической частью автомобиля проводятся только при отключенной минусовой клемме аккумулятора. Это <mark>критически важно</mark>, так как случайное замыкание плюсового провода на массу в процессе монтажа может сжечь блок управления кузовом (BCM) или саму магнитолу. Игнорирование этого правила часто становится причиной дорогостоящего ремонта.</p>
+
+<h2 id="подготовка-инструментов-и-проверка-комплектации">Подготовка инструментов и проверка комплектации</h2>
+
+<p>Для успешного завершения работ вам потребуется минимальный, но качественный набор инструментов. Не стоит полагаться на случайные предметы, так как пластиковые элементы салона легко повредить неаккуратным обращением. Основу вашего арсенала должны составлять специальные съемники для пластиковых панелей, набор отверток (крестовые и плоские), а также мультиметр для проверки напряжения.</p>
+
+<ul>
+    <li>🛠️ Набор пластиковых лопаток и съемников для аккуратного демонтажа обшивки без царапин.</li>
+    <li>🔌 Изолента высокого качества, термоусадка и стяжки для фиксации проводки.</li>
+    <li>📏 Рулетка или линейка для проверки глубины посадочного места (если требуется доработка).</li>
+    <li>🧤 Рабочие перчатки для защиты рук и предотвращения загрязнения салона.</li>
+</ul>
+
+<p>Тщательно распакуйте коробку с устройством <em>Teyes CC3</em> и сверьте содержимое со списком в инструкции. В стандартный комплект обычно входит сама магнитола, рамка переходника (под конкретную модель авто), жгуты проводов, кабель CAN-bus, GPS-антенна, микрофон и пульт дистанционного управления. Отсутствие даже одного элемента может остановить монтаж на полпути.</p>
+
+<blockquote>
+<p>⚠️ <strong>Внимание:</strong> Перед началом разборки салона обязательно сфотографируйте штатную систему и все подключения. Это поможет вам восстановить все как было в случае неудачной установки или при необходимости вернуть автомобиль к заводскому состоянию.</p>
+</blockquote>
+
+<p>Проверьте целостность всех разъемов на жгутах проводов. Иногда при транспортировке контакты могут быть повреждены или окислены. Убедитесь, что штекер питания имеет правильную распиновку для вашего региона (обычно ISO стандарт). Если вы покупали устройство у официального дилера, проблем быть не должно, но на рынке много серых поставок, где комплектация может отличаться.</p>
+
+<h2 id="демонтаж-штатной-магнитолы-и-подготовка-места">Демонтаж штатной магнитолы и подготовка места</h2>
+
+<p>Процесс снятия заводской головной единицы (ГУ) сильно различается в зависимости от марки и модели автомобиля. В некоторых случаях достаточно просто потянуть панель на себя, в других — требуется выкручивать скрытые винты за декоративными заглушками или в бардачке. Изучите спецификацию для вашего авто или посмотрите видео-обзоры по разборке именно вашей модели.</p>
+
+<p>После извлечения штатного устройства внимательно осмотрите посадочное место. Часто бывает, что <strong>геометрия корпуса</em> новой магнитолы не совпадает с заводскими креплениями. В комплекте с <em>Teyes CC3</em> часто идет металлическая рамка-переходник, которая должна встать как влитая. Если требуются небольшие доработки пластика, используйте напильник или дремель, но действуйте осторожно.</p>
+
+<div class="checklist-block"><h4>☑️ Чек-лист перед подключением</h4><label class="check-item"><input type="checkbox"><span>Проверено напряжение в разъеме питания</span></label><label class="check-item"><input type="checkbox"><span>CAN-bus адаптер подключен к правильным пинам</span></label><label class="check-item"><input type="checkbox"><span>Антенны GPS и 4G выведены на верхнюю часть панели</span></label><label class="check-item"><input type="checkbox"><span>Все разъемы защелкнуты до щелчка</span></label><label class="check-item"><input type="checkbox"><span>Проводка надежно зафиксирована стяжками</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 5</div></div>
+
+<p>Очистите внутреннюю часть торпедо от пыли и посторонних предметов. Любая мелочь, попавшая под экран или в вентиляционные каналы, может вызвать дребезжание или перегрев. Также проверьте состояние штатной проводки: провода не должны быть перетерты или оплавлены. Если обнаружены дефекты изоляции, их необходимо устранить до подключения нового оборудования.</p>
+
+<h2 id="схема-подключения-и-электрическая-часть">Схема подключения и электрическая часть</h2>
+
+<p>Самый ответственный этап — коммутация электрических цепей. Стандартный разъем ISO имеет цветовую маркировку, но полагаться только на цвета нельзя, так как производители автомобилей могут менять распиновку. Используйте мультиметр в режиме прозвонки или измерения напряжения, чтобы найти постоянный плюс (+12V), зажигание (ACC) и массу (GND).</p>
+
+<p>Для подключения <em>Teyes CC3</em> вам необходимо соединить соответствующие провода через переходник или напрямую (методом скрутки с последующей пайкой и изоляцией, хотя лучше использовать коннекторы). Особое внимание уделите проводу управления усилителем (AMP) и проводу парковки (PARK), если он требуется для разблокировки видео.</p>
+
+<details class="faq-item"><summary>Нюансы подключения CAN-bus</summary><div class="faq-answer"><p>Адаптер CAN-bus позволяет магнитоле "общаться" с бортовым компьютером автомобиля. Без него не будут работать кнопки на руле, индикация открытой двери и настройки штатного усилителя. Важно правильно выбрать тип автомобиля и протокол в настройках заводских (Factory Settings).</p></div></details>
+
+<p>Ниже приведена таблица стандартной цветовой маркировки проводов, которая чаще всего встречается в головных устройствах на базе Android:</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Цвет провода</th>
+            <th>Функция</th>
+            <th>Назначение</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Желтый</td>
+            <td>Battery +</td>
+            <td>Постоянный плюс (память)</td>
+        </tr>
+        <tr>
+            <td>Красный</td>
+            <td>ACC</td>
+            <td>Плюс зажигания (включение)</td>
+        </tr>
+        <tr>
+            <td>Черный</td>
+            <td>GND</td>
+            <td>Масса (кузов)</td>
+        </tr>
+        <tr>
+            <td>Синый/Белый</td>
+            <td>AMP</td>
+            <td>Управление усилителем/антенной</td>
+        </tr>
+        <tr>
+            <td>Розовый</td>
+            <td>PARK</td>
+            <td>Датчик ручного тормоза</td>
+        </tr>
+    </tbody>
+</table>
+
+<p>После соединения всех проводов не спешите вставлять магнитолу в нишу. Включите зажигание и проверьте, загорается ли экран, работает ли звук и реагирует ли устройство на кнопки. Если все функционирует корректно, можно приступать к окончательному монтажу.</p>
+
+<h2 id="настройка-can-bus-и-кнопок-руля">Настройка CAN-bus и кнопок руля</h2>
+
+<p>Современные автомобили передают команды с кнопок руля и данные о климат-контроле через цифровой шину CAN. Для работы этих функций в <em>Teyes CC3</strong> установлен CAN-адаптер. После физической установки устройства необходимо зайти в настройки и выбрать правильный протокол.</p>
+
+<p>Перейдите в меню <code>Настройки → Заводские настройки (Factory Settings)</code>. Вам потребуется ввести пароль (обычно <code>8878</code>, <code>1234</code> или <code>0000</code>, проверьте документацию). В открывшемся меню найдите раздел <strong>CAN Bus</em> или <em>Steering Wheel</em>.</p>
+
+<ul>
+    <li>🚗 Выберите марку вашего автомобиля из списка (например, Volkswagen, Toyota, Kia).</li>
+    <li>⚙️ Найдите точную модель и год выпуска в предложенном перечне протоколов.</li>
+    <li>✅ Сохраните настройки и перезагрузите устройство для применения изменений.</li>
+</ul>
+
+<blockquote>
+<p>⚠️ <strong>Внимание:</strong> Если вы выбрали неверный протокол CAN-bus, кнопки на руле могут работать некорректно (например, вместо громкости переключать треки), а на экране могут появляться ошибки или "снег". В таком случае попробуйте соседний протокол или обновите базу CAN-кодов.</p>
+</blockquote>
+
+<div class="attention-box attention-info"><div><strong>📊 С каким протоколом CAN-bus возникли сложности?</strong><ul><li>Volkswagen/Toyota/Kia/Hyundai/Другой</li></ul></div></div>
+
+<p>Если в списке нет вашей модели, возможно, потребуется ручная настройка кнопок через меню обучения (Learning Mode). В этом режиме вы нажимаете кнопку на руле, а затем выбираете соответствующее действие на экране магнитолы. Этот процесс занимает больше времени, но гарантирует работу управления.</p>
+
+<h2 id="калибровка-экрана-и-установка-драйверов">Калибровка экрана и установка драйверов</h2>
+
+<p>После первого включения вы можете заметить, что сенсорный экран реагирует неточно или смещен относительно изображения. Это нормально и требует калибровки. В меню настроек найдите пункт <code>Калибровка экрана</code> или запустите его, несколько раз нажав на точку в углу экрана (зависит от версии прошивки).</p>
+
+<p>Следуйте инструкциям на дисплее: нажимайте точно в центр появляющихся крестиков. После завершения процедуры устройство сохранит координаты. Также на этом этапе рекомендуется проверить работу видеовыхода и камер. Если у вас есть камера заднего вида, подключите ее к разъему <code>CAM-IN</code> или <code>REVERSE</code>.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Для идеальной цветопередачи и яркости используйте заводские профили изображения, но при желании можно установить сторонние приложения для тонкой настройки цветового баланса экрана.</p></div>
+
+<p>Не забудьте установить необходимые драйверы для 3G/4G модемов, если вы планируете использовать мобильный интернет через USB-свисток. Файлы драйверов обычно находятся на внутренней памяти устройства в папке <code>Drivers</code> или доступны для скачивания на официальном сайте производителя. Подключите модем, дождитесь его определения и активируйте точку доступа.</p>
+
+<h2 id="финальная-сборка-и-тестирование-систем">Финальная сборка и тестирование систем</h2>
+
+<p>Когда все электрические соединения проверены, а программные настройки внесены, можно приступать к финальной сборке. Аккуратно уложите лишнюю длину проводов в глубь торпедо, используя стяжки, чтобы они не болтались и не создавали шума при движении. Убедитесь, что провода не пережаты острыми краями металла.</p>
+
+<p>Вставьте магнитолу в посадочное место до характерного щелчка фиксаторов. Установите декоративную рамку. Включите зажигание и проведите комплексное тестирование: проверьте работу радио, Bluetooth-соединения, навигации, звука на разных частотах и работу камер. Особое внимание уделите работе климат-контроля, если он цифровой.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Качественная укладка проводов и надежная фиксация разъемов — залог отсутствия посторонних шумов и стабильной работы системы в долгосрочной перспективе.</p></div>
+
+<p>Если все системы работают штатно, поздравляем — установка <em>Teyes CC3</em> своими руками успешно завершена. Вы получили современный мультимедийный центр, который значительно расширяет функционал вашего автомобиля. Регулярно обновляйте программное обеспечение для получения новых функций и исправлений ошибок.</p>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+
+<details>
+    <summary>Почему магнитола выключается при запуске двигателя?</summary>
+    <p>Это может происходить из-за просадки напряжения в бортовой сети в момент работы стартера. Проверьте надежность подключения массы и постоянного плюса. Если проблема сохраняется, возможно, аккумулятор автомобиля ослаб и требует замены или подзарядки.</p>
+</details>
+
+<details>
+    <summary>Как сбросить настройки до заводских, если система зависла?</summary>
+    <p>На задней панели устройства или на лицевой рамке (иногда в разъеме AUX/USB) есть маленькое отверстие <code>RST</code>. Нажмите туда скрепкой при включенном питании. Также сброс можно выполнить через меню <code>Настройки → Восстановление и сброс</code>.</p>
+</details>
+
+<details>
+    <summary>Можно ли подключить две камеры (переднюю и заднюю)?</summary>
+    <p>Да, большинство моделей <em>Teyes CC3</em> имеют два видеовхода: <code>REVERSE</code> (для задней камеры с приоритетом) и <code>CAM-IN</code> или <code>FRONT</code> (для передней камеры или камеры салона). Переключение осуществляется программно или автоматически при включении задней передачи.</p>
+</details>
+
+<details>
+    <summary>Почему не работает микрофон, и собеседники меня плохо слышат?</summary>
+    <p>Проверьте, подключен ли внешний микрофон из комплекта в специальный разъем <code>MIC</code> на задней панели. В настройках звука убедитесь, что выбран источник "Внешний микрофон", а не встроенный. Также проверьте, не закрыт ли микрофон элементами салона.</p>
+</details>
+
+<details>
+    <summary>Как установить приложения из Google Play, если их нет в списке?</summary>
+    <p>Убедитесь, что аккаунт Google авторизован. Если приложение не совместимо с версией Android или разрешением экрана, его установка невозможна напрямую. Можно попробовать скачать APK-файл стороннего источника и установить его через файловый менеджер, но это может быть небезопасно.</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#подготовка-инструментов-и-проверка-комплектации">Подготовка инструментов и проверка комплектации</a></li><li><a href="#демонтаж-штатной-магнитолы-и-подготовка-места">Демонтаж штатной магнитолы и подготовка места</a></li><li><a href="#схема-подключения-и-электрическая-часть">Схема подключения и электрическая часть</a></li><li><a href="#настройка-can-bus-и-кнопок-руля">Настройка CAN-bus и кнопок руля</a></li><li><a href="#калибровка-экрана-и-установка-драйверов">Калибровка экрана и установка драйверов</a></li><li><a href="#финальная-сборка-и-тестирование-систем">Финальная сборка и тестирование систем</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/k/ka/kak-raspolovinit-bak-stiralnoj-mashiny.html" class="related-card">Как располовинить бак стиральной машины: пошаговая инструкция 2026</a></li><li><a href="/articles/n/ni/nissan-zhuk-zamena-masla-variatora.html" class="related-card">Замена масла в вариаторе Nissan Juke: интервалы и спецификации</a></li><li><a href="/articles/t/te/teyes-cc4-pro-data-vykhoda.html" class="related-card">Teyes CC4 Pro: дата выхода, официальные новости и утечки 2026</a></li><li><a href="/articles/m/ma/maslo-lukojl-5w30-s-dopuskom-504-507-dlya-folksvagen.html" class="related-card">Масло Lukoil 5W30 с допуском VW 504 507: подходит ли для вашего Фольксваген?</a></li><li><a href="/articles/b/bl/blok-immobilajzera-uaz-patriot-raspolozhenie.html" class="related-card">Блок иммобилайзера УАЗ Патриот: где находится и как выглядит</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/k/ka/kak-raspolovinit-bak-stiralnoj-mashiny.html" class="related-bottom-card"><span class="related-bottom-title">Как располовинить бак стиральной машины: пошаговая инструкция 2026</span><span class="related-bottom-desc">Подробный гайд по разборке бака стиральной машины с фото, инструментами и советами. Узнайте, как пра</span></a><a href="/articles/n/ni/nissan-zhuk-zamena-masla-variatora.html" class="related-bottom-card"><span class="related-bottom-title">Замена масла в вариаторе Nissan Juke: интервалы и спецификации</span><span class="related-bottom-desc">Полный гид по обслуживанию CVT Nissan Juke. Выбор масла, интервалы замены, проверка уровня и критиче</span></a><a href="/articles/t/te/teyes-cc4-pro-data-vykhoda.html" class="related-bottom-card"><span class="related-bottom-title">Teyes CC4 Pro: дата выхода, официальные новости и утечки 2026</span><span class="related-bottom-desc">Официальная дата релиза Teyes CC4 Pro, технические характеристики, отличия от CC3 и CC4, где купить </span></a><a href="/articles/m/ma/maslo-lukojl-5w30-s-dopuskom-504-507-dlya-folksvagen.html" class="related-bottom-card"><span class="related-bottom-title">Масло Lukoil 5W30 с допуском VW 504 507: подходит ли для вашего Фольксваген?</span><span class="related-bottom-desc">Разбираемся, можно ли заливать Lukoil Genesis Armortech 5W30 с допусками 504 507 в двигатели VW. Сра</span></a><a href="/articles/b/bl/blok-immobilajzera-uaz-patriot-raspolozhenie.html" class="related-bottom-card"><span class="related-bottom-title">Блок иммобилайзера УАЗ Патриот: где находится и как выглядит</span><span class="related-bottom-desc">Где расположен блок иммобилайзера УАЗ Патриот. Схемы размещения, особенности ЭБУ Bosch и Сименс. Инс</span></a><a href="/articles/c/ch/chto-takoe-sudzhuk-iz-chego-sdelan.html" class="related-bottom-card"><span class="related-bottom-title">Суджук: состав, рецепт и секреты приготовления — полный гид</span><span class="related-bottom-desc">Что такое суджук, из чего его делают и как выбрать качественную колбасу? Разбираем состав, технологи</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

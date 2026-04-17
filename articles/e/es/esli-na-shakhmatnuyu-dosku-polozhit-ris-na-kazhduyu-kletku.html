@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>Сколько риса на шахматной доске? Легенда о зернах и математика — VW-portal</title>
+    <meta name="description" content="Разбираем задачу о рисе на шахматной доске: экспоненциальный рост, история легенды и реальные расчёты. Почему 2^64 − 1 зерно — это 18 квинтиллионов тонн?">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/e/es/esli-na-shakhmatnuyu-dosku-polozhit-ris-na-kazhduyu-kletku.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Сколько риса на шахматной доске? Легенда о зернах и математика">
+    <meta property="og:description" content="Разбираем задачу о рисе на шахматной доске: экспоненциальный рост, история легенды и реальные расчёты. Почему 2^64 − 1 зерно — это 18 квинтиллионов тонн?">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Сколько риса на шахматной доске? Легенда о зернах и математика</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Если на шахматную доску положить рис на каждую клетку: миф, математика и последствия</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#легенда-о-шахматах-и-рисе-происхождение-мифа">Легенда о шахматах и рисе: происхождение мифа</a></li><li><a href="#математика-задачи-как-считать-зерна-риса">Математика задачи: как считать зерна риса</a></li><li><a href="#сколько-это-риса-в-реальности-логистический-кошмар">Сколько это риса в реальности: логистический кошмар</a></li><li><a href="#экспоненциальный-рост-в-современном-мире-от-биткоина-до-пандемий">Экспоненциальный рост в современном мире: от биткоина до пандемий</a></li><li><a href="#практическое-применение-где-используется-удвоение">Практическое применение: где используется удвоение</a></li><li><a href="#ошибки-в-интерпретации-что-все-понимают-неправильно">Ошибки в интерпретации: что все понимают неправильно</a></li><li><a href="#faq-ответы-на-частые-вопросы">FAQ: ответы на частые вопросы</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body"><p>Легенда о мудреце, попросившем у правителя за шахматную доску рис по схеме «одно зерно на первую клетку, два — на вторую, четыре — на третью и так далее», стала классическим примером <strong>экспоненциального роста</strong>. На первый взгляд, просьба кажется скромной: первые клетки содержат горстки зёрен, но уже к середине доски цифры становятся астрономическими. Эта задача не только иллюстрирует мощь геометрической прогрессии, но и имеет реальные приложения — от криптографии до экономики.</p>
+
+<p>В статье мы разберём:
+<em>математическую основу</em> задачи (почему сумма на 64-й клетке равна <mark>18 446 744 073 709 551 615 зёрен</mark>),
+<em>исторический контекст</em> (откуда взялась легенда и как она связана с изобретением шахмат),
+<em>практические последствия</em> (сколько это риса в тоннах и как его хранить),
+<p>а также <em>современные аналоги</em> — где ещё встречается экспоненциальный рост, от биткоина до вирусов.</p></p>
+
+<h2 id="легенда-о-шахматах-и-рисе-происхождение-мифа">Легенда о шахматах и рисе: происхождение мифа</h2>
+
+<p>Самая ранняя версия истории датируется <strong>VIII веком</strong> и связана с индийским математиком <em>Сисой бен Дахиром</em>, который якобы изобрёл шахматы для царя <em>Шерама</em>. В награду мудрец попросил рис по схеме удвоения на каждой клетке доски. Правитель сначала рассмеялся, но потом понял, что не сможет выполнить просьбу: даже все запасы риса в стране не покроют долг.</p>
+
+<p>Интересно, что в разных культурах сюжет варьируется:
+<em>в персидской версии</em> вместо риса фигурирует пшеница,
+<em>в европейских пересказах</em> — золото или монеты.
+<p>Но суть остаётся той же: <strong>человек не способен интуитивно оценить экспоненциальный рост</strong>. Эта история стала предостережением для правителей и меткой иллюстрацией для математиков.</p></p>
+
+<ul>
+  <li>📜 <strong>Древнейший источник</strong>: трактат <em>«Китāб аш-шатрандж»</em> (IX век) на арабском.</li>
+  <li>👑 <strong>Альтернативные версии</strong>: в Китае вместо шахмат — игра <em>го</em>, а награда — бобы.</li>
+  <li>💰 <strong>Экономический подтекст</strong>: легенда объясняет, почему инфляция и проценты опасны.</li>
+</ul>
+
+<blockquote>⚠️ Внимание: В оригинальной легенде речь идёт о <code>64 клетках</code>, но некоторые пересказы сокращают до <code>32</code> или <code>16</code>, что искажает суть. Экспоненциальный рост проявляется именно на больших числах!</blockquote>
+
+<h2 id="математика-задачи-как-считать-зерна-риса">Математика задачи: как считать зерна риса</h2>
+
+<p>Формула для количества зёрен на <em>n</em>-й клетке проста: <code>2^(n−1)</code>. Но сумма всех зёрен на доске — это <strong>геометрический ряд</strong>:</p>
+
+<p><pre><code>S = 2^0 + 2^1 + 2^2 + ... + 2^63 = 2^64 − 1</code></pre>
+<p>Результат — <mark>18 446 744 073 709 551 615 зёрен</mark> (около 18 квинтиллионов). Для сравнения:</p>
+<em>мировое производство риса в 2023 году</em> — ~800 млн тонн (~40 триллионов зёрен).
+<p>Чтобы выполнить просьбу мудреца, понадобилось бы <strong>в 460 миллиардов раз больше</strong>, чем весь рис на планете!</p></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Клетка</th>
+      <th>Количество зёрен</th>
+      <th>Эквивалент в тоннах*</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1–10</td>
+      <td>1 023</td>
+      <td>0,02 кг</td>
+    </tr>
+    <tr>
+      <td>20</td>
+      <td>524 288</td>
+      <td>10,5 кг</td>
+    </tr>
+    <tr>
+      <td>30</td>
+      <td>536 870 912</td>
+      <td>10 737 кг</td>
+    </tr>
+    <tr>
+      <td>40</td>
+      <td>549 755 813 888</td>
+      <td>10 995 тонн</td>
+    </tr>
+    <tr>
+      <td>64 (сумма)</td>
+      <td>18 446 744 073 709 551 615</td>
+      <td>368 934 881 474 тонн</td>
+    </tr>
+  </tbody>
+</table>
+<p>*При среднем весе зерна риса 0,02 грамма.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Как вы думаете, почему царь не смог выполнить просьбу?</strong><ul><li>Не понял математику</li><li>Подвёл бухгалтер</li><li>Зерна не хватило на складах</li><li>Это вымысел</li></ul></div></div>
+
+<h2 id="сколько-это-риса-в-реальности-логистический-кошмар">Сколько это риса в реальности: логистический кошмар</h2>
+
+<p>Даже если бы у царя были все зерна мира, их <strong>физическое хранение</strong> стало бы проблемой. Объём 368 миллиардов тонн риса при плотности ~0,8 т/м³ занял бы <em>460 кубических километров</em> — это куб с ребром <code>7,7 км</code> (выше Эвереста!) или озеро глубиной 10 метров площадью с <em>Московскую область</em>.</p>
+
+<p>Для транспортировки понадобилось бы:
+<em>18 миллионов грузовых кораблей</em> типа <em>«Valemax»</em> (вместимость 400 тыс. тонн),
+<p>или <em>92 миллиона железнодорожных вагонов</em> (по 4 тонны каждый).</p>
+<p>При этом мировой флот сухогрузов — всего ~12 тыс. судов, а перевозка заняла бы <strong>десятки лет</strong>.</p></p>
+
+<ul>
+  <li>🌍 <strong>Площадь полей</strong>: Чтобы вырастить столько риса, нужно засеять <em>все континенты</em> (кроме Антарктиды) на глубину 1 метр.</li>
+  <li>⏳ <strong>Время сбора</strong>: При урожайности 5 т/га и площади Земли 150 млн км² — <em>73 года непрерывного сбора</em>.</li>
+  <li>💸 <strong>Стоимость</strong>: При цене 1 000 $/тонна — <em>368 триллионов долларов</em> (в 4 раза больше глобального ВВП).</li>
+</ul>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Чтобы визуализировать 18 квинтиллионов зёрен, представьте, что каждое зерно — это звезда. Тогда их хватит, чтобы заполнить <em>всю нашу галактику Млечный Путь</em> (100–400 млрд звёзд) <strong>46 раз</strong>!</p></div>
+
+<h2 id="экспоненциальный-рост-в-современном-мире-от-биткоина-до-пандемий">Экспоненциальный рост в современном мире: от биткоина до пандемий</h2>
+
+<p>Задача о рисе — не просто математическая абстракция. Аналогичные процессы наблюдаются в:</p>
+
+<ol>
+  <li><strong>Криптовалютах</strong>: Биткоин имеет лимит эмиссии в <code>21 млн монет</code>, но их добыча follows схеме удвоения сложности майнинга каждые 4 года (<em>halving</em>).</li>
+  <li><strong>Вирусологии</strong>: Распространение COVID-19 в начале пандемии описывалось формулой <code>R0 × (1 − иммунитет)</code>, где <em>R0 > 1</em> приводит к экспоненте.</li>
+  <li><strong>Технологиях</strong>: Закон Мура (удвоение транзисторов в чипах каждые 2 года) действовал с 1965 по 2016 год.</li>
+</ol>
+
+<p>Ключевое отличие от шахматной доски: в реальности экспонента <strong>всегда ограничена ресурсами</strong>. Например:
+<em>биткоин</em> не может расти вечно из-за лимита блокчейна,
+<em>вирус</em> останавливается при коллективном иммунитете,
+<em>чипы</em> упёрлись в физические пределы кремния.</p>
+
+<details class="faq-item"><summary>Почему экспоненциальный рост обманчив?</summary><div class="faq-answer"><p>Человеческий мозг эволюционно не приспособлен воспринимать экспоненту. Мы интуитивно думаем линейно: если сегодня 10 случаев заболевания, а завтра 20 — кажется, что это «всего в 2 раза больше». Но через 10 дней при R0=2 это будет уже 10 240 случаев — и система здравоохранения рухнет.</p></div></details>
+
+<h2 id="практическое-применение-где-используется-удвоение">Практическое применение: где используется удвоение</h2>
+
+<p>Знание экспоненциальных процессов помогает в:</p>
+
+<ul>
+  <li>💰 <strong>Финансах</strong>: Расчёт сложных процентов по вкладам (<code>A = P(1 + r/n)^(nt)</code>).</li>
+  <li>📈 <strong>Маркетинге</strong>: Виральное распространение контента (каждый пользователь привлекает 2 новых).</li>
+  <li>🔋 <strong>Энергетике</strong>: Солнечные панели удваивают эффективность каждые 5–7 лет.</li>
+</ul>
+
+<p>Пример из IT: алгоритмы с экспоненциальной сложностью (<em>O(2^n)</em>) неприменимы для больших данных. Например, <strong>задача коммивояжёра</strong> (поиск кратчайшего маршрута) для 64 городов потребует перебора <code>9 223 372 036 854 775 808</code> вариантов — даже суперкомпьютер будет решать её годами.</p>
+
+
+<p>Ищите фразы «удвоение», «рост в геометрической прогрессии»</p>
+<p>Проверяйте, не ограничен ли рост ресурсами (энергия, площадь, время)</p>
+<p>Сравнивайте с линейными процессами (например, +10% в год vs ×2 каждый год)</p>
+<p>Считайте итоговую сумму, а не только темп роста--></p>
+
+<h2 id="ошибки-в-интерпретации-что-все-понимают-неправильно">Ошибки в интерпретации: что все понимают неправильно</h2>
+
+<p>Распространённые заблуждения о задаче:</p>
+
+<blockquote>⚠️ Внимание: Многие считают, что сумма зёрен на доске — это <code>2^64</code>, но на самом деле это <code>2^64 − 1</code> (минус одно зерно на первой клетке). Разница в <em>18 квинтиллионов</em> может показаться несущественной, но в криптографии такой нюанс критичен!</blockquote>
+
+<ul>
+  <li>❌ <strong>Миф 1</strong>: «Это просто большая цифра». На самом деле, <em>скорость роста</em> важнее итога — уже к 30-й клетке сумма превышает годовой урожай риса в Таиланде.</li>
+  <li>❌ <strong>Миф 2</strong>: «Царь был глуп». В реальности, <em>ни один правитель</em> не смог бы выполнить просьбу — даже современные государства.</li>
+  <li>❌ <strong>Миф 3</strong>: «Это только про рис». Задача универсальна: замените рис на <em>доллары, байты или бактерии</em> — суть не изменится.</li>
+</ul>
+
+<p>Ключевая ошибка — <strong>недооценка halfway point</strong> (точки, после которой рост становится неуправляемым). Для шахматной доски это <em>40-я клетка</em>: здесь сумма достигает <code>1 трлн зёрен</code>, а далее каждый шаг умножает её на 1 000.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Экспоненциальный рост коварен тем, что первые 90% процесса проходят почти незаметно, а последние 10% — взрывообразно. Это объясняет, почему пандемии, финансовые пузыри и технологические революции всегда застают врасплох.</p></div>
+
+<h2 id="faq-ответы-на-частые-вопросы">FAQ: ответы на частые вопросы</h2>
+
+<details>
+  <summary>Сколько весит всё зерно на доске?</summary>
+  <p>При среднем весе зерна риса <code>0,02 грамма</code>, общая масса составит <strong>368 934 881 474 тонны</strong> (368 миллиардов тонн). Это в <em>500 раз больше</em>, чем вес всех людей на Земле (~7,8 млрд × 70 кг = 546 млн тонн).</p>
+</details>
+
+<details>
+  <summary>Можно ли хранить такое количество риса?</summary>
+  <p>Теоретически — да, но потребуется:
+  <ul>
+    <li>Площадь: <em>71 000 км²</em> (как <em>Чехия</em>) при высоте складов 10 метров.</li>
+    <li>Упаковка: <em>92 триллиона</em> 50-килограммовых мешков.</li>
+    <li>Климат-контроль: рис должен храниться при влажности <code>12–14%</code> и температуре <code>10–15°C</code>, иначе он испортится.</li>
+  </ul>
+<p>Практически — это невозможно из-за логистики и стоимости.</p></p>
+</details>
+
+<details>
+  <summary>Почему именно удвоение, а не тройное или десятикратное?</summary>
+  <p>Удвоение выбрано потому, что:
+  <ol>
+    <li>Это <strong>минимальная экспонента</strong>, которую легко понять (1 → 2 → 4 → 8...).</li>
+    <li>В двоичной системе (основе компьютеров) удвоение — это сдвиг бита влево (<code>101 → 1010</code>).</li>
+    <li>Исторически <em>шахматы</em> связаны с двоичной логикой (чёрное/белое, ход/контрход).</li>
+  </ol>
+<p>При тройном росте сумма на 64-й клетке была бы <code>3^64 − 1 ≈ 3,4 × 10^30</code> зёрен — в <em>180 тысяч раз больше</em>!</p></p>
+</details>
+
+<details>
+  <summary>Есть ли реальные примеры выполнения такой просьбы?</summary>
+  <p>Нет, но были попытки <em>символического</em> выполнения:
+  <ul>
+    <li>В <em>2015 году</em> в Индии на фестивале шахмат выложили рис на <code>первые 10 клеток</code> (1 023 зерна).</li>
+    <li>В <em>2020 году</em> программист написал скрипт, который визуализировал рост зёрен в реальном времени — сервер упал на <em>45-й клетке</em>.</li>
+    <li>Компания <em>Google</em> в шутку предлагала <code>2^64 байт</code> памяти (16 эксабайт) в честоль легенды, но это <em>всего 0,000001%</em> от количества зёрен.</li>
+  </ul></p>
+</details>
+
+<details>
+  <summary>Как эта задача связана с биткоином?</summary>
+  <p>Создатель биткоина <em>Сатоши Накамото</em> заложил в протокол <strong>удвоение награды за блок</strong> каждые 210 000 блоков (~4 года), но с <em>обратным отсчётом</em>:
+  <ul>
+    <li>2009–2012: <code>50 BTC</code> за блок.</li>
+    <li>2012–2016: <code>25 BTC</code> (halving).</li>
+    <li>...
+    <li>2140 год: награда упадёт до <code>0 BTC</code> (лимит 21 млн монет достигнут).</li>
+  </ul>
+<p>Это <strong>зеркальная экспонента</strong>: вместо роста — сжатие эмиссии.</p></p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#легенда-о-шахматах-и-рисе-происхождение-мифа">Легенда о шахматах и рисе: происхождение мифа</a></li><li><a href="#математика-задачи-как-считать-зерна-риса">Математика задачи: как считать зерна риса</a></li><li><a href="#сколько-это-риса-в-реальности-логистический-кошмар">Сколько это риса в реальности: логистический кошмар</a></li><li><a href="#экспоненциальный-рост-в-современном-мире-от-биткоина-до-пандемий">Экспоненциальный рост в современном мире: от биткоина до пандемий</a></li><li><a href="#практическое-применение-где-используется-удвоение">Практическое применение: где используется удвоение</a></li><li><a href="#ошибки-в-интерпретации-что-все-понимают-неправильно">Ошибки в интерпретации: что все понимают неправильно</a></li><li><a href="#faq-ответы-на-частые-вопросы">FAQ: ответы на частые вопросы</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/s/sh/shtab-6-armii-vvs-i-pvo.html" class="related-card">Штаб 6 армии ВВС и ПВО: структура, задачи и особенности управления</a></li><li><a href="/articles/m/ma/magnitola-teyes-cc3l-instruktsiya-na-russkom-yazyke.html" class="related-card">Инструкция для Teyes CC3L на русском: настройка и подключение</a></li><li><a href="/articles/s/sh/shkoda-fabiya-predokhraniteli-raspolozhenie.html" class="related-card">Skoda Fabia: где находятся предохранители (схема + фото)</a></li><li><a href="/articles/t/ti/tipy-dvs-po-raspolozheniyu-tsilindrov.html" class="related-card">Типы ДВС по расположению цилиндров: плюсы и минусы каждого</a></li><li><a href="/articles/v/v-/v-kakom-polozhenii-dolzhna-byt-drosselnaya-zaslonka-na-zaglushennom-dvigatele.html" class="related-card">Положение дроссельной заслонки на заглушенном двигателе</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/s/sh/shtab-6-armii-vvs-i-pvo.html" class="related-bottom-card"><span class="related-bottom-title">Штаб 6 армии ВВС и ПВО: структура, задачи и особенности управления</span><span class="related-bottom-desc">Подробный анализ штаба 6 армии ВВС и ПВО: организационная структура, ключевые задачи, современные вы</span></a><a href="/articles/m/ma/magnitola-teyes-cc3l-instruktsiya-na-russkom-yazyke.html" class="related-bottom-card"><span class="related-bottom-title">Инструкция для Teyes CC3L на русском: настройка и подключение</span><span class="related-bottom-desc">Подробная инструкция на русском для магнитолы Teyes CC3L: установка, подключение, настройка Android,</span></a><a href="/articles/s/sh/shkoda-fabiya-predokhraniteli-raspolozhenie.html" class="related-bottom-card"><span class="related-bottom-title">Skoda Fabia: где находятся предохранители (схема + фото)</span><span class="related-bottom-desc">Подробное расположение предохранителей Škoda Fabia (1, 2, 3 поколения). Схемы блоков, назначение, ка</span></a><a href="/articles/t/ti/tipy-dvs-po-raspolozheniyu-tsilindrov.html" class="related-bottom-card"><span class="related-bottom-title">Типы ДВС по расположению цилиндров: плюсы и минусы каждого</span><span class="related-bottom-desc">Разбираем все схемы компоновки двигателей: рядные, V-образные, оппозитные и другие. Как расположение</span></a><a href="/articles/v/v-/v-kakom-polozhenii-dolzhna-byt-drosselnaya-zaslonka-na-zaglushennom-dvigatele.html" class="related-bottom-card"><span class="related-bottom-title">Положение дроссельной заслонки на заглушенном двигателе</span><span class="related-bottom-desc">В каком положении должна быть дроссельная заслонка при выключенном зажигании? Разбор норм, причин за</span></a><a href="/articles/e/el/elza-folksvagen-skachat-besplatno-na-russkom.html" class="related-bottom-card"><span class="related-bottom-title">ELSA Volkswagen: как скачать бесплатно на русском языке (2026)</span><span class="related-bottom-desc">Пошаговая инструкция по скачиванию ELSA Pro для Volkswagen на русском. Официальные и альтернативные </span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

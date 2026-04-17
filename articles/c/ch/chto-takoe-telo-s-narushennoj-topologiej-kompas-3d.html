@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>Тело с нарушенной топологией в KOMPAS-3D: причины и исправление — VW-portal</title>
+    <meta name="description" content="Что такое нарушенная топология в KOMPAS-3D, как распознать ошибки и восстановить геометрию модели. Пошаговые инструкции для инженеров и конструкторов.">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/c/ch/chto-takoe-telo-s-narushennoj-topologiej-kompas-3d.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Тело с нарушенной топологией в KOMPAS-3D: причины и исправление">
+    <meta property="og:description" content="Что такое нарушенная топология в KOMPAS-3D, как распознать ошибки и восстановить геометрию модели. Пошаговые инструкции для инженеров и конструкторов.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Тело с нарушенной топологией в KOMPAS-3D: причины и исправление</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Тело с нарушенной топологией в KOMPAS-3D: как найти и исправить ошибки</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#что-такое-топология-в-3d-моделировании-и-почему-она-нарушается">Что такое топология в 3D-моделировании и почему она нарушается</a></li><li><a href="#как-распознать-тело-с-нарушенной-топологией-5-ключевых-признаков">Как распознать тело с нарушенной топологией: 5 ключевых признаков</a></li><li><a href="#типичные-ошибки-топологии-и-их-причины">Типичные ошибки топологии и их причины</a></li><li><a href="#пошаговая-инструкция-как-исправить-нарушенную-топологию">Пошаговая инструкция: как исправить нарушенную топологию</a></li><li><a href="#что-делать-если-kompas-3d-не-может-исправить-ошибку">Что делать, если KOMPAS-3D не может исправить ошибку</a></li><li><a href="#как-избежать-ошибок-топологии-профилактика">Как избежать ошибок топологии: профилактика</a></li><li><a href="#сравнение-kompas-3d-с-другими-cad-по-обработке-топологии">Сравнение KOMPAS-3D с другими CAD по обработке топологии</a></li><li><a href="#faq-частые-вопросы-о-нарушенной-топологии-в-kompas-3d">FAQ: Частые вопросы о нарушенной топологии в KOMPAS-3D</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body"><p>Если вы работаете в <em>KOMPAS-3D</em> и вдруг столкнулись с сообщением о <strong>теле с нарушенной топологией</strong>, это значит, что ваша 3D-модель содержит геометрические ошибки, мешающие корректной работе. Такие дефекты могут возникать при импорте файлов из других CAD-систем, некорректном редактировании или сбоях во время построения. Внешне модель может выглядеть нормально, но при попытке экспорта, анализа или дальнейших операций (например, создания чертежа) программа выдаст ошибку.</p>
+
+<p>Нарушение топологии — это не просто "глюк" системы, а серьёзная проблема, которая влияет на <strong>целостность геометрии</strong>. Например, тело может иметь незакрытые грани, самопересечения, "дырки" микроскопического размера или некорректные стыки поверхностей. В этой статье разберём, как диагностировать такие ошибки, почему они возникают и <mark>какие инструменты KOMPAS-3D помогут их устранить без потери данных</mark>.</p>
+
+<h2 id="что-такое-топология-в-3d-моделировании-и-почему-она-нарушается">Что такое топология в 3D-моделировании и почему она нарушается</h2>
+
+<p>Топология в контексте <em>KOMPAS-3D</em> — это структура тела, определяющая, как связаны между собой его элементы: вершины, рёбра и грани. В исправной модели эти связи логичны и непротиворечивы. Например, каждое ребро должно соединять две вершины, а каждая грань — ограничиваться замкнутым контуром рёбер. Нарушение топологии означает, что эти правила нарушены.</p>
+
+<p>Основные причины возникновения ошибок:</p>
+<ul>
+  <li>🔄 <strong>Импорт из других CAD-систем</strong> (STEP, IGES, Parasolid) — форматы могут неточно передавать геометрию, особенно если исходная модель содержала ошибки.</li>
+  <li>⚡ <strong>Сбои при построении</strong> — например, прерванная операция выдавливания или вращения.</li>
+  <li>✂️ <strong>Некорректное редактирование</strong>: удаление граней без "зашивания" отверстий, обрезка с ошибками.</li>
+  <li>🖥️ <strong>Программные баги</strong> — редко, но бывает при работе с сложными сборками.</li>
+</ul>
+
+<p>KOMPAS-3D обычно сигнализирует о проблеме сообщением вроде: <code>"Тело содержит ошибки топологии. Дальнейшие операции могут привести к непредсказуемым результатам"</code>. Игнорировать это нельзя — даже если модель визуально выглядит нормально, при генерации чертежей или расчётах могут возникнуть критические сбои.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 С какой частотой вы сталкиваетесь с ошибками топологии в KOMPAS-3D?</strong><ul><li>Часто (раз в неделю)</li><li>Иногда (раз в месяц)</li><li>Рядко (раз в полгода)</li><li>Никогда</li><li>Не знаю, что это</li></ul></div></div>
+
+<h2 id="как-распознать-тело-с-нарушенной-топологией-5-ключевых-признаков">Как распознать тело с нарушенной топологией: 5 ключевых признаков</h2>
+
+<p>Не всегда KOMPAS-3D сразу показывает ошибку. Иногда проблемы проявляются косвенно. Обратите внимание на следующие симптомы:</p>
+
+<ol>
+  <li><strong>Невозможно создать чертеж</strong> — при генерации видов программа выдаёт ошибку или "зависает".</li>
+  <li><strong>Проблемы с булевыми операциями</strong> — объединение, вычитание или пересечение тел завершаются сбоем.</li>
+  <li><strong>Артефакты при рендеринге</strong> — на модели появляются "дыры", искажения или невидимые грани.</li>
+  <li><strong>Ошибки при экспорте</strong> — файл не сохраняется в STEP/IGES или открывается с искажениями в других CAD.</li>
+  <li><strong>Нестабильная работа</strong> — KOMPAS-3D тормозит или закрывается при попытке редактировать тело.</li>
+</ol>
+
+<p>Для диагностики используйте встроенные инструменты:</p>
+<ul>
+  <li>🔍 <strong>Проверка модели</strong>: <code>Сервис → Диагностика → Проверить модель</code>.</li>
+  <li>📊 <strong>Анализ топологии</strong>: <code>Сервис → Анализ → Топология</code> (показывает незамкнутые контуры, самопересечения).</li>
+  <li>🎨 <strong>Визуализация дефектов</strong>: включите отображение рёбер (<code>Вид → Отобразить → Рёбра</code>) — часто ошибки видны как "разорванные" линии.</li>
+</ul>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если при проверке модели KOMPAS-3D выдаёт сообщение <code>"Обнаружены дегенеративные рёбра"</code>, это означает, что в теле есть рёбра нулевой длины. Их можно удалить с помощью команды <code>Редактировать → Удалить → Дегенеративные элементы</code>.</p></div>
+
+<h2 id="типичные-ошибки-топологии-и-их-причины">Типичные ошибки топологии и их причины</h2>
+
+<p>Разберём наиболее распространённые дефекты и их источники:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Тип ошибки</th>
+      <th>Причина</th>
+      <th>Как проявляется</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Незамкнутые грани</strong></td>
+      <td>Неправильное построение поверхности, обрезка с ошибками</td>
+      <td>Тело выглядит "дырявым", операции выдавливания не работают</td>
+    </tr>
+    <tr>
+      <td><strong>Самопересечения</strong></td>
+      <td>Ошибки при лофтинге, скруглении или импорте</td>
+      <td>Визуально — искажения сетки, при анализе — ошибка <code>"Грани пересекаются"</code></td>
+    </tr>
+    <tr>
+      <td><strong>Дублирующиеся вершины/рёбра</strong></td>
+      <td>Сбои при копировании элементов или булевых операциях</td>
+      <td>Модель "дергается" при вращении, экспорт в STEP даёт ошибку</td>
+    </tr>
+    <tr>
+      <td><strong>Некорректные стыки граней</strong></td>
+      <td>Неточности при сшивке поверхностей или импорте из SolidWorks/Inventor</td>
+      <td>На рендере видны "швы", анализ показывает <code>"Несовпадающие рёбра"</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Особенно часто проблемы возникают при работе с <strong>импортированными моделями</strong>. Например, файлы из <em>SolidWorks</em> или <em>Autodesk Inventor</em> могут содержать "невидимые" дефекты, которые KOMPAS-3D не может автоматически исправить. В таких случаях помогает ручная обработка или использование специализированных инструментов вроде <code>Сервис → Починить тело</code>.</p>
+
+<details class="faq-item"><summary>Пример ошибки при импорте из STEP</summary><div class="faq-answer"><p>При открытии STEP-файла в KOMPAS-3D тело может казаться целым, но при попытке создать сечение программа выдаст ошибку <code>"Невозможно построить сечение: тело содержит некорректные грани"</code>. Это типичный признак нарушенной топологии, вызванной неточным преобразованием геометрии при экспорте из другой CAD-системы.</p></div></details>
+
+<h2 id="пошаговая-инструкция-как-исправить-нарушенную-топологию">Пошаговая инструкция: как исправить нарушенную топологию</h2>
+
+<p>Если вы обнаружили ошибку, следуйте этому алгоритму:</p>
+
+<ol>
+  <li><strong>Сохраните резервную копию</strong> файла (<code>Файл → Сохранить как</code>).</li>
+  <li><strong>Запустите диагностику</strong>:
+    <pre><code>Сервис → Диагностика → Проверить модель</code></pre>
+<p>KOMPAS-3D покажет список ошибок. Запишите их типы (например, "Незамкнутый контур на грани 3").</p>
+  </li>
+  <li><strong>Используйте инструмент "Починить тело"</strong>:
+    <pre><code>Сервис → Починить тело</code></pre>
+<p>В большинстве случаев это автоматически устраняет простые дефекты.</p>
+  </li>
+  <li><strong>Ручная правка сложных ошибок</strong>:
+    <ul>
+      <li>Для незамкнутых граней: используйте <code>Редактировать → Зашить отверстие</code>.</li>
+      <li>Для самопересечений: удалите проблемную грань (<code>Редактировать → Удалить грань</code>) и восстановите её заново.</li>
+    </ol>
+  </li>
+  <li><strong>Проверьте результат</strong> повторной диагностикой.</li>
+</ol>
+
+<div class="checklist-block"><h4>☑️ Подготовка к исправлению топологии</h4><label class="check-item"><input type="checkbox"><span>Сохранить резервную копию модели</span></label><label class="check-item"><input type="checkbox"><span>Запустить диагностику (Сервис → Проверить модель)</span></label><label class="check-item"><input type="checkbox"><span>Записать типы обнаруженных ошибок</span></label><label class="check-item"><input type="checkbox"><span>Применить "Починить тело"</span></label><label class="check-item"><input type="checkbox"><span>Проверка результата</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 5</div></div>
+
+<p>Если автоматическое исправление не помогло, попробуйте <strong>разбить тело на части</strong> (<code>Редактировать → Разделить тело</code>) и обработать каждую отдельно. Иногда помогает экспорт модели в <code>STL</code> с последующим импортом обратно — это "сбрасывает" топологию, но может ухудшить точность геометрии.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Инструмент <code>Сервис → Починить тело</code> справляется с 70–80% типичных ошибок топологии. Однако для сложных дефектов (например, самопересечений после лофтинга) требуется ручная правка или перестроение модели с нуля.</p></div>
+
+<h2 id="что-делать-если-kompas-3d-не-может-исправить-ошибку">Что делать, если KOMPAS-3D не может исправить ошибку</h2>
+
+<p>В некоторых случаях стандартные методы не работают. Рассмотрим альтернативные подходы:</p>
+
+<ul>
+  <li>🔄 <strong>Перестроение модели</strong>:
+    <p>Создайте новое тело и перенесите в него геометрию по эскизам. Например, если ошибка в детали, созданной выдавливанием, повторите операцию с теми же параметрами, но в новом файле.</p>
+  </li>
+  <li>📥 <strong>Импорт через нейтральные форматы</strong>:
+    <p>Экспортируйте модель в <code>STEP</code> или <code>IGES</code>, затем импортируйте обратно. Иногда это "сбрасывает" ошибки, но может привести к потере точности.</p>
+  </li>
+  <li>🛠️ <strong>Использование внешних инструментов</strong>:
+    <p>Программы вроде <em>Netfabb</em> или <em>Meshmixer</em> специализируются на исправлении сеток. Экспортируйте модель в <code>STL</code>, обработайте во внешнем ПО и импортируйте обратно.</p>
+  </li>
+</ul>
+
+<blockquote>⚠️ <strong>Внимание</strong>: При экспорте в <code>STL</code> теряются параметрические связи и история построения. Этот метод подходит только для "замороженных" моделей, которые не планируется дальше редактировать.</blockquote>
+
+<p>Если модель критически важна и не поддаётся исправлению, обратитесь в поддержку <em>АСКОН</em> с лог-файлом ошибок. Для этого:</p>
+<ol>
+  <li>Включите запись лога: <code>Сервис → Настройки → Система → Вести журнал ошибок</code>.</li>
+  <li>Повторите действия, приводящие к сбою.</li>
+  <li>Файл журнала находится по пути: <code>C:\Users\<Ваш_пользователь>\AppData\Roaming\ASCON\KOMPAS-3D\Logs</code>.</li>
+</ol>
+
+<h2 id="как-избежать-ошибок-топологии-профилактика">Как избежать ошибок топологии: профилактика</h2>
+
+<p>Лучше предотвратить проблему, чем исправлять её. Следуйте этим правилам:</p>
+
+<ul>
+  <li>📁 <strong>Проверяйте импортированные модели</strong>:
+    <p>Всегда запускайте диагностику после импорта из STEP/IGES. Используйте <code>Сервис → Анализ → Топология</code>.</p>
+  </li>
+  <li>🔧 <strong>Избегайте "грязных" операций</strong>:
+    <p>Не удаляйте грани или вершины без последующего "зашивания". Для сложных редактирований используйте <code>Редактировать → Локальная операция</code>.</p>
+  </li>
+  <li>🔄 <strong>Следите за булевыми операциями</strong>:
+    <p>Перед объединением/вычитанием тел убедитесь, что они не пересекаются некорректно. Используйте <code>Вид → Отобразить → Пересечения</code>.</p>
+  </li>
+  <li>💾 <strong>Регулярно сохраняйте промежуточные версии</strong>:
+    <p>Это позволит откатиться, если после редактирования появятся ошибки.</p>
+  </li>
+</ul>
+
+<p>Особое внимание уделите работе с <strong>поверхностями</strong>. При сшивке поверхностей в тело (<code>Операции → Сшить поверхности</code>) KOMPAS-3D может создавать дегенеративные рёбра. Чтобы избежать этого:</p>
+<ul>
+  <li>Используйте минимально возможную точность (<code>Настройки → Точность</code>).</li>
+  <li>Перед сшивкой проверьте поверхности на зазоры командой <code>Анализ → Зазоры между поверхностями</code>.</li>
+</ul>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>При работе с импортированными сборками разбирайте их на отдельные детали (<code>Файл → Разобрать сборку</code>) и проверяйте каждую на ошибки топологии. Часто проблема кроется в одной "битой" детали, которая портит всю сборку.</p></div>
+
+<h2 id="сравнение-kompas-3d-с-другими-cad-по-обработке-топологии">Сравнение KOMPAS-3D с другими CAD по обработке топологии</h2>
+
+<p>Разные CAD-системы по-разному справляются с ошибками геометрии. В таблице ниже — сравнение подходов:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>CAD-система</th>
+      <th>Автоисправление топологии</th>
+      <th>Инструменты диагностики</th>
+      <th>Поддержка "грязных" моделей</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><em>KOMPAS-3D</em></td>
+      <td>Есть (<code>Сервис → Починить тело</code>)</td>
+      <td>Да (<code>Сервис → Диагностика</code>)</td>
+      <td>Средняя (требует ручной правки)</td>
+    </tr>
+    <tr>
+      <td><em>SolidWorks</em></td>
+      <td>Есть (инструмент <code>Import Diagnostics</code>)</td>
+      <td>Да (<code>Tools → Check</code>)</td>
+      <td>Высокая (лучше обрабатывает STEP)</td>
+    </tr>
+    <tr>
+      <td><em>Autodesk Inventor</em></td>
+      <td>Есть (<code>Tools → Repair Body</code>)</td>
+      <td>Да (<code>Tools → Model Check</code>)</td>
+      <td>Низкая (часто требует перестроения)</td>
+    </tr>
+    <tr>
+      <td><em>Fusion 360</em></td>
+      <td>Есть (автоматически при импорте)</td>
+      <td>Ограничена</td>
+      <td>Высокая (хорошо работает с "битыми" mesh)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>KOMPAS-3D более строг к топологии, чем <em>SolidWorks</em> или <em>Fusion 360</em>, но предоставляет мощные инструменты для ручного исправления. Например, в <em>SolidWorks</em> ошибки часто "маскируются" и проявляются только при экспорте, тогда как KOMPAS-3D сигнализирует о них сразу.</p>
+
+<blockquote>⚠️ <strong>Внимание</strong>: Если вы часто работаете с импортированными моделями, настройте в KOMPAS-3D опцию автоматической проверки при открытии файлов: <code>Сервис → Настройки → Система → Проверять модели при открытии</code>. Это сэкономит время на диагностику.</blockquote>
+
+<h2 id="faq-частые-вопросы-о-нарушенной-топологии-в-kompas-3d">FAQ: Частые вопросы о нарушенной топологии в KOMPAS-3D</h2>
+
+<details>
+  <summary>Можно ли экспортировать модель с нарушенной топологией в STEP?</summary>
+  <p>Технически да, но результат будет непредсказуемым. В лучшем случае — ошибки перенесутся в STEP-файл и проявятся при открытии в другой CAD. В худшем — модель откроется с искажениями или вообще не откроется. Всегда исправляйте топологию перед экспортом.</p>
+</details>
+
+<details>
+  <summary>Почему после исправления топологии модель изменила форму?</summary>
+  <p>Это происходит, если KOMPAS-3D при починке тела автоматически закрыл отверстия или удалил "лишние" грани. Чтобы избежать искажений, перед исправлением:</p>
+  <ol>
+    <li>Сохраните копию оригинальной модели.</li>
+    <li>Используйте <code>Сервис → Настройки → Точность</code> для уменьшения допусков.</li>
+    <li>Проверьте результат визуально и при необходимости отмените исправление (<code>Ctrl+Z</code>).</li>
+  </ol>
+</details>
+
+<details>
+  <summary>Как исправить ошибку "Тело содержит дегенеративные рёбра"?</summary>
+  <p>Дегенеративные рёбра (нулевой длины) появляются при неточных булевых операциях или импорте. Чтобы их устранить:</p>
+  <pre><code>Редактировать → Удалить → Дегенеративные элементы</code></pre>
+  <p>Если команда не помогает, увеличьте точность модели в настройках (<code>Сервис → Настройки → Точность → Повысить</code>) и повторите операцию.</p>
+</details>
+
+<details>
+  <summary>Можно ли восстановить историю построения после исправления топологии?</summary>
+  <p>Нет. Инструменты вроде <code>Починить тело</code> или ручная правка разрушают параметрические связи. Если история важна, создайте новую деталь и повторите операции построения с нуля, используя исправленную модель как справочную геометрию.</p>
+</details>
+
+<details>
+  <summary>Почему после импорта из AutoCAD в KOMPAS-3D тело становится "битым"?</summary>
+  <p><em>AutoCAD</em> работает с 2D/3D-графикой на основе mesh, а KOMPAS-3D — с точной параметрической геометрией. При импорте <code>DWG</code>/<code>DXF</code>:</p>
+  <ul>
+    <li>Поверхности преобразуются в сетку с приближёнными гранями.</li>
+    <li>Тела могут содержать микроскопические зазоры или наложения.</li>
+  </ul>
+  <p>Решение: импортируйте через <code>STEP</code> или <code>IGES</code>, если исходная модель была создана в <em>AutoCAD Mechanical</em> или <em>Inventor</em>.</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#что-такое-топология-в-3d-моделировании-и-почему-она-нарушается">Что такое топология в 3D-моделировании и почему она нарушается</a></li><li><a href="#как-распознать-тело-с-нарушенной-топологией-5-ключевых-признаков">Как распознать тело с нарушенной топологией: 5 ключевых признаков</a></li><li><a href="#типичные-ошибки-топологии-и-их-причины">Типичные ошибки топологии и их причины</a></li><li><a href="#пошаговая-инструкция-как-исправить-нарушенную-топологию">Пошаговая инструкция: как исправить нарушенную топологию</a></li><li><a href="#что-делать-если-kompas-3d-не-может-исправить-ошибку">Что делать, если KOMPAS-3D не может исправить ошибку</a></li><li><a href="#как-избежать-ошибок-топологии-профилактика">Как избежать ошибок топологии: профилактика</a></li><li><a href="#сравнение-kompas-3d-с-другими-cad-по-обработке-топологии">Сравнение KOMPAS-3D с другими CAD по обработке топологии</a></li><li><a href="#faq-частые-вопросы-о-нарушенной-топологии-в-kompas-3d">FAQ: Частые вопросы о нарушенной топологии в KOMPAS-3D</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/m/mo/mozhno-li-polozhit-plitku-na-krasku.html" class="related-card">Можно ли класть плитку на краску: технологии и риски</a></li><li><a href="/articles/n/ni/nissan-dzhuk-gorit-skolzkaya-doroga.html" class="related-card">Ниссан Джук: горит индикатор скользкой дороги — причины и решение</a></li><li><a href="/articles/f/fi/filtr-dlya-trekhpolosnoj-akustiki.html" class="related-card">Фильтр для 3-х полосной акустики: выбор, установка и настройка</a></li><li><a href="/articles/p/pr/pro-apk-teyes-cc3.html" class="related-card">Прошивка и установка APK для TEYES CC3: Полный гид 2026</a></li><li><a href="/articles/h/ho/honda-accord-7-aux.html" class="related-card">Honda Accord 7: как подключить AUX и улучшить звук в машине</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/m/mo/mozhno-li-polozhit-plitku-na-krasku.html" class="related-bottom-card"><span class="related-bottom-title">Можно ли класть плитку на краску: технологии и риски</span><span class="related-bottom-desc">Подробный разбор технологии укладки плитки на окрашенные стены. Оценка адгезии, выбор клея и этапы п</span></a><a href="/articles/n/ni/nissan-dzhuk-gorit-skolzkaya-doroga.html" class="related-bottom-card"><span class="related-bottom-title">Ниссан Джук: горит индикатор скользкой дороги — причины и решение</span><span class="related-bottom-desc">На Nissan Juke горит значок скользкой дороги? Узнайте причины мигания лампы ESP, как отключить систе</span></a><a href="/articles/f/fi/filtr-dlya-trekhpolosnoj-akustiki.html" class="related-bottom-card"><span class="related-bottom-title">Фильтр для 3-х полосной акустики: выбор, установка и настройка</span><span class="related-bottom-desc">Как правильно подобрать фильтр для трехполосной акустики? Схемы подключения, типы кроссоверов и ошиб</span></a><a href="/articles/p/pr/pro-apk-teyes-cc3.html" class="related-bottom-card"><span class="related-bottom-title">Прошивка и установка APK для TEYES CC3: Полный гид 2026</span><span class="related-bottom-desc">Как правильно устанавливать APK на TEYES CC3? Сброс настроек, работа с файловой системой и решение п</span></a><a href="/articles/h/ho/honda-accord-7-aux.html" class="related-bottom-card"><span class="related-bottom-title">Honda Accord 7: как подключить AUX и улучшить звук в машине</span><span class="related-bottom-desc">Пошаговая инструкция по подключению AUX в Honda Accord 7 (2002-2008), выбор адаптеров, решение пробл</span></a><a href="/articles/b/ba/bak-hyundai-accent-skolko-litrov.html" class="related-bottom-card"><span class="related-bottom-title">Объём бака Hyundai Accent: сколько литров на разных поколениях</span><span class="related-bottom-desc">Точные данные по объёму топливного бака Hyundai Accent (1994–2023): сравнение поколений, особенности</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

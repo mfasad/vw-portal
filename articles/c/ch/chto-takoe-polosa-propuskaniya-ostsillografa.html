@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>Полоса пропускания осциллографа: что это и как влияет на измерения — VW-portal</title>
+    <meta name="description" content="Разбираемся, что такое полоса пропускания осциллографа, как её правильно выбрать и почему это ключевой параметр для точных измерений сигналов. Практические советы и примеры.">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/c/ch/chto-takoe-polosa-propuskaniya-ostsillografa.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Полоса пропускания осциллографа: что это и как влияет на измерения">
+    <meta property="og:description" content="Разбираемся, что такое полоса пропускания осциллографа, как её правильно выбрать и почему это ключевой параметр для точных измерений сигналов. Практические советы и примеры.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Полоса пропускания осциллографа: что это и как влияет на измерения</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Полоса пропускания осциллографа: определение, расчёт и выбор для точных измерений</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#что-такое-полоса-пропускания-осциллографа-физический-смысл">Что такое полоса пропускания осциллографа: физический смысл</a></li><li><a href="#как-полоса-пропускания-влияет-на-форму-сигнала-примеры-искажений">Как полоса пропускания влияет на форму сигнала: примеры искажений</a></li><li><a href="#как-рассчитать-требуемую-полосу-пропускания-для-вашей-задачи">Как рассчитать требуемую полосу пропускания для вашей задачи</a></li><li><a href="#типичные-ошибки-при-выборе-осциллографа-по-полосе-пропускания">Типичные ошибки при выборе осциллографа по полосе пропускания</a></li><li><a href="#полоса-пропускания-vs-частота-дискретизации-что-важнее">Полоса пропускания vs частота дискретизации: что важнее?</a></li><li><a href="#как-проверить-реальную-полосу-пропускания-вашего-осциллографа">Как проверить реальную полосу пропускания вашего осциллографа</a></li><li><a href="#практические-рекомендации-по-выбору-осциллографа">Практические рекомендации по выбору осциллографа</a></li><li><a href="#faq-частые-вопросы-о-полосе-пропускания-осциллографов">FAQ: Частые вопросы о полосе пропускания осциллографов</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body"><p>Вы когда-нибудь сталкивались с ситуацией, когда осциллограф показывает искажённый сигнал, хотя на вход подан идеальный прямоугольный импульс? Или почему при измерении высокочастотных цепей на экране вместо чёткой синусоиды отображается «сглаженная» волна? Причина чаще всего кроется в <strong>полосе пропускания осциллографа</strong> — ключевом параметре, который определяет, какие частоты прибор способен корректно регистрировать и отображать.</p>
+
+<p>Эта характеристика не просто «техническая мелочь» — она напрямую влияет на точность ваших измерений, возможность диагностики высокоскоростных сигналов и даже на стоимость оборудования. Например, осциллограф с полосой <code>100 МГц</code> может «не заметить» гармоники сигнала на частоте <code>150 МГц</code>, что приведёт к ошибкам в анализах цепей питания, цифровых шин или радиочастотных схем. В этой статье мы разберём, что такое полоса пропускания на практике, как её правильно интерпретировать в даташитах, и почему иногда лучше переплатить за более широкополосную модель, чем потом тратить время на поиск «призрачных» помех.</p>
+
+<h2 id="что-такое-полоса-пропускания-осциллографа-физический-смысл">Что такое полоса пропускания осциллографа: физический смысл</h2>
+
+<p>Полоса пропускания осциллографа — это <strong>диапазон частот</strong>, в котором прибор способен измерять сигналы с заданной точностью (обычно с падением амплитуды не более <code>3 дБ</code> или ~30% от исходного значения). Проще говоря, это максимальная частота синусоидального сигнала, которую осциллограф может воспроизвести на экране без значительных искажений.</p>
+
+<p>Физически полоса ограничивается <em>аналоговыми компонентами</em> тракта сигнала: входными усилителями, аттенюаторами, АЦП (аналого-цифровым преобразователем) и даже кабелями. Например, если в даташите указано <code>350 МГц</code>, это означает, что на частоте <code>350 МГц</code> амплитуда сигнала на экране будет составлять ~70% от реальной, а на более высоких частотах — ещё меньше. При этом <mark>реальная полоса пропускания может сужаться при использовании длинных щупов или неправильных настроек входа (например, режима <code>1×</code> вместо <code>10×</code>)</mark>.</p>
+
+<ul>
+  <li>📡 <strong>Аналоговая полоса</strong>: Определяется аппаратной частью (усилители, фильтры). Например, у <em>Rigol DS1054Z</em> она составляет <code>50 МГц</code> в базовой комплектации.</li>
+  <li>🖥️ <strong>Цифровая полоса</strong>: Зависит от частоты дискретизации АЦП. Для восстановления сигнала по теореме Найквиста частота дискретизации должна быть минимум в 2 раза выше полосы (на практике — в 4–5 раз).</li>
+  <li>⚡ <strong>Эффективная полоса</strong>: Учитывает все потери в тракте, включая щупы и кабели. Может быть на 20–30% уже заявленной.</li>
+</ul>
+
+<p>Важно понимать, что полоса пропускания — это <em>не</em> максимальная частота сигнала, который можно «увидеть» на экране. Например, осциллограф с полосой <code>100 МГц</code> может отобразить сигнал на <code>200 МГц</code>, но его амплитуда будет занижена в 2 раза, а форма искажена. Для точных измерений рекомендуется выбирать прибор с полосой в <strong>3–5 раз шире</strong>, чем максимальная частота в вашей схеме.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой осциллограф вы используете?</strong><ul><li>До 100 МГц</li><li>100–300 МГц</li><li>300–1000 МГц</li><li>Более 1 ГГц</li><li>Не использую</li></ul></div></div>
+
+<h2 id="как-полоса-пропускания-влияет-на-форму-сигнала-примеры-искажений">Как полоса пропускания влияет на форму сигнала: примеры искажений</h2>
+
+<p>Даже небольшое превышение частоты сигнала над полосой осциллографа приводит к заметным искажениям. Рассмотрим типичные случаи:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Тип сигнала</th>
+      <th>Полоса осциллографа</th>
+      <th>Искажение</th>
+      <th>Пример</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Синусоида <code>50 МГц</code></td>
+      <td><code>100 МГц</code></td>
+      <td>Амплитуда занижена на 3% (незаметно)</td>
+      <td>Чистый сигнал</td>
+    </tr>
+    <tr>
+      <td>Синусоида <code>100 МГц</code></td>
+      <td><code>100 МГц</code></td>
+      <td>Амплитуда занижена на 30% (<code>3 дБ</code>)</td>
+      <td>Сигнал «прижат» к нулю</td>
+    </tr>
+    <tr>
+      <td>Прямоугольный импульс <code>1 МГц</code> (фронт <code>10 нс</code>)</td>
+      <td><code>50 МГц</code></td>
+      <td>Фронты «размыты», выбросы на перепадах</td>
+      <td>Импульс похож на «колокол»</td>
+    </tr>
+    <tr>
+      <td>Цифровая шина <code>SPI 20 МГц</code></td>
+      <td><code>20 МГц</code></td>
+      <td>Сигналы <code>CLK</code> и <code>DATA</code> сливаются, ошибки декодирования</td>
+      <td>Невозможно распознать протокол</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Особенно критичны искажения для <strong>импульсных сигналов</strong>. Например, фронт прямоугольного импульса содержит гармоники вплоть до <code>f = 0.35 / t_r</code>, где <code>t_r</code> — время нарастания. Для фронта <code>1 нс</code> значимы гармоники до <code>350 МГц</code>! Если полоса осциллографа уже, фронты будут «сглажены», а выбросы (например, из-за паразитных индуктивностей) — скрыты.</p>
+
+<blockquote>⚠️ <strong>Внимание:</strong> При измерении сигналов с быстрыми фронтами (например, в цепях <em>USB 3.0</em> или <em>PCIe</em>) полоса осциллографа должна быть не менее <strong>5–10 раз шире</strong>, чем частота тактового сигнала. Иначе вы рискуете пропустить критические помехи или ошибки синхронизации.</blockquote>
+
+<p>Для наглядности: осциллограф <em>Tektronix TBS2000</em> с полосой <code>200 МГц</code> при измерении сигнала <code>100 МГц</code> покажет амплитуду с ошибкой ~3%, а при <code>200 МГц</code> — уже ~30%. Если же подать на него сигнал <code>500 МГц</code>, амплитуда на экране будет занижена в <strong>10 раз</strong>, а форма станет неузнаваемой.</p>
+
+<h2 id="как-рассчитать-требуемую-полосу-пропускания-для-вашей-задачи">Как рассчитать требуемую полосу пропускания для вашей задачи</h2>
+
+<p>Выбор осциллографа по полосе пропускания зависит от типа сигналов, с которыми вы работаете. Вот пракческие правила:</p>
+
+<ol>
+  <li><strong>Для синусоидальных сигналов:</strong> Полоса должна быть <strong>в 3 раза шире</strong> максимальной частоты. Например, для измерения сигнала <code>50 МГц</code> нужен осциллограф с полосой <code>≥150 МГц</code>.</li>
+  <li><strong>Для цифровых сигналов (прямоугольные импульсы):</strong> Полоса = <code>0.35 / t_r</code>, где <code>t_r</code> — время нарастания фронта. Для фронта <code>1 нс</code> требуется <code>≥350 МГц</code>.</li>
+  <li><strong>Для сложных сигналов (OFDM, шумоподобные):</strong> Полоса должна покрывать <strong>5-ю гармонику</strong> основной частоты. Например, для <em>Wi-Fi 6</em> (частота <code>5 ГГц</code>) нужен осциллограф с полосой <code>≥25 ГГц</code>.</li>
+</ol>
+
+<p>Пример расчёта для микроконтроллера <em>STM32</em> с тактовой частотой <code>180 МГц</code>:</p>
+<ul>
+  <li>Основная частота: <code>180 МГц</code>.</li>
+  <li>3-я гармоника: <code>540 МГц</code>.</li>
+  <li>Требуемая полоса осциллографа: <strong><code>≥600 МГц</code></strong> (с запасом).</li>
+</ul>
+
+<p>Если бюджет ограничен, можно пойти на компромисс: использовать осциллограф с полосой в <strong>2 раза шире</strong> основной частоты, но учитывать, что фронты сигналов будут искажены. Например, для отладки <em>CAN-шины</em> (<code>1 МГц</code>) подойдёт прибор с полосой <code>10–20 МГц</code>, но для анализа помех на фронтах потребуется <code>≥100 МГц</code>.</p>
+
+
+<p>Убедитесь, что полоса в 3–5 раз шире вашей максимальной частоты|</p>
+<p>Проверьте частоту дискретизации (должна быть ≥4× полоса)|</p>
+<p>Оцените длину щупов (длинные щупы сужают полосу)|</p>
+<p>Учтите запас для будущих задач (например, переход на USB-C 2.0 потребует ≥1 ГГц)</p>
+<p>--></p>
+
+<h2 id="типичные-ошибки-при-выборе-осциллографа-по-полосе-пропускания">Типичные ошибки при выборе осциллографа по полосе пропускания</h2>
+
+<p>Многие инженеры ошибочно считают, что полоса пропускания — это «максимальная частота, которую можно измерить». На практике это приводит к следующим проблемам:</p>
+
+<ul>
+  <li>🔍 <strong>Игнорирование гармоник:</strong> Например, при измерении сигнала <code>50 МГц</code> на осциллографе <code>100 МГц</code> вы не увидите 3-ю гармонику (<code>150 МГц</code>), которая может быть причиной помех.</li>
+  <li>⚡ <strong>Неучёт времени нарастания:</strong> Осциллограф с полосой <code>100 МГц</code> имеет время нарастания ~<code>3.5 нс</code>. Если ваш сигнал имеет фронт <code>1 нс</code>, прибор физически не сможет его корректно отобразить.</li>
+  <li>📉 <strong>Занижение амплитуды:</strong> При измерении сигнала на границе полосы (например, <code>100 МГц</code> на осциллографе <code>100 МГц</code>) амплитуда будет занижена на 30%, что критично для измерений мощности или С/Ш.</li>
+  <li>🔌 <strong>Влияние щупов:</strong> Пассивный щуп <code>10×</code> с полосой <code>500 МГц</code> на осциллографе <code>1 ГГц</code> сузит эффективную полосу до <code>~350 МГц</code>.</li>
+</ul>
+
+<blockquote>⚠️ <strong>Внимание:</strong> Если вы работаете с <em>дифференциальными сигналами</em> (например, <em>LVDS</em>, <em>HDMI</em>), полоса пропускания должна быть в <strong>2 раза шире</strong>, чем для одиночного сигнала той же частоты. Это связано с тем, что дифференциальные пары содержат высокочастотные компоненты, отсутствующие в одиночном проводе.</blockquote>
+
+<p>Ещё одна распространённая ошибка — покупка осциллографа с «запасом по полосе», но без учёта частоты дискретизации. Например, прибор с полосой <code>500 МГц</code> и частотой дискретизации <code>1 Гвыб/с</code> не сможет корректно восстановить сигнал <code>200 МГц</code> (требуется минимум <code>1 Гвыб/с</code> для <code>500 МГц</code> по теореме Найквиста, но на практике нужно <code>2–2.5 Гвыб/с</code>).</p>
+
+<details class="faq-item"><summary>Почему осциллограф с полосой 1 ГГц может не показать сигнал 500 МГц?</summary><div class="faq-answer"><p>
+<p>Даже если полоса пропускания осциллографа 1 ГГц, реальная полоса с учётом щупов, кабелей и настроек входа может сузиться до 600–700 МГц. Кроме того, если частота дискретизации ниже 2 Гвыб/с, сигнал 500 МГц будет восстановлен с aliasing-искажениями (наложением спектров). Также важно учитывать настройки фильтров (например, включённый фильтр нижних частот на 200 МГц полностью скроет сигнал 500 МГц).</p>
+<p></p></div></details></p>
+
+<h2 id="полоса-пропускания-vs-частота-дискретизации-что-важнее">Полоса пропускания vs частота дискретизации: что важнее?</h2>
+
+<p>Эти два параметра тесно связаны, но отвечают за разные аспекты измерений:</p>
+
+<ul>
+  <li>📊 <strong>Полоса пропускания</strong> определяет, <strong>какие частоты</strong> осциллограф может «увидеть» в аналоговом тракте.</li>
+  <li>⏱️ <strong>Частота дискретизации</strong> определяет, <strong>как точно</strong> будет восстановлена форма сигнала после оцифровки.</li>
+</ul>
+
+<p>Правило выбора:</p>
+<ol>
+  <li>Сначала выбирайте полосу пропускания (она должна быть в 3–5 раз шире вашей максимальной частоты).</li>
+  <li>Затем проверяйте частоту дискретизации: она должна быть <strong>не менее 4× полоса</strong> (например, для <code>500 МГц</code> нужна частота дискретизации <code>≥2 Гвыб/с</code>).</li>
+</ol>
+
+<table>
+  <thead>
+    <tr>
+      <th>Полоса осциллографа</th>
+      <th>Минимальная частота дискретизации</th>
+      <th>Рекомендуемая частота дискретизации</th>
+      <th>Пример моделей</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>100 МГц</code></td>
+      <td><code>400 Мвыб/с</code></td>
+      <td><code>1 Гвыб/с</code></td>
+      <td><em>Rigol DS1054Z</em>, <em>Siglent SDS1104X-E</em></td>
+    </tr>
+    <tr>
+      <td><code>350 МГц</code></td>
+      <td><code>1.4 Гвыб/с</code></td>
+      <td><code>2.5 Гвыб/с</code></td>
+      <td><em>Tektronix TBS2000B</em>, <em>Keysight DSOX1102G</em></td>
+    </tr>
+    <tr>
+      <td><code>1 ГГц</code></td>
+      <td><code>4 Гвыб/с</code></td>
+      <td><code>5–10 Гвыб/с</code></td>
+      <td><em>LeCroy WaveRunner 8000</em>, <em>Rohde & Schwarz RTO</em></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Если частота дискретизации недостаточна, возникает эффект <em>aliasing</em> (наложение спектров), когда высокочастотные компоненты сигнала отображаются как низкочастотные помехи. Например, сигнал <code>250 МГц</code> на осциллографе с частотой дискретизации <code>500 Мвыб/с</code> будет выглядеть как сигнал <code>50 МГц</code>!</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>При измерении периодических сигналов включите режим <code>Average</code> (усреднение) — это поможет уменьшить шум и выявить слабые высокочастотные компоненты, которые могли быть скрыты из-за недостаточной полосы.</p></div>
+
+<h2 id="как-проверить-реальную-полосу-пропускания-вашего-осциллографа">Как проверить реальную полосу пропускания вашего осциллографа</h2>
+
+<p>Заявленная в даташите полоса пропускания может отличаться от реальной из-за износа прибора, некачественных щупов или неправильных настроек. Вот как её проверить:</p>
+
+<ol>
+  <li><strong>Тест с генератором:</strong>
+    <ul>
+      <li>Подключите к осциллографу генератор синусоидальных сигналов (например, <em>Agilent 33220A</em>).</li>
+      <li>Установите частоту генератора равной заявленной полосе осциллографа (например, <code>100 МГц</code> для <em>DS1054Z</em>).</li>
+      <li>Измерьте амплитуду сигнала на экране и сравните с реальной амплитудой генератора. Падение на <code>3 дБ</code> (~30%) подтверждает заявленную полосу.</li>
+    </ul>
+  </li>
+  <li><strong>Тест с прямоугольным импульсом:</strong>
+    <ul>
+      <li>Подайте на вход меандр с частотой <code>f = полоса / 10</code> (например, <code>10 МГц</code> для полосы <code>100 МГц</code>).</li>
+      <li>Измерьте время нарастания фронта (<code>t_r</code>). Реальная полоса ≈ <code>0.35 / t_r</code>.</li>
+    </ul>
+  </li>
+  <li><strong>Проверка щупов:</strong>
+    <ul>
+      <li>Подключите щуп к калибраторному выходу осциллографа (обычно <code>1 кГц</code>, <code>0.5–1 В</code>).</li>
+      <li>Если форма сигнала искажена (например, «завал» вершины), щуп требует калибровки или замены.</li>
+    </ol>
+  </li>
+</ol>
+
+<blockquote>⚠️ <strong>Внимание:</strong> Если при тесте на частоте, равной половине заявленной полосы (например, <code>50 МГц</code> для осциллографа <code>100 МГц</code>), амплитуда падает более чем на 10%, это признак <strong>деградации входных усилителей</strong> или неисправности щупа. В этом случае прибор требует ремонта.</blockquote>
+
+<p>Для профессиональной проверки используйте <em>анализатор цепей</em> (например, <em>Keysight E5061B</em>), который покажет АЧХ осциллографа в диапазоне до <code>3 ГГц</code>. Это актуально для приборов, работающих в критических приложениях (например, тестирование <em>5G</em>-устройств).</p>
+
+<h2 id="практические-рекомендации-по-выбору-осциллографа">Практические рекомендации по выбору осциллографа</h2>
+
+<p>При выборе осциллографа ориентируйтесь не только на полосу пропускания, но и на следующие параметры:</p>
+
+<ul>
+  <li>🔌 <strong>Тип щупов:</strong> Пассивные щупы <code>10×</code> дешевле, но сужают полосу. Активные щупы (например, <em>Tektronix TAP1500</em>) сохраняют полосу до <code>1.5 ГГц</code>, но дороже.</li>
+  <li>📈 <strong>Частота дискретизации:</strong> Для полосы <code>500 МГц</code> нужна частота ≥<code>2.5 Гвыб/с</code> в режиме реального времени.</li>
+  <li>🔄 <strong>Память:</strong> Глубокая память (например, <code>128 Мпт</code> у <em>Siglent SDS2000X</em>) позволяет анализировать длинные последовательности без потери деталей.</li>
+  <li>🛠️ <strong>Декодирование протоколов:</strong> Если работаете с <em>I2C</em>, <em>SPI</em> или <em>CAN</em>, проверьте поддержку этих протоколов «из коробки».</li>
+</ul>
+
+<p>Примеры подходящих моделей для разных задач:</p>
+<ul>
+  <li><strong>Бюджетные задачи (до <code>100 МГц</code>):</strong> <em>Rigol DS1054Z</em> (4 канала, <code>1 Гвыб/с</code>), <em>Siglent SDS1104X-E</em> (генератор в комплекте).</li>
+  <li><strong>Цифровая электроника (<code>200–500 МГц</code>):</strong> <em>Tektronix TBS2000B</em> (хорошее ПО для декодирования), <em>Keysight DSOX1202A</em> (отличная эргономика).</li>
+  <li><strong>Высокочастотные сигналы (<code>≥1 ГГц</code>):</strong> <em>LeCroy WaveRunner 8204</em> (полоса <code>2 ГГц</code>, память <code>20 Мпт</code>), <em>Rohde & Schwarz RTO1044</em> (полоса <code>4 ГГц</code>).</li>
+</ul>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если вы работаете с сигналами выше 1 ГГц, обратите внимание на осциллографы с <strong>опциональными модулями увеличения полосы</strong> (например, <em>Keysight Infiniium UXR</em> позволяет расширить полосу до 110 ГГц).</p></div>
+
+<h2 id="faq-частые-вопросы-о-полосе-пропускания-осциллографов">FAQ: Частые вопросы о полосе пропускания осциллографов</h2>
+
+<details>
+  <summary>Можно ли измерить сигнал 200 МГц на осциллографе с полосой 100 МГц?</summary>
+  <p>Технически можно, но амплитуда будет занижена в <strong>2 раза</strong> (на <code>6 дБ</code>), а форма сигнала искажена. Для точных измерений нужна полоса минимум <code>400 МГц</code>.</p>
+</details>
+
+<details>
+  <summary>Почему на осциллографе с полосой 1 ГГц сигнал 500 МГц выглядит как 100 МГц?</summary>
+  <p>Скорее всего, включён фильтр нижних частот (например, <code>200 МГц</code>) или неправильно настроен щуп (режим <code>1×</code> вместо <code>10×</code>). Также проверьте частоту дискретизации — если она ниже <code>1 Гвыб/с</code>, сигнал будет отображаться с aliasing-искажениями.</p>
+</details>
+
+<details>
+  <summary>Как полоса пропускания связана с временем нарастания?</summary>
+  <p>Время нарастания (<code>t_r</code>) и полоса пропускания (<code>BW</code>) связаны формулой: <code>t_r ≈ 0.35 / BW</code>. Например, осциллограф с полосой <code>350 МГц</code> имеет время нарастания ~<code>1 нс</code>. Это означает, что фронты сигналов быстрее <code>1 нс</code> будут искажены.</p>
+</details>
+
+<details>
+  <summary>Нужна ли полоса 1 ГГц для отладки Arduino?</summary>
+  <p>Нет, для <em>Arduino</em> (максимальная частота <code>16 МГц</code>) достаточно осциллографа с полосой <code>50–100 МГц</code>. Однако для анализа помех на шине <em>SPI</em> или <em>I2C</em> может потребоваться полоса <code>200–300 МГц</code>.</p>
+</details>
+
+<details>
+  <summary>Почему осциллограф с полосой 500 МГц не показывает сигнал с генератора 400 МГц?</summary>
+  <p>Возможные причины:
+    <ul>
+      <li>Неправильный щуп (например, пассивный <code>10×</code> с полосой <code>250 МГц</code>).</li>
+      <li>Включённый фильтр нижних частот в настройках осциллографа.</li>
+      <li>Недостаточная амплитуда сигнала (проверьте уровень на генераторе).</li>
+      <li>Проблемы с заземлением или экранированием кабелей.</li>
+    </ul>
+  </p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#что-такое-полоса-пропускания-осциллографа-физический-смысл">Что такое полоса пропускания осциллографа: физический смысл</a></li><li><a href="#как-полоса-пропускания-влияет-на-форму-сигнала-примеры-искажений">Как полоса пропускания влияет на форму сигнала: примеры искажений</a></li><li><a href="#как-рассчитать-требуемую-полосу-пропускания-для-вашей-задачи">Как рассчитать требуемую полосу пропускания для вашей задачи</a></li><li><a href="#типичные-ошибки-при-выборе-осциллографа-по-полосе-пропускания">Типичные ошибки при выборе осциллографа по полосе пропускания</a></li><li><a href="#полоса-пропускания-vs-частота-дискретизации-что-важнее">Полоса пропускания vs частота дискретизации: что важнее?</a></li><li><a href="#как-проверить-реальную-полосу-пропускания-вашего-осциллографа">Как проверить реальную полосу пропускания вашего осциллографа</a></li><li><a href="#практические-рекомендации-по-выбору-осциллографа">Практические рекомендации по выбору осциллографа</a></li><li><a href="#faq-частые-вопросы-о-полосе-пропускания-осциллографов">FAQ: Частые вопросы о полосе пропускания осциллографов</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/s/sk/skhema-podklyucheniya-avtomagnitoly-teyes-cc3l.html" class="related-card">Схема подключения автомагнитолы Teyes CC3L: инструкция и распиновка</a></li><li><a href="/articles/k/ka/kabel-vvg-i-vvgng-otlichiya.html" class="related-card">ВВГ и ВВГнг: ключевые отличия и где какой кабель использовать</a></li><li><a href="/articles/g/ga/gazel-zadnie-fonari-raspolozhenie-lampochek.html" class="related-card">Расположение лампочек в задних фонарях Газели: схема и замена</a></li><li><a href="/articles/m/mu/muzej-usadba-polotnyanyj-zavod.html" class="related-card">Музей-усадьба Полотняный Завод: история, экспозиции, как доехать</a></li><li><a href="/articles/c/ch/chto-takoe-tuaregi.html" class="related-card">Туареги: кто они, история и особенности кочевников Сахары</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/s/sk/skhema-podklyucheniya-avtomagnitoly-teyes-cc3l.html" class="related-bottom-card"><span class="related-bottom-title">Схема подключения автомагнитолы Teyes CC3L: инструкция и распиновка</span><span class="related-bottom-desc">Подробная схема подключения Teyes CC3L, распиновка проводов, настройка CAN-шины и решение проблем с </span></a><a href="/articles/k/ka/kabel-vvg-i-vvgng-otlichiya.html" class="related-bottom-card"><span class="related-bottom-title">ВВГ и ВВГнг: ключевые отличия и где какой кабель использовать</span><span class="related-bottom-desc">Сравнение кабелей ВВГ и ВВГнг: технические характеристики, сфера применения, плюсы и минусы. Какой в</span></a><a href="/articles/g/ga/gazel-zadnie-fonari-raspolozhenie-lampochek.html" class="related-bottom-card"><span class="related-bottom-title">Расположение лампочек в задних фонарях Газели: схема и замена</span><span class="related-bottom-desc">Подробная схема расположения лампочек в задних фонарях Газели (ГАЗель NEXT, Бизнес, Фермер). Типы цо</span></a><a href="/articles/m/mu/muzej-usadba-polotnyanyj-zavod.html" class="related-bottom-card"><span class="related-bottom-title">Музей-усадьба Полотняный Завод: история, экспозиции, как доехать</span><span class="related-bottom-desc">Подробный гид по музею-усадьбе Полотняный Завод в Калужской области: история усадьбы Гончаровых, экс</span></a><a href="/articles/c/ch/chto-takoe-tuaregi.html" class="related-bottom-card"><span class="related-bottom-title">Туареги: кто они, история и особенности кочевников Сахары</span><span class="related-bottom-desc">Узнайте, кто такие туареги: традиции, культура, язык и современная жизнь легендарных «синих людей» п</span></a><a href="/articles/i/ic/ic-vw-165.html" class="related-bottom-card"><span class="related-bottom-title">IC VW 165: что это, как проверить и где купить оригинал</span><span class="related-bottom-desc">Разбираемся, что такое IC VW 165 (интегральная схема), где используется в автомобилях Volkswagen, ка</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

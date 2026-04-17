@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>OBD для Teyes CC3: Настройка, коды ошибок и диагностика — VW-portal</title>
+    <meta name="description" content="Полное руководство по подключению OBD к Teyes CC3. Настройка CAN-шины, расшифровка ошибок двигателя, проверка датчиков и устранение неисправностей.">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/o/ob/obd-dlya-teyes-cc3.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OBD для Teyes CC3: Настройка, коды ошибок и диагностика">
+    <meta property="og:description" content="Полное руководство по подключению OBD к Teyes CC3. Настройка CAN-шины, расшифровка ошибок двигателя, проверка датчиков и устранение неисправностей.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">OBD для Teyes CC3: Настройка, коды ошибок и диагностика</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>OBD для Teyes CC3: Полная настройка и диагностика авто</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#принципы-работы-obd-и-can-шины-на-teyes-cc3">Принципы работы OBD и CAN-шины на Teyes CC3</a></li><li><a href="#подключение-и-физическая-установка-оборудования">Подключение и физическая установка оборудования</a></li><li><a href="#настройка-протоколов-в-инженерном-меню">Настройка протоколов в инженерном меню</a></li><li><a href="#диагностика-и-чтение-кодов-ошибок">Диагностика и чтение кодов ошибок</a></li><li><a href="#сравнение-протоколов-и-совместимость">Сравнение протоколов и совместимость</a></li><li><a href="#частые-проблемы-и-методы-их-решения">Частые проблемы и методы их решения</a></li><li><a href="#faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Владельцы современных головных устройств <em>Teyes</em> часто сталкиваются с необходимостью глубокой интеграции мультимедиа с электроникой автомобиля. Функция **OBD (On-Board Diagnostics)** в модели <em>CC3</em> позволяет не просто считывать базовые параметры, но и получать доступ к расширенным данным о состоянии систем машины. Это превращает обычную магнитолу в полноценный диагностический центр.</p>
+
+<p>Без правильного подключения **CAN-шины** или <strong>OBD-адаптера</strong> устройство будет работать в изолированном режиме. Вы потеряете возможность видеть реальный расход топлива, температуру двигателя или ошибки бортовой сети прямо на экране. Грамотная настройка этого модуля — ключ к стабильной работе всей мультимедийной системы.</p>
+
+<p>В этой статье мы подробно разберем, как активировать и настроить <strong>OBD-протоколы</strong> на <em>Teyes CC3</em>. Мы рассмотрим различия между встроенным CAN-декором и внешними сканерами, а также научимся интерпретировать коды неисправностей.</p>
+
+<h2 id="принципы-работы-obd-и-can-шины-на-teyes-cc3">Принципы работы OBD и CAN-шины на Teyes CC3</h2>
+
+<p>Современные автомобили обмениваются данными через цифровую сеть, известную как <strong>CAN-bus</strong>. Головное устройство <em>Teyes CC3</em> оснащено встроенным декодером, который умеет "разговаривать" с блоком управления двигателем (ECU) и другими модулями. Однако, для корректной работы необходимо выбрать правильный протокол связи.</p>
+
+<p>Существует два основных способа получения диагностических данных. Первый — это использование встроенного <strong>CAN-декодера</strong>, который подключается напрямую к проводам автомобиля. Второй вариант подразумевает подключение внешнего <em>OBDII-сканера</em> (например, ELM327) через USB или Bluetooth. Выбор метода зависит от марки вашего авто и желаемой глубины диагностики.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Неправильный выбор протокола CAN-шины может привести к быстрому разряду аккумулятора или некорректному отображению данных на экране. Всегда сверяйтесь с таблицей совместимости.</p>
+</blockquote>
+
+<p>Если вы используете внешний адаптер, система работает как шлюз, передавая данные от сканера на дисплей андроида. Встроенный же метод требует точной настройки параметров в инженерном меню. Ошибки в настройке <code>Baud Rate</code> (скорости передачи данных) приведут к тому, что магнитола просто не увидит автомобиль.</p>
+
+
+
+<h2 id="подключение-и-физическая-установка-оборудования">Подключение и физическая установка оборудования</h2>
+
+<p>Для начала работы необходимо обеспечить физическое соединение. В большинстве случаев <em>Teyes CC3</em> уже имеет разъем для подключения CAN-адаптера в основном жгуте проводов. Вам нужно найти штекер с маркировкой <strong>CAN</strong> или <em>CANbus</em> и соединить его с соответствующим проводом от декодера.</p>
+
+<p>Если вы планируете использовать внешний <strong>Bluetooth OBDII</strong> сканер, его следует подключить к USB-порту устройства или спарить через настройки Android. Важно обеспечить питание адаптера, если он не берется от самого разъема диагностики автомобиля. Качество проводов напрямую влияет на стабlильность сигнала.</p>
+
+<ul>
+<li>🔌 Найдите разъем CAN в жгуте проводов Teyes и подключите декодер, соблюдая полярность (CAN-H и CAN-L).</li>
+<li>📡 Для внешних сканеров используйте качественный USB-кабель с экраном от помех.</li>
+<li>🔋 Убедитесь, что провода питания подключены к постоянному плюсу (ACC или BAT), чтобы данные сохранялись.</li>
+<li>🛠️ Проверьте целостность изоляции всех соединений во избежание короткого замыкания.</li>
+</ul>
+
+<p>После физического подключения переходим к программной части. Без правильной конфигурации даже идеально подключенное оборудование не заработает. Система должна "понять", с каким именно автомобилем она взаимодействует.</p>
+
+
+
+<h2 id="настройка-протоколов-в-инженерном-меню">Настройка протоколов в инженерном меню</h2>
+
+<p>Доступ к настройкам CAN-шины осуществляется через скрытое инженерное меню. Для входа необходимо перейти в <code>Настройки → Car Info → Factory Settings</code>. Система запросит пароль. Для большинства моделей <em>Teyes CC3</em> стандартным кодом является <code>8877</code> или <code>123456</code>.</p>
+
+<p>В открывшемся меню найдите раздел <strong>CAN Type</strong> или <em>Protocol Setting</em>. Здесь представлен огромный список производителей автомобилей. Вам нужно выбрать марку вашего авто, а затем конкретную модель и год выпуска. Часто для одной модели доступно несколько вариантов протоколов.</p>
+
+<p>После выбора параметров нажмите кнопку <code>Set</code> или <em>Apply</em>. Устройство перезагрузится. Если настройка прошла успешно, на главном экране или в виджете "Car Info" появятся данные: скорость, обороты, уровень топлива. Если данные не появились или отображаются неверно (например, показывает 0 км/ч при движении), попробуйте другой протокол из списка.</p>
+
+
+
+<blockquote>
+<p>⚠️ Внимание: Не меняйте настройки в других вкладках инженерного меню (например, LCD Driver или Audio), если не уверены в их значении. Это может привести к исчезновению изображения или звука.</p>
+</blockquote>
+
+<h2 id="диагностика-и-чтение-кодов-ошибок">Диагностика и чтение кодов ошибок</h2>
+
+<p>Одной из главных функций <strong>OBD</strong> является диагностика неисправностей. На <em>Teyes CC3</em> для этого можно использовать как встроенные виджеты, так и сторонние приложения из Google Play, такие как <em>Torque Pro</em>, <em>Car Scanner</em> или <em>HobDrive</em>. Эти программы умеют строить графики в реальном времени.</p>
+
+<p>При обнаружении неисправности загорается лампочка <strong>Check Engine</strong>. Через приложение вы можете считать код ошибки (например, P0300 — пропуски зажигания). Устройство <em>Teyes</em> выступает здесь лишь как дисплей и процессор, а сбором данных занимается подключенный адаптер или CAN-модуль.</p>
+
+<p>Важно уметь различать типы ошибок. Некоторые из них можно сбросить программно прямо с экрана магнитолы. Другие же указывают на серьезные механические проблемы, которые требуют вмешательства сервисного центра. Постоянное игнорирование сигналов может привести к дорогостоящему ремонту.</p>
+
+
+
+<h2 id="сравнение-протоколов-и-совместимость">Сравнение протоколов и совместимость</h2>
+
+<p>Не все автомобили одинаково хорошо дружат с головными устройствами на Android. Некоторые протоколы передают полный спектр данных, другие — только базовые. Ниже приведена таблица совместимости популярных марок с системой <em>Teyes CC3</em>.</p>
+
+<table>
+<thead>
+<tr>
+<th>Марка авто</th>
+<th>Тип подключения</th>
+<th>Передаваемые данные</th>
+<th>Стабильность</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Toyota / Lexus</td>
+<td>CAN-декодер</td>
+<td>Все (климат, двери, свет)</td>
+<td>Высокая</td>
+</tr>
+<tr>
+<td>Kia / Hyundai</td>
+<td>CAN-декодер</td>
+<td>Скорость, топливо, ошибки</td>
+<td>Средняя</td>
+</tr>
+<tr>
+<td>VAG Group</td>
+<td>CAN / OBDII</td>
+<td>Расширенные данные</td>
+<td>Высокая</td>
+</tr>
+<tr>
+<td>BMW / Mercedes</td>
+<td>Внешний OBDII</td>
+<td>Базовые + Давление</td>
+<td>Зависит от адаптера</td>
+</tr>
+</tbody>
+</table>
+
+<p>Как видно из таблицы, для автомобилей концерна VAG и японских марок встроенный декодер работает отлично. Для европейских премиум-марок часто требуется более сложная настройка или использование мощных внешних сканеров, так как их протоколы шифруются или имеют специфическую структуру.</p>
+
+<p>Если в таблице нет вашей модели, это не значит, что подключение невозможно. Часто помогают универсальные протоколы или ручная настройка через ADB-команды, но это требует глубоких знаний в области электроники.</p>
+
+
+
+<h2 id="частые-проблемы-и-методы-их-решения">Частые проблемы и методы их решения</h2>
+
+<p>В процессе эксплуатации пользователи могут столкнуться с рядом типичных проблем. Например, данные о скорости могут отображаться с задержкой или скачками. Это часто решается выбором другого <strong>CAN-протокола</strong> с более высокой частотой опроса.</p>
+
+<p>Еще одна частая проблема — самопроизвольное включение магнитолы или невозможность её выключения вместе с автомобилем. Это указывает на конфликт сигналов зажигания в CAN-шине. В настройках декодера попробуйте изменить параметр <code>Ignition Type</code> или <em>Power Mode</em>.</p>
+
+<ul>
+<li>📉 <strong>Скачки показаний:</strong> Попробуйте установить фильтр значений в приложении или сменить протокол на более старый/новый.</li>
+<li>🔇 <strong>Нет звука при парковке:</strong> Проверьте, не перебит ли провод парковочного датчика в жгуте CAN.</li>
+<li>📱 <strong>Приложение не видит адаптер:</strong> Убедитесь, что в настройках Bluetooth Android выбрано сопряжение с устройством, а не просто включен поиск.</li>
+<li>🔥 <strong>Перегрев:</strong> При активной диагностике процессор Teyes CC3 может греться. Ensure proper ventilation.</li>
+</ul>
+
+<p>Если ничего не помогает, попробуйте выполнить полный сброс настроек CAN-декодера до заводских значений. Иногда программный сбой в самом модуле декодирования мешает корректной работе, и простая перезагрузка конфигурации решает проблему.</p>
+
+<blockquote>
+<p>⚠️ Внимание: При обновлении прошивки самого головного устройства настройки CAN-шины могут слететь. Всегда делайте скриншоты текущих настроек перед обновлением ПО.</p>
+</blockquote>
+
+<h2 id="faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</h2>
+
+<details>
+<summary>Нужно ли покупать отдельный OBD сканер для Teyes CC3?</summary>
+<p>В большинстве случаев нет. В комплекте с магнитолой идет CAN-адаптер, который подключается в разрыв штатной проводки. Отдельный сканер (ELM327) нужен только если встроенный декодер не поддерживает вашу редкую модель авто или если вам нужны специфические функции, недоступные через CAN-шину.</p>
+</details>
+
+<details>
+<summary>Почему не работает отображение давления в шинах?</summary>
+<p>Датчики давления (TPMS) передают данные не по всем протоколам. Убедитесь, что выбранный в инженерном меню протокол поддерживает TPMS. Также на автомобиле должна быть установлена штатная система мониторинга давления.</p>
+</details>
+
+<details>
+<summary>Можно ли сбросить ошибку Check Engine через Teyes?</summary>
+<p>Да, если вы используете приложение для диагностики (например, Car Scanner) и подключен адаптер. Встроенными средствами магнитолы сбросить ошибку обычно нельзя, только через сторонний софт, имеющий доступ к командам OBDII.</p>
+</details>
+
+<details>
+<summary>Влияет ли OBD на работу штатного усилителя?</summary>
+<p>При правильной настройке CAN-шины — нет. Однако, если выбран неверный протокол, могут возникать конфликты сигналов управления усилителем, что приведет к хрипам или отсутствию звука. В таком случае нужно экспериментировать с другими вариантами протокола.</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#принципы-работы-obd-и-can-шины-на-teyes-cc3">Принципы работы OBD и CAN-шины на Teyes CC3</a></li><li><a href="#подключение-и-физическая-установка-оборудования">Подключение и физическая установка оборудования</a></li><li><a href="#настройка-протоколов-в-инженерном-меню">Настройка протоколов в инженерном меню</a></li><li><a href="#диагностика-и-чтение-кодов-ошибок">Диагностика и чтение кодов ошибок</a></li><li><a href="#сравнение-протоколов-и-совместимость">Сравнение протоколов и совместимость</a></li><li><a href="#частые-проблемы-и-методы-их-решения">Частые проблемы и методы их решения</a></li><li><a href="#faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/p/po/polochka-iz-poddonov.html" class="related-card">Полочка из поддонов: 10 идей + пошаговая инструкция 2026</a></li><li><a href="/articles/k/ko/kogda-vtoraya-polovina-dnya-nachinaetsya.html" class="related-card">Во сколько начинается вторая половина дня? Точное время и правила</a></li><li><a href="/articles/d/da/datchik-polozheniya-kuzova-kak-proverit.html" class="related-card">Датчик положения кузова: как проверить и заменить своими руками</a></li><li><a href="/articles/k/ki/kitajskaya-mashina-pokhozhaya-na-folksvagen.html" class="related-card">Китайские копии Volkswagen: 5 моделей, похожих на немецкие оригиналы</a></li><li><a href="/articles/k/kr/kraska-dlya-betonnykh-polov-poliuretanovaya.html" class="related-card">Полиуретановая краска для бетонных полов: плюсы, минусы, выбор и нанесение</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/p/po/polochka-iz-poddonov.html" class="related-bottom-card"><span class="related-bottom-title">Полочка из поддонов: 10 идей + пошаговая инструкция 2026</span><span class="related-bottom-desc">Как сделать стильную и прочную полку из поддонов своими руками: выбор материалов, инструменты, дизай</span></a><a href="/articles/k/ko/kogda-vtoraya-polovina-dnya-nachinaetsya.html" class="related-bottom-card"><span class="related-bottom-title">Во сколько начинается вторая половина дня? Точное время и правила</span><span class="related-bottom-desc">Узнайте, когда официально начинается вторая половина дня — 12:00 или 13:00? Разбор стандартов, культ</span></a><a href="/articles/d/da/datchik-polozheniya-kuzova-kak-proverit.html" class="related-bottom-card"><span class="related-bottom-title">Датчик положения кузова: как проверить и заменить своими руками</span><span class="related-bottom-desc">Подробное руководство: как проверить датчик положения кузова мультиметром. Симптомы неисправности, п</span></a><a href="/articles/k/ki/kitajskaya-mashina-pokhozhaya-na-folksvagen.html" class="related-bottom-card"><span class="related-bottom-title">Китайские копии Volkswagen: 5 моделей, похожих на немецкие оригиналы</span><span class="related-bottom-desc">Разбираемся, какие китайские автомобили внешне и технически повторяют &lt;em&gt;Volkswagen&lt;/em&gt; — сравнени</span></a><a href="/articles/k/kr/kraska-dlya-betonnykh-polov-poliuretanovaya.html" class="related-bottom-card"><span class="related-bottom-title">Полиуретановая краска для бетонных полов: плюсы, минусы, выбор и нанесение</span><span class="related-bottom-desc">Как выбрать полиуретановую краску для бетонных полов? Сравнение составов, технология нанесения, сове</span></a><a href="/articles/p/pr/proverka-datchika-polozheniya-kolenvala-ostsillografom.html" class="related-bottom-card"><span class="related-bottom-title">Проверка датчика положения коленвала осциллографом: методика</span><span class="related-bottom-desc">Экспертная диагностика ДПКВ: анализ осциллограмм Холла и индуктивных датчиков. Нормы напряжения, фор</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

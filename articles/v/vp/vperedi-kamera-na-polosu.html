@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>Впереди камера на полосу: как работает и как отключить — VW-portal</title>
+    <meta name="description" content="Подробный разбор функции слежения за разметкой. Причины ложных срабатываний, настройка чувствительности и алгоритмы работы системы LKA.">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/v/vp/vperedi-kamera-na-polosu.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Впереди камера на полосу: как работает и как отключить">
+    <meta property="og:description" content="Подробный разбор функции слежения за разметкой. Причины ложных срабатываний, настройка чувствительности и алгоритмы работы системы LKA.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/passat/">Passat</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Впереди камера на полосу: как работает и как отключить</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Впереди камера на полосу: принципы работы и настройка системы</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#принципы-работы-системы-распознавания-разметки">Принципы работы системы распознавания разметки</a></li><li><a href="#почему-система-теряет-разметку-основные-причины">Почему система теряет разметку: основные причины</a></li><li><a href="#настройка-чувствительности-и-типов-предупреждений">Настройка чувствительности и типов предупреждений</a></li><li><a href="#таблица-сравнения-систем-ldw-и-lka">Таблица сравнения систем LDW и LKA</a></li><li><a href="#ложные-срабатывания-и-как-их-избежать">Ложные срабатывания и как их избежать</a></li><li><a href="#влияние-замены-лобового-стекла-на-калибровку">Влияние замены лобового стекла на калибровку</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Современные системы помощи водителю стали неотъемлемой частью эксплуатации автомобиля, и одним из самых заметных элементов интерфейса на приборной панели является сообщение «впереди камера на полосу». Этот индикатор свидетельствует о том, что блок управления активировал режим сканирования дорожного полотна для считывания разметки. Водители часто воспринимают это как простое уведомление, однако за ним скрывается сложный процесс обработки видеопотока в реальном времени.</p>
+
+<p>Понимание того, как именно работает эта технология, помогает избежать ложной паники при внезапном отключении ассистента или, наоборот, при его навязчивом вмешательстве в руление. Система не просто «видит» линии, она анализирует их контрастность, непрерывность и геометрию. <strong>Качество изображения</strong> с камеры напрямую влияет на способность электронного мозга автомобиля предсказывать траекторию движения. Если вы замечаете частые сбои, проблема может крыться не в неисправности датчика, а в банальном загрязнении лобового стекла.</p>
+
+<p>В данной статье мы детально разберем алгоритмы работы, возможные причины ошибок и способы корректной настройки чувствительности. <em>Важно отметить</em>, что разные автопроизводители используют различные названия для этой функции, такие как LKA, LDW или Lane Assist, но принцип действия у них схож. Давайте углубимся в технические детали.</p>
+
+<h2 id="принципы-работы-системы-распознавания-разметки">Принципы работы системы распознавания разметки</h2>
+
+<p>Основой всей системы является оптическая камера, расположенная обычно за зеркалом заднего вида в верхней части лобового стекла. Она работает в видимом спектре и иногда дополняется инфракрасной подсветкой для работы в темное время суток. Камера передает видеопоток на процессор, который с высокой частотой кадров анализирует изображение, пытаясь идентифицировать <strong>горизонтальную разметку</strong>. Алгоритм ищет контрастные линии, отличающиеся по цвету от основного полотна дороги.</p>
+
+<p>После обнаружения линий система вычисляет положение автомобиля относительно них. Если машина начинает смещаться без включенного сигнала поворота, система интерпретирует это как непреднамеренный выезд. В зависимости от настроек и комплектации, автомобиль может либо просто вибрировать рулем (LDW), либо активно подруливать, возвращая машину в центр полосы (LKA). <em>Точность вычислений</em> зависит от скорости движения: обычно система активируется только после достижения порога в 60 км/ч.</p>
+
+<p>Особое внимание уделяется распознаванию прерывистых линий. Система должна понимать, можно ли совершать маневр. Если линии прерывистые, электроника разрешает перестроение. Если же линии сплошные, вмешательство рулевого управления будет более агрессивным. <strong>Угол обзора</strong> камеры ограничен, поэтому на крутых поворотах система может временно терять разметку и выдавать предупреждение о недоступности.</p>
+
+<details class="faq-item"><summary>Технические нюансы обработки изображения</summary><div class="faq-answer"><p>Камера использует фильтры для устранения бликов от мокрого асфальта и снега. Однако, если контрастность падает ниже определенного порога, система принудительно отключается, чтобы не вводить водителя в заблуждение ложными данными.</p></div></details>
+
+<h2 id="почему-система-теряет-разметку-основные-причины">Почему система теряет разметку: основные причины</h2>
+
+<p>Ситуация, когда на приборной панели загорается сообщение о том, что камера не видит полосу, может возникать по ряду объективных и субъективных причин. Чаще всего проблема кроется в внешних условиях. <strong>Погодные факторы</strong> играют решающую роль: сильный дождь, снегопад или густой туман drastically снижают видимость для оптического сенсора. Вода на лобовом стекле искажает световые лучи, делая разметку неразличимой для алгоритмов.</p>
+
+<p>Состояние дорожного покрытия — второй критический фактор. Стертая разметка, отсутствие контрастных линий или наличие снежной каши, скрывающей дорожные метки, приводят к мгновенному отключению ассистента. Также система может сбоить при резкой смене освещения, например, при выезде из тоннеля или при ярком солнце, бьющем в объектив. <em>Тени от мостов</em> и деревьев также могут быть восприняты как границы полосы.</p>
+
+<p>Технические причины также нельзя исключать. Загрязнение внешней поверхности стекла в зоне работы камеры — самая частая ошибка водителя. Даже тонкая пленка грязи, незаметная глазу, может стать критическим препятствием. Кроме того, неисправность самого модуля камеры или нарушение калибровки после замены лобового стекла приводят к постоянным ошибкам.</p>
+
+<ul>
+<li>🌧️ <strong>Погодные условия:</strong> Ливень, снегопад, туман или метель drastically снижают контрастность изображения.</li>
+<li>🛣️ <strong>Состояние дороги:</strong> Стертая разметка, отсутствие линий или снежный покров на асфальте.</li>
+<li>🧼 <strong>Загрязнение:</strong> Грязь, пыль или насекомые на лобовом стекле в зоне обзора камеры.</li>
+<li>☀️ <strong>Освещение:</strong> Прямые солнечные лучи, блики от мокрой дороги или резкие перепады света.</li>
+</ul>
+
+<div class="attention-box attention-info"><div><strong>📊 Как часто у вас теряется камера на трассе?</strong><ul><li>Постоянно в дождь</li><li>Только зимой</li><li>Редко, исправно</li><li>Вообще не пользуюсь</li></ul></div></div>
+
+<h2 id="настройка-чувствительности-и-типов-предупреждений">Настройка чувствительности и типов предупреждений</h2>
+
+<p>Большинство современных автомобилей позволяют гибко настраивать работу системы Lane Assist. В меню бортового компьютера обычно доступны несколько режимов работы. Вы можете выбрать, как именно автомобиль будет реагировать на выезд: только вибрацией руля, звуковым сигналом или активным подруливанием. <strong>Чувствительность</strong> системы также часто регулируется, что позволяет уменьшить количество ложных срабатываний на неровных дорогах.</p>
+
+<p>Для доступа к настройкам необходимо перейти в соответствующий раздел меню. Путь может отличаться в зависимости от модели, но часто он находится в разделе помощи водителю. Используйте команды меню: нажмите <code>Car → Settings → Driver Assistance → Lane Assist</code>. Здесь можно активировать функцию «Раннее предупреждение» или изменить тип вибрации рулевого колеса.</p>
+
+<p>Некоторые системы позволяют выбрать сторону предупреждения. Например, если вы привыкли ездить по левой полосе и редко перестраиваетесь вправо, можно настроить мониторинг только для правой стороны. Однако <em>полное отключение</em> контроля с одной стороны не рекомендуется из соображений безопасности. Правильная настройка помогает водителю чувствовать себя увереннее, не раздражаясь от постоянных вмешательств электроники.</p>
+
+<div class="checklist-block"><h4>☑️ Настройка системы LKA</h4><label class="check-item"><input type="checkbox"><span>Зайти в меню автомобиля</span></label><label class="check-item"><input type="checkbox"><span>Выбрать Driver Assistance</span></label><label class="check-item"><input type="checkbox"><span>Найти Lane Assist</span></label><label class="check-item"><input type="checkbox"><span>Выбрать тип реакции (Вибрация/Руление)</span></label><label class="check-item"><input type="checkbox"><span>Проверить работу на трассе</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 5</div></div>
+
+<h2 id="таблица-сравнения-систем-ldw-и-lka">Таблица сравнения систем LDW и LKA</h2>
+
+<p>Важно различать два основных типа систем, которые часто путают из-за схожести названий и图标ографии на приборной панели. LDW (Lane Departure Warning) — это система предупреждения, которая лишь информирует водителя об опасности. LKA (Lane Keeping Assist) — это система удержания, которая активно вмешивается в управление. Ниже приведено сравнение их характеристик.</p>
+
+<table>
+<thead>
+<tr>
+<th>Характеристика</th>
+<th>LDW (Предупреждение)</th>
+<th>LKA (Удержание)</th>
+<th>Полуавтономный режим</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Вмешательство в руление</td>
+<td>Нет</td>
+<td>Да, активное</td>
+<td>Да, постоянное</td>
+</tr>
+<tr>
+<td>Тип сигнала</td>
+<td>Вибрация, звук</td>
+<td>Вибрация + подруливание</td>
+<td>Центрование в полосе</td>
+</tr>
+<tr>
+<td>Скорость активации</td>
+<td>Обычно от 60 км/ч</td>
+<td>Обычно от 60 км/ч</td>
+<td>От 0 до 130+ км/ч</td>
+</tr>
+<tr>
+<td>Реакция на сигнал поворота</td>
+<td>Отключает сигнал</td>
+<td>Разрешает маневр</td>
+<td>Разрешает маневр</td>
+</tr>
+</tbody>
+</table>
+
+<p>Как видно из таблицы, функционал систем существенно различается. <strong>Активное подруливание</strong> требует от водителя постоянного контроля, так как система может резко дернуть руль. В то же время, простое предупреждение может быть менее заметным для уставшего водителя. Выбор зависит от ваших предпочтений и уровня доверия к электронике.</p>
+
+<h2 id="ложные-срабатывания-и-как-их-избежать">Ложные срабатывания и как их избежать</h2>
+
+<p>Ложные срабатывания — бич любых охранных и ассистентских систем. В случае с камерой полосы, электроника может принять тени, масляные пятна или даже стыки бетонных плит за разметку. Если система начинает «дергать» руль на прямой дороге, это не только раздражает, но и опасно. Часто причиной становится <strong>узкая дорога</strong>, где полосы расположены близко друг к другу, и камера считывает разметку встречной полосы.</p>
+
+<p>Чтобы минимизировать количество ошибок, следите за чистотой стекла. Протирайте зону камеры мягкой тканью при каждой заправке или мойке. Если вы знаете, что на определенном участке трассы разметка плохая, имеет смысл временно отключить ассистента кнопкой на торце подрулевого переключателя или через меню. <em>Постоянное игнорирование</em> ложных сигналов может привести к тому, что вы пропустите реальное предупреждение.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Никогда не полагайтесь полностью на систему LKA в условиях плохой видимости или на дорогах с временной разметкой. Электроника может не распозн оранжевые конусы или рабочих, направляющих поток.</p>
+</blockquote>
+
+<p>Еще один нюанс — это модификации автомобиля. Установка нештатного лобового стекла низкого качества или тонировочной пленки в верхней части стекла может нарушить работу камеры. Оптика требует определенной светопропускаемости в特定的ном спектре. Если после замены стекла система начала работать некорректно, проверьте сертификаты на установленное стекло.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Совет: Если камера часто теряет разметку на знакомой трассе, попробуйте слегка снизить скорость. На скоростях выше 130 км/ч время обработки кадра может быть недостаточным для резких поворотов.</p></div>
+
+<h2 id="влияние-замены-лобового-стекла-на-калибровку">Влияние замены лобового стекла на калибровку</h2>
+
+<p>Замена лобового стекла — это критическая операция для систем, использующих камеру, установленную за зеркалом. Камера должна смотреть на дорогу под строго определенным углом. Даже минимальное смещение крепежной пластины или самого стекла приводит к тому, что <strong>угол обзора</strong> меняется, и система перестает корректно определять положение автомобиля. В таких случаях требуется обязательная калибровка.</p>
+
+<p>Калибровка может быть статической (выполняется в сервисе по специальным мишеням) или динамической (автомоб должен проехать определенное расстояние по трассе с хорошей разметкой). Многие современные автомобили требуют проведения статической калибровки после каждой замены стекла. Если процедура не выполнена, система будет выдавать ошибку или работать некорректно, показывая «впереди камера на полосу» даже на идеальной дороге.</p>
+
+<p>Использование неоригинальных стекол или стекол без площадки под камеру (если камера крепится к стеклу, а не к корпусу) может сделать калибровку невозможной. Всегда уточняйте у мастера, имеет ли стекло необходимую геометрию и оптическую прозрачность в зоне работы датчиков. <em>Экономия на стекле</em> может привести к неработоспособности дорогостоящих систем безопасности.</p>
+
+<blockquote>
+<p>⚠️ Внимание: После замены лобового стекла обязательно проверьте работу системы на безопасном участке. Если автомобиль «рыскает» по полосе, необходима повторная калибровка у дилера.</p>
+</blockquote>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+
+<details>
+<summary>Почему горит желтый значок камеры с перечеркнутой полосой?</summary>
+<p>Этот значок означает, что система временно недоступна. Чаще всего причина в загрязнении стекла, плохой разметке или погодных условиях. Если значок горит постоянно в хорошую погоду, требуется диагностика.</p>
+</details>
+
+<details>
+<summary>Можно ли ездить с неисправной камерой полосы?</summary>
+<p>Да, эксплуатация автомобиля возможна, так как это вспомогательная система. Однако вы лишаетесь важного помощника, предотвращающего выезд из полосы. Рекомендуется устранить неисправность при первой возможности.</p>
+</details>
+
+<details>
+<summary>Как сбросить ошибку камеры?</summary>
+<p>Попробуйте заглушить двигатель, выйти из машины, закрыть двери и подождать 5-10 минут для перезагрузки систем. Если ошибка вызвана временным сбоем, она исчезнет. Постоянную ошибку сбросит только диагностика.</p>
+</details>
+
+<details>
+<summary>Влияет ли тонировка на работу камеры?</summary>
+<p>Да, если тонировочная пленка наклеена в зоне расположения камеры и имеет низкий коэффициент светопропускания или искажает изображение, система может работать некорректно или отключиться.</p>
+</details>
+
+<details>
+<summary>Работает ли система ночью?</summary>
+<p>Да, большинство современных камер оснащены инфракрасными датчиками или имеют высокую светочувствительность. Однако эффективность работы ночью может быть ниже из-за плохой видимости разметки или встречного света фар.</p>
+</details>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Система «камера на полосу» — это мощный инструмент безопасности, но она требует чистого стекла и исправной калибровки для корректной работы.</p></div></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#принципы-работы-системы-распознавания-разметки">Принципы работы системы распознавания разметки</a></li><li><a href="#почему-система-теряет-разметку-основные-причины">Почему система теряет разметку: основные причины</a></li><li><a href="#настройка-чувствительности-и-типов-предупреждений">Настройка чувствительности и типов предупреждений</a></li><li><a href="#таблица-сравнения-систем-ldw-и-lka">Таблица сравнения систем LDW и LKA</a></li><li><a href="#ложные-срабатывания-и-как-их-избежать">Ложные срабатывания и как их избежать</a></li><li><a href="#влияние-замены-лобового-стекла-на-калибровку">Влияние замены лобового стекла на калибровку</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/p/pa/passat-b3-sedan.html" class="related-card">Passat B3 седан: характеристики, надежность и ремонт легендарного авто</a></li><li><a href="/articles/p/pa/passat-b7-obem-baka.html" class="related-card">Passat B7 объем бака: реальные данные и запас хода</a></li><li><a href="/articles/m/ma/maslyanyj-filtr-passat-b5-19-tdi.html" class="related-card">Масляный фильтр Passat B5 1.9 TDI: выбор, замена, нюансы</a></li><li><a href="/articles/f/fo/folksvagen-passat-b5-18-turbo-otzyvy.html" class="related-card">Volkswagen Passat B5 1.8 Turbo: отзывы, надежность и проблемы</a></li><li><a href="/articles/f/fo/folts-passat-universal.html" class="related-card">Volkswagen Passat Variant: обзор, характеристики, плюсы и минусы</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/p/pa/passat-b3-sedan.html" class="related-bottom-card"><span class="related-bottom-title">Passat B3 седан: характеристики, надежность и ремонт легендарного авто</span><span class="related-bottom-desc">Подробный обзор Volkswagen Passat B3 седан. Технические характеристики, обзор двигателей, типичные н</span></a><a href="/articles/p/pa/passat-b7-obem-baka.html" class="related-bottom-card"><span class="related-bottom-title">Passat B7 объем бака: реальные данные и запас хода</span><span class="related-bottom-desc">Точный объем бака Passat B7 (седан и универсал), реальный запас хода, расход топлива и особенности э</span></a><a href="/articles/m/ma/maslyanyj-filtr-passat-b5-19-tdi.html" class="related-bottom-card"><span class="related-bottom-title">Масляный фильтр Passat B5 1.9 TDI: выбор, замена, нюансы</span><span class="related-bottom-desc">Какой масляный фильтр выбрать для &lt;em&gt;Passat B5 1.9 TDI&lt;/em&gt;? Сравнение брендов, пошаговая замена, о</span></a><a href="/articles/f/fo/folksvagen-passat-b5-18-turbo-otzyvy.html" class="related-bottom-card"><span class="related-bottom-title">Volkswagen Passat B5 1.8 Turbo: отзывы, надежность и проблемы</span><span class="related-bottom-desc">Честные отзывы владельцев VW Passat B5 1.8T. Реальный расход, ресурс турбины, типичные поломки и сто</span></a><a href="/articles/f/fo/folts-passat-universal.html" class="related-bottom-card"><span class="related-bottom-title">Volkswagen Passat Variant: обзор, характеристики, плюсы и минусы</span><span class="related-bottom-desc">Подробный разбор &lt;em&gt;Passat Variant&lt;/em&gt; (B8, B7, B6): технические параметры, сравнение с конкурента</span></a><a href="/articles/t/ty/tyuning-folksvagen-passat-b6-sedan.html" class="related-bottom-card"><span class="related-bottom-title">Тюнинг Volkswagen Passat B6 седан: 100+ идей и инструкций 2026</span><span class="related-bottom-desc">Полный гайд по тюнингу &lt;em&gt;VW Passat B6&lt;/em&gt; седан: от внешних доработок до чип-тюнинга. Фото, цены,</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>Параметр ACCEL в Torque Pro: настройка датчиков и фильтров — VW-portal</title>
+    <meta name="description" content="Подробный разбор параметра ACCEL в приложении Torque Pro. Как настроить акселерометр, убрать рывки графика и калибровать G-сенсор для точных замеров.">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/a/ac/accel-v-torque-chto-eto.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Параметр ACCEL в Torque Pro: настройка датчиков и фильтров">
+    <meta property="og:description" content="Подробный разбор параметра ACCEL в приложении Torque Pro. Как настроить акселерометр, убрать рывки графика и калибровать G-сенсор для точных замеров.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Параметр ACCEL в Torque Pro: настройка датчиков и фильтров</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Параметр ACCEL в Torque: что это и как настроить</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#физический-смысл-и-программная-реализация-accel">Физический смысл и программная реализация ACCEL</a></li><li><a href="#настройка-фильтрации-и-сглаживания-данных">Настройка фильтрации и сглаживания данных</a></li><li><a href="#калибровка-g-сенсора-для-точных-замеров">Калибровка G-сенсора для точных замеров</a></li><li><a href="#влияние-настроек-на-запись-логов-и-графики">Влияние настроек на запись логов и графики</a></li><li><a href="#типичные-ошибки-и-способы-их-устранения">Типичные ошибки и способы их устранения</a></li><li><a href="#faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Многие пользователи диагностических приложений для Android сталкиваются с аббревиатурой ACCEL при настройке отображения данных в реальном времени. В контексте популярной программы <em>Torque Pro</em> этот термин не имеет прямого отношения к ускорению автомобиля в физическом смысле разгона двигателя. <strong>ACCEL</strong> здесь выступает сокращением от слова Accelerometer, то есть акселерометр, встроенный в ваш смартфон или планшет.</p>
+
+<p>Эта функция позволяет использовать гироскопические датчики мобильного устройства для измерения перегрузок, возникающих при торможении, разгоне или прохождении поворотов. Однако, если вы видите параметр <code>Accel Correction</code> или настройки сглаживания в меню датчиков, речь идет о программной обработке входящего потока данных от <em>OBDII</em> адаптера. Неправильная интерпретация этих значений может привести к тому, что графики будут выглядеть как «пила», а числовые значения скорости реагировать с заметной задержкой.</p>
+
+<p>Понимание того, как работает связка аппаратного акселерометра и программных фильтров, критически важно для тех, кто занимается чип-тюнингом или хочет точно замерить динамику разгона до сотни. В этой статье мы детально разберем, за что отвечает этот параметр, как откалибровать систему для получения честных данных и почему игнорирование настроек фильтрации приводит к ошибкам в логах.</p>
+
+<h2 id="физический-смысл-и-программная-реализация-accel">Физический смысл и программная реализация ACCEL</h2>
+
+<p>В основе работы функции лежит использование встроенных сенсоров смартфона. Когда вы держите устройство в руке или крепите его на лобовое стекло, оно фиксирует векторные изменения положения в пространстве. Приложение <em>Torque</em> считывает эти данные и преобразует их в понятные величины: продольные и поперечные перегрузки. <strong>Акселерометр</strong> реагирует на любые изменения скорости движения телефона, что в условиях автомобиля означает реакцию на динамику самого транспортного средства.</p>
+
+<p>Однако сырые данные с сенсоров редко бывают идеальными. Вибрации кузова, работа подвески на неровной дороге и даже дрожание рук при держании устройства вносят шум в сигнал. Именно здесь вступает в действие программный параметр, часто обозначаемый как фильтр или коррекция. Он необходим для того, чтобы отсечь высокочастотные колебания, которые не несут полезной информации о разгоне автомобиля, но сильно искажают график.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Если вы используете дешевые китайские адаптеры <em>OBDII</em>, задержка передачи данных по Bluetooth может составлять до 200-300 мс. В таких случаях полагаться solely на акселерометр телефона для точных замеров динамики разгона не рекомендуется, так как рассинхронизация с данными ЭБУ будет слишком велика.</p>
+</blockquote>
+
+<p>Разница между аппаратным ускорением и программной коррекцией заключается в источнике данных. В первом случае мы берем информацию с гироскопа телефона, во втором — математически обрабатываем поток цифр, приходящих от двигателя через <code>ELM327</code> интерфейс. Для большинства пользователей важно понимать, что настройка <strong>Accel</strong> в меню приложения чаще всего относится именно к сглаживанию графика, а не к физической калибровке сенсора, если не указано иное.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Для получения наиболее точных данных о перегрузках в поворотах размещайте смартфон строго по центру торпедо, параллельно продольной оси автомобиля. Смещение устройства к двери исказит показания боковой перегрузки.</p></div>
+
+<h2 id="настройка-фильтрации-и-сглаживания-данных">Настройка фильтрации и сглаживания данных</h2>
+
+<p>Одной из главных проблем при мониторинге параметров в реальном времени является «дрожание» значений. Если вы наблюдаете за параметром скорости или оборотов, и цифры меняются слишком хаотично, это затрудняет анализ. Параметр сглаживания (Smoothing) или коррекции акселерометра позволяет усреднять входящие значения за определенный промежуток времени. Это делает график более плавным и читаемым.</p>
+
+<p>В настройках <em>Torque Pro</em></p> часто можно встретить ползунки, отвечающие за чувствительность. Увеличивая значение фильтра, вы делаете систему менее отзывчивой на резкие скачки, что хорошо для записи плавного движения по трассе. Однако для трековых гонок или резких маневров чрезмерное сглаживание скроет важные пики ускорения. <strong>Баланс</strong> здесь является ключевым словом: нужно найти золотую середину между отзывчивостью и стабильностью картинки.</p>
+
+<p>Существует несколько типов фильтров, которые могут применяться в фоновом режиме:</p>
+<ul>
+<li>📉 <strong>Low-pass filter</strong> — пропускает только низкие частоты изменений, убирая резкие скачки (шум).</li>
+<li>📈 <strong>High-pass filter</strong> — наоборот, выделяет резкие изменения, игнорируя медленное изменение фона.</li>
+<li>⚖️ <strong>Moving Average</em> — усредняет значение на основе нескольких последних замеров, создавая эффект инерции.</li>
+</ul>
+
+<p>При работе с логами Если вы записали лог с сильным сглаживанием, восстановить реальные пиковые значения ускорения afterwards будет невозможно. Поэтому для профессионального тюнинга рекомендуется вести запись с минимальной фильтрацией, а сглаживание применять только для визуального отображения на экране в реальном времени.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Как вы используете Torque Pro?</strong><ul><li>Только для чтения ошибок</li><li>Для записи логов и треков</li><li>Для красоты (гаджеты)</li><li>Не пользуюсь, есть другие приложения</li></ul></div></div>
+
+<h2 id="калибровка-g-сенсора-для-точных-замеров">Калибровка G-сенсора для точных замеров</h2>
+
+<p>Прежде чем доверять показаниям акселерометра, необходимо провести процедуру калибровки. Без этого шага программа может считать, что автомобиль стоит на месте, хотя он уже движется, или наоборот, показывать ускорение на стоянке. В меню приложения существует специальный раздел, посвященный калибровке датчиков, который нужно активировать, когда автомобиль стоит на ровной горизонтальной поверхности.</p>
+
+<p>Процесс калибровки обычно занимает несколько секунд. В этот момент приложение считывает вектор гравитации и принимает его за ноль ускорения. Если провести калибровку на наклонной поверхности, все последующие замеры будут иметь систематическую ошибку. Это особенно критично для тех, кто использует данные для расчета мощности на колесах или эффективности торможения.</p>
+
+<p>Вот основные этапы правильной подготовки устройства к работе:</p>
+<ul>
+<li>🅿️ Установите автомобиль на идеально ровную площадку без уклона.</li>
+<li>📱 Запустите приложение и дождитесь подключения к <em>OBDII</em> адаптеру.</li>
+<li>🛠️ Перейдите в настройки датчиков и выберите «Калибровать акселерометр».</li>
+<li>⏳ Не трогайте устройство и автомобиль в течение 5-10 секунд до завершения процесса.</li>
+</ul>
+
+<p>После успешной калибровки значения по осям X и Y должны стремиться к нулю, когда автомобиль неподвижен. Значение по оси Z (вертикаль) должно соответствовать единице (1g), так как на устройство действует сила тяжести Земли. Любые отклонения от этих значений после калибровки свидетельствуют о неисправности сенсора или необходимости повторить процедуру в других условиях.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка перед калибровкой</h4><label class="check-item"><input type="checkbox"><span>Автомобиль стоит на ровном месте:Двигатель заглушен:Телефон закреплен жестко:Фоновые приложения закрыты</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 1</div></div>
+
+<h2 id="влияние-настроек-на-запись-логов-и-графики">Влияние настроек на запись логов и графики</h2>
+
+<p>Запись логов — это процесс сохранения всех поступающих данных в файл для последующего анализа на компьютере. Настройки <strong>ACCEL</strong> и частота опроса напрямую влияют на размер файла и детализацию записи. Если вы выставите слишком высокую частоту опроса (например, 50 Гц или 100 Гц), файл будет огромным, но зато вы увидите мельчайшие детали работы двигателя. При низкой частоте (1-2 Гц) файл будет маленьким, но вы можете пропустить важные моменты, например, кратковременные провалы тяги.</p>
+
+<p>Графики в приложении строятся на основе буферизированных данных. Если буфер переполняется или фильтр сглаживания слишком агрессивный, график будет выглядеть как прямая линия, даже если в реальности происходили колебания. Это явление называется «алиасингом» или потерей деталей сигнала. Для анализа работы <em>турбокомпрессора</em> или систем изменения фаз газораспределения нужна высокая детализация, тогда как для мониторинга температуры масла достаточно низких частот.</p>
+
+<table>
+<thead>
+<tr>
+<th>Параметр</th>
+<th>Низкое значение</th>
+<th>Высокое значение</th>
+<th>Влияние на систему</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Частота опроса</td>
+<td>1-2 Гц</td>
+<td>50-100 Гц</td>
+<td>Размер файла и нагрузка на CPU</td>
+</tr>
+<tr>
+<td>Сглаживание</td>
+<td>Минимальное</td>
+<td>Максимальное</td>
+<td>Плавность графика vs Реальность</td>
+</tr>
+<tr>
+<td>Буферизация</td>
+<td>Малый буфер</td>
+<td>Большой буфер</td>
+<td>Риск потери данных при лагах</td>
+</tr>
+<tr>
+<td>Точность GPS</td>
+<td>Экономия батареи</td>
+<td>Высокая точность</td>
+<td>Корректность привязки к координатам</td>
+</tr>
+</tbody>
+</table>
+
+<p>Опытные тюнеры часто используют двойную запись: один лог с высокими частотами для детального анализа конкретного участка трассы, и второй — фоновый, с низкими частотами для отслеживания общих тенденций в течение всей поездки. Это позволяет экономить место на накопителе и не перегружать процессор смартфона, который и так занят декодированием видеопотока или навигацией.</p>
+
+<h2 id="типичные-ошибки-и-способы-их-устранения">Типичные ошибки и способы их устранения</h2>
+
+<p>Самая распространенная проблема — это расхождение показаний скорости по GPS и по данным с <em>OBDII</em>. Параметр акселерометра здесь ни при чем, но пользователи часто грешат на настройки фильтров. На самом деле, скорость по GPS всегда имеет задержку и зависит от качества приема спутников, тогда как данные с колесных датчиков (через ЭБУ) мгновенны. Пытаясь «подогнать» графики друг к другу с помощью сглаживания, вы только вносите дополнительные искажения.</p>
+
+<p>Еще одна ошибка — использование режима энергосбережения на смартфоне. В этом режиме операционная система может искусственно ограничивать частоту опроса сенсоров и Bluetooth-модуля. В результате вы получаете рваный график и пропуски в логах, которые невозможно исправить программными фильтрами. Для работы с <em>Torque</em> необходимо добавить приложение в исключения режима экономии энергии.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Не используйте одновременно несколько приложений, запрашивающих доступ к акселерометру и GPS. Конфликт ресурсов приведет к тому, что одно из приложений будет получать устаревшие данные или вовсе перестанет обновляться.</p>
+</blockquote>
+
+<p>Если графики продолжают «дергаться» даже после настройки фильтров, проверьте физическое крепление адаптера. Дешевые модели <em>ELM327</em> могут перегреваться и терять связь, что выглядит как резкие скачки значений до нуля или максимальных пределов. В таких случаях никакая программная коррекция <strong>ACCEL</strong> не поможет — требуется замена аппаратной части на более качественную.</p>
+
+<details class="faq-item"><summary>Секрет стабильного соединения</summary><div class="faq-answer"><p>Многие пользователи не знают, что длина Bluetooth-кабеля (если используется удлинитель) или наличие металлических предметов рядом с адаптером может экранировать сигнал. Попробуйте перевернуть адаптер в разъеме или использовать керамический переходник, если наблюдаются постоянные обрывы связи.</p></div></details>
+
+<h2 id="faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</h2>
+
+<details>
+<summary>Почему график ускорения идет вниз, когда я торможу?</summary>
+<p>Это нормальное поведение акселерометра. При торможении возникает отрицательное ускорение (перегрузка), направленное противоположно вектору движения. Если график отображает продольную перегрузку, то при разгоне она положительная, а при торможении — отрицательная. Это подтверждает исправность сенсора.</p>
+</details>
+
+<details>
+<summary>Можно ли использовать Torque для замера 0-100 км/ч?</summary>
+<p>Да, в приложении есть встроенный инструмент «Тест производительности» (Performance Test). Он использует комбинацию данных GPS и акселерометра для вычисления времени разгона. Для максимальной точности убедитесь, что калибровка проведена на ровной поверхности, а GPS пойман до начала движения.</p>
+</details>
+
+<details>
+<summary>Что делать, если значение G-force не возвращается в ноль на стоянке?</summary>
+<p>Необходимо заново пройти процедуру калибровки. Также проверьте, не наклонен ли держатель телефона. Если телефон закреплен под углом, гравитация будет постоянно действовать на одну из осей сенсора, создавая иллюзию постоянной перегрузки. Выровняйте устройство по горизонту.</p>
+</details>
+
+<details>
+<summary>Влияет ли параметр ACCEL на расход топлива в логах?</summary>
+<p>Нет, параметр настройки акселерометра влияет только на отображение и запись данных о перегрузках и сглаживание графиков. Реальный расход топлива рассчитывается на основе данных форсунок и дроссельной заслонки, поступающих от ЭБУ, и программные фильтры телефона на этот физический процесс не влияют.</p>
+</details>
+
+<details>
+<summary>Почему на разных телефонах разные показания G-сенсора?</summary>
+<p>Разные модели смартфонов оснащаются акселерометрами разного качества и чувствительности. Кроме того, производители по-разному калибруют сенсоры на заводе. Поэтому абсолютные значения могут отличаться на 5-10%, что считается нормой для потребительской электроники.</p>
+</details>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Главный вывод: Параметр ACCEL в Torque — это инструмент настройки отображения данных акселерометра. Правильная калибровка и умеренное сглаживание позволяют получить честную картину динамики автомобиля без цифрового шума.</p></div></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#физический-смысл-и-программная-реализация-accel">Физический смысл и программная реализация ACCEL</a></li><li><a href="#настройка-фильтрации-и-сглаживания-данных">Настройка фильтрации и сглаживания данных</a></li><li><a href="#калибровка-g-сенсора-для-точных-замеров">Калибровка G-сенсора для точных замеров</a></li><li><a href="#влияние-настроек-на-запись-логов-и-графики">Влияние настроек на запись логов и графики</a></li><li><a href="#типичные-ошибки-и-способы-их-устранения">Типичные ошибки и способы их устранения</a></li><li><a href="#faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/d/da/datchik-polozheniya-drosselnoj-zaslonki-mitsubisi-galant.html" class="related-card">Датчик дроссельной заслонки Mitsubishi Galant: неисправности и замена</a></li><li><a href="/articles/r/ra/razdelitelnaya-polosa-na-doroge-kak-vyglyadit.html" class="related-card">Разделительная полоса на дороге: как выглядит и зачем нужна</a></li><li><a href="/articles/g/ge/generator-hyundai-accent.html" class="related-card">Генератор Hyundai Accent: выбор, диагностика и замена</a></li><li><a href="/articles/h/ho/honda-accord-cl7.html" class="related-card">Honda Accord CL7: Характеристики, Двигатели K24 и Проблемы Модели</a></li><li><a href="/articles/d/dv/dvorniki-ne-vozvrashchayutsya-v-iskhodnoe-polozhenie-priora.html" class="related-card">Дворники Приоры не возвращаются: причины и ремонт</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/d/da/datchik-polozheniya-drosselnoj-zaslonki-mitsubisi-galant.html" class="related-bottom-card"><span class="related-bottom-title">Датчик дроссельной заслонки Mitsubishi Galant: неисправности и замена</span><span class="related-bottom-desc">Как проверить и заменить датчик положения дроссельной заслонки на Mitsubishi Galant 8/9 поколения? П</span></a><a href="/articles/r/ra/razdelitelnaya-polosa-na-doroge-kak-vyglyadit.html" class="related-bottom-card"><span class="related-bottom-title">Разделительная полоса на дороге: как выглядит и зачем нужна</span><span class="related-bottom-desc">Фото, виды и назначение разделительных полос на дорогах России. Как отличить сплошную, двойную и пре</span></a><a href="/articles/g/ge/generator-hyundai-accent.html" class="related-bottom-card"><span class="related-bottom-title">Генератор Hyundai Accent: выбор, диагностика и замена</span><span class="related-bottom-desc">Полное руководство по генератору Hyundai Accent. Признаки неисправности, артикулы деталей, проверка </span></a><a href="/articles/h/ho/honda-accord-cl7.html" class="related-bottom-card"><span class="related-bottom-title">Honda Accord CL7: Характеристики, Двигатели K24 и Проблемы Модели</span><span class="related-bottom-desc">Полный обзор Honda Accord CL7 седьмого поколения. Технические характеристики, слабые места двигателя</span></a><a href="/articles/d/dv/dvorniki-ne-vozvrashchayutsya-v-iskhodnoe-polozhenie-priora.html" class="related-bottom-card"><span class="related-bottom-title">Дворники Приоры не возвращаются: причины и ремонт</span><span class="related-bottom-desc">Почему дворники на Lada Priora не встают в исходное положение? Диагностика редуктора, моторчика и пр</span></a><a href="/articles/n/ni/nissan-zhuk-ili-reno-daster.html" class="related-bottom-card"><span class="related-bottom-title">Nissan Juke или Renault Duster: какой кроссовер выбрать в 2026 году?</span><span class="related-bottom-desc">Сравнение Nissan Juke и Renault Duster по цене, технике, комфорту и проходимости. Разбираем плюсы и </span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

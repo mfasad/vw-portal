@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>Geely Atlas на D2: как подключить и настроить мультимедиа — VW-portal</title>
+    <meta name="description" content="Пошаговая инструкция по интеграции &lt;em&gt;Geely Atlas&lt;/em&gt; с &lt;em&gt;Drive2&lt;/em&gt;: от регистрации до синхронизации данных. Разбираем ошибки, функции и скрытые возможности.">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/d/dz/dzhili-atlas-na-drajv-2.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Geely Atlas на D2: как подключить и настроить мультимедиа">
+    <meta property="og:description" content="Пошаговая инструкция по интеграции &lt;em&gt;Geely Atlas&lt;/em&gt; с &lt;em&gt;Drive2&lt;/em&gt;: от регистрации до синхронизации данных. Разбираем ошибки, функции и скрытые возможности.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/atlas/">Atlas</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Geely Atlas на D2: как подключить и настроить мультимедиа</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Geely Atlas и Drive2: полное руководство по подключению и использованию</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#почему-geely-atlas-и-drive2-идеальное-сочетание">Почему Geely Atlas и Drive2 — идеальное сочетание?</a></li><li><a href="#шаг-1-регистрация-и-первичная-настройка-аккаунта-drive2">Шаг 1: Регистрация и первичная настройка аккаунта Drive2</a></li><li><a href="#шаг-2-подключение-geely-atlas-к-drive2-через-obd-ii-адаптер">Шаг 2: Подключение Geely Atlas к Drive2 через OBD-II адаптер</a></li><li><a href="#шаг-3-настройка-автоматической-записи-поездок">Шаг 3: Настройка автоматической записи поездок</a></li><li><a href="#шаг-4-синхронизация-с-бортовой-системой-geely-atlas-без-obd-ii">Шаг 4: Синхронизация с бортовой системой Geely Atlas (без OBD-II)</a></li><li><a href="#распространённые-ошибки-и-их-решения">Распространённые ошибки и их решения</a></li><li><a href="#скрытые-функции-drive2-для-geely-atlas">Скрытые функции Drive2 для Geely Atlas</a></li><li><a href="#faq-частые-вопросы-по-geely-atlas-и-drive2">FAQ: Частые вопросы по Geely Atlas и Drive2</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body"><p><em>Geely Atlas</em> — один из самых технологичных кроссоверов в своём классе, а платформа <em>Drive2</em> уже давно стала экосистемой для автовладельцев, где можно вести бортовой журнал, отслеживать расход топлива и обмениваться опытом. Но как правильно связать эти два инструмента, чтобы получить максимум пользы? В этой статье разберём все нюансы — от первоначальной настройки до решения типичных проблем.</p>
+
+<p>Многие владельцы <strong>ошибочно думают</strong>, что для интеграции достаточно просто загрузить приложение <em>Drive2</em> на смартфон и начать пользоваться. На деле же процесс требует синхронизации с бортовой системой <em>Geely Atlas</em>, настройки API-доступа и даже некоторых манипуляций с <code>OBD-II адаптером</code> (если вы хотите автоматически считывать данные о поездках). Мы подробно расскажем, как избежать распространённых ошибок и настроить всё с первого раза.</p>
+
+<h2 id="почему-geely-atlas-и-drive2-идеальное-сочетание">Почему <em>Geely Atlas</em> и <em>Drive2</em> — идеальное сочетание?</h2>
+
+<p>Платформа <em>Drive2</em> изначально создавалась как социальная сеть для автолюбителей, но со временем превратилась в мощный инструмент для <strong>мониторинга технического состояния машины</strong>. Для <em>Geely Atlas</em> это особенно актуально, так как кроссовер оснащён современной электроникой, данные с которой можно передавать в бортовой журнал автоматически.</p>
+
+<p>Вот ключевые преимущества такой интеграции:</p>
+<ul>
+  <li>📊 <strong>Автоматическая запись поездок</strong>: маршрут, средняя скорость, расход топлива — всё фиксируется без ручного ввода.</li>
+  <li>⚠️ <strong>Оповещения о неисправностях</strong>: система считывает ошибки с <code>ECU</code> и отправляет уведомления в приложение.</li>
+  <li>💰 <strong>Контроль расходов</strong>: топливо, запчасти, ТО — всё учитывается в одном месте.</li>
+  <li>📱 <strong>Удалённый доступ</strong>: можно проверять состояние машины даже когда её нет рядом.</li>
+</ul>
+
+<p>Кроме того, <em>Drive2</em> позволяет <strong>сравнивать показатели</strong> вашего <em>Atlas</em> с другими владельцами той же модели. Это помогает выявить отклонения в расходе топлива или динамике разгона, которые могут указывать на скрытые проблемы.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Вы уже используете Drive2 для своего Geely Atlas?</strong><ul><li>Да, активно</li><li>Пробовал, но бросил</li><li>Ещё не пробовал</li><li>Не знаю, что это</li></ul></div></div>
+
+<h2 id="шаг-1-регистрация-и-первичная-настройка-аккаунта-drive2">Шаг 1: Регистрация и первичная настройка аккаунта <em>Drive2</em></h2>
+
+<p>Прежде чем связывать <em>Geely Atlas</em> с платформой, нужно правильно настроить профиль. Это займёт не более 10 минут, но от этого зависит, насколько удобно вам будет пользоваться системой позже.</p>
+
+<p>Следуйте этому алгоритму:</p>
+<ol>
+  <li>Скачайте официальное приложение <em>Drive2</em> из <a href="https://play.google.com" target="_blank">Google Play</a> или <a href="https://apps.apple.com" target="_blank">App Store</a>.</li>
+  <li>Зарегистрируйтесь через email или социальные сети. <strong>Важно</strong>: используйте реальный адрес — на него будут приходить уведомления о критических ошибках автомобиля.</li>
+  <li>В разделе <code>Мой гараж</code> добавьте <em>Geely Atlas</em>, указав год выпуска, комплектацию и VIN (при наличии). Это нужно для точной идентификации модели при синхронизации.</li>
+  <li>Активируйте премиум-аккаунт (опционально). Бесплатной версии хватит для базового функционала, но премиум даёт расширенную аналитику и отсутствие рекламы.</li>
+</ol>
+
+<p>После регистрации проверьте настройки уведомлений. Рекомендуем включить оповещения о:</p>
+<ul>
+  <li>🔧 Новых ошибках <code>ECU</code> (через <code>OBD-II</code>)</li>
+  <li>⛽ Превышении среднего расхода топлива</li>
+  <li>📅 Предстоящем ТО (на основе пробега)</li>
+</ul>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если вы регистрируетесь через Google или ВКонтакте, убедитесь, что в профиле социальной сети указан реальный email. Иначе вы не сможете восстановить доступ к Drive2 при блокировке аккаунта.</p></div>
+
+<h2 id="шаг-2-подключение-geely-atlas-к-drive2-через-obd-ii-адаптер">Шаг 2: Подключение <em>Geely Atlas</em> к <em>Drive2</em> через <code>OBD-II</code> адаптер</h2>
+
+<p>Для полноценной синхронизации данных потребуется <code>OBD-II адаптер</code> с поддержкой протокола <code>ELM327</code>. Большинство недорогих китайских устройств подойдут, но лучше выбрать модели с чипом <code>STN1110</code> — они стабильнее работают с <em>Geely Atlas</em>.</p>
+
+<p>Инструкция по подключению:</p>
+<ol>
+  <li>Вставьте адаптер в разъём <code>OBD-II</code> (обычно расположен под рулём или в бардачке).</li>
+  <li>Включите зажигание (двигатель заводить не нужно).</li>
+  <li>В приложении <em>Drive2</em> перейдите в <code>Настройки → Устройства → Добавить OBD-адаптер</code>.</li>
+  <li>Выберите модель адаптера из списка. Если вашего нет — выберите <code>ELM327 (универсальный)</code>.</li>
+  <li>Подождите, пока система определит параметры автомобиля. На <em>Geely Atlas</em> это может занять до 2 минут.</li>
+</ol>
+
+<p><strong>Важный момент</strong>: если адаптер не определяется, проверьте:</p>
+<ul>
+  <li>🔌 Правильность подключения (контакты не должны быть окислены).</li>
+  <li>📱 Совместимость с вашей версией Android/iOS (некоторые адаптеры не работают с iOS 15+).</li>
+  <li>🔄 Перезагрузите адаптер, вынув и снова вставив его в разъём.</li>
+</ul>
+
+<details class="faq-item"><summary>Какие данные считывает OBD-II в Geely Atlas?</summary><div class="faq-answer"><p>Адаптер передаёт в Drive2 следующие параметры:
+<p>- Обороты двигателя (RPM)</p>
+<p>- Скорость (km/h)</p>
+<p>- Температура охлаждающей жидкости (°C)</p>
+<p>- Расход топлива (л/100 км)</p>
+<p>- Коды ошибок (DTC)</p>
+<p>- Напряжение бортовой сети (V)</p>
+<p>- Пробег (km)</p>
+<p>- Время работы двигателя (ч:мин)</p>
+<p>- Положение дроссельной заслонки (%)</p>
+<p>- Давление во впускном коллекторе (kPa)</p>
+<p></p></div></details></p>
+
+<p>Если после подключения в приложении отображаются некорректные данные (например, расход топлива 99.9 л/100 км), значит адаптер не совместим с протоколом <em>Geely Atlas</em>. В этом случае поможет прошивка адаптера или его замена на модель с чипом <code>STN1110</code>.</p>
+
+<h2 id="шаг-3-настройка-автоматической-записи-поездок">Шаг 3: Настройка автоматической записи поездок</h2>
+
+<p>Одна из самых полезных функций <em>Drive2</em> — автоматическое ведение бортового журнала. Чтобы она работала корректно, нужно:</p>
+
+<ol>
+  <li>Включить геолокацию на смартфоне (обязательно!).</li>
+  <li>В настройках приложения <em>Drive2</em> перейти в <code>Запись поездок → Автозапуск</code> и активировать опцию.</li>
+  <li>Указать тип топлива (<code>АИ-92/95/98</code> или <code>Дизель</code>) и средний расход для вашего <em>Atlas</em>.</li>
+  <li>Синхронизировать данные с <code>OBD-II</code> (если адаптер подключён).</li>
+</ol>
+
+<p><strong>Как проверить, что всё работает?</strong> Совершите тестовую поездку длиной 5+ км. После остановки двигателя:</p>
+<ol>
+  <li>Откройте приложение <em>Drive2</em>.</li>
+  <li>Перейдите в <code>Бортовой журнал → Последние поездки</code>.</li>
+  <li>Убедитесь, что отобразился маршрут, средняя скорость и расход топлива.</li>
+</ol>
+
+<p>Если данные не записываются:</p>
+<ul>
+  <li>📵 Проверьте, не блокирует ли энергосберегающий режим работу приложения в фоновом режиме.</li>
+  <li>📡 Убедитесь, что геолокация включена <strong>всегда</strong>, а не только во время использования приложения.</li>
+  <li>🔄 Перезагрузите смартфон и адаптер <code>OBD-II</code>.</li>
+</ul>
+
+
+<p>Включена геолокация на смартфоне</p>
+<p>Drive2 добавлен в исключения энергосбережения</p>
+<p>OBD-II адаптер подключён и определяется системой</p>
+<p>В настройках указан правильный тип топлива</p>
+<p>Совершена тестовая поездка длиной ≥5 км--></p>
+
+<h2 id="шаг-4-синхронизация-с-бортовой-системой-geely-atlas-без-obd-ii">Шаг 4: Синхронизация с бортовой системой <em>Geely Atlas</em> (без <code>OBD-II</code>)</h2>
+
+<p>Если у вас нет <code>OBD-II</code> адаптера, можно частично синхронизировать данные через бортовой компьютер <em>Geely Atlas</em>. Для этого:</p>
+
+<p>1. Подключите смартфон к мультимедийной системе через <code>Bluetooth</code> или <code>USB</code>.</p>
+<p>2. В настройках <em>Drive2</em> выберите <code>Подключить через бортовой компьютер</code>.</p>
+<p>3. Следуйте инструкциям на экране — система запросит доступ к данным о пробеге и расходе топлива.</p>
+
+<p><strong>Ограничения этого метода</strong>:</p>
+<ul>
+  <li>❌ Нет считывания ошибок <code>ECU</code>.</li>
+  <li>❌ Данные о расходе топлива могут быть менее точными.</li>
+  <li>❌ Не все комплектации <em>Atlas</em> поддерживают эту функцию (проверьте в руководстве пользователя).</li>
+</ul>
+
+<p>Для владельцев <em>Geely Atlas Pro</em> и <em>Atlas Luxury</em> доступна расширенная синхронизация через <code>Geely Net</code> — фирменный сервис удалённого управления. Чтобы связать его с <em>Drive2</em>:</p>
+<ol>
+  <li>Авторизуйтесь в приложении <code>Geely Net</code>.</li>
+  <li>В настройках <em>Drive2</em> выберите <code>Подключить Geely Net</code>.</li>
+  <li>Введите логин/пароль от вашего аккаунта <code>Geely</code>.</li>
+  <li>Подтвердите доступ к данным автомобиля.</li>
+</ol>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Синхронизация через Geely Net позволяет получать данные о пробеге, уровне топлива и даже предварительном нагреве двигателя (если функция поддерживается вашей комплектацией).</p></div>
+
+<h2 id="распространённые-ошибки-и-их-решения">Распространённые ошибки и их решения</h2>
+
+<p>Даже при правильной настройке пользователи <em>Geely Atlas</em> иногда сталкиваются с проблемами. Разберём самые частые:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Ошибка</th>
+      <th>Причина</th>
+      <th>Решение</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Адаптер <code>OBD-II</code> не определяется</td>
+      <td>Несовместимый протокол или физическое повреждение</td>
+      <td>Попробуйте другой адаптер (рекомендуем <code>Vgate iCar2</code> или <code>OBDLink MX+</code>)</td>
+    </tr>
+    <tr>
+      <td>Данные о расходе топлива завышены</td>
+      <td>Неправильные настройки топливной карты в <em>Drive2</em></td>
+      <td>Перекалибруйте расход вручную в <code>Настройки → Автомобиль → Топливо</code></td>
+    </tr>
+    <tr>
+      <td>Приложение не записывает поездки</td>
+      <td>Геолокация или фоновая активность заблокированы</td>
+      <td>Добавьте <em>Drive2</em> в исключения энергосбережения и проверьте разрешения</td>
+    </tr>
+    <tr>
+      <td>Ошибка соединения с <code>Geely Net</code></td>
+      <td>Неактуальная версия приложения или проблемы на сервере</td>
+      <td>Обновите <em>Drive2</em> и <code>Geely Net</code>, перезагрузите смартфон</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><mark>Критическая ошибка: если после подключения <code>OBD-II</code> адаптера в <em>Drive2</em> отображается сообщение "Не поддерживаемый протокол ECU", это означает, что ваш <em>Geely Atlas</em> использует проприетарный протокол диагностики. В этом случае поможет только прошивка адаптера под <code>Geely</code> или покупка специализированного сканера (например, <code>Launch CReader</code>).</mark></p>
+
+<blockquote>⚠️ <strong>Внимание</strong>: Никогда не подключайте <code>OBD-II</code> адаптеры сомнительного происхождения (например, с AliExpress за 300 рублей). Они могут не только не работать, но и <strong>повредить электронные блоки</strong> <em>Atlas</em> из-за нестабильного напряжения. Используйте только сертифицированные устройства.</blockquote>
+
+<h2 id="скрытые-функции-drive2-для-geely-atlas">Скрытые функции <em>Drive2</em> для <em>Geely Atlas</em></h2>
+
+<p>Многие пользователи используют <em>Drive2</em> только для записи поездок, но платформа предлагает гораздо больше:</p>
+
+<ul>
+  <li>📈 <strong>Аналитика стиля вождения</strong>: система оценивает вашу манеру езды и даёт рекомендации по экономии топлива. Для <em>Atlas</em> с турбомотором это особенно актуально — агрессивный стиль может увеличить расход на 20-30%.</li>
+  <li>🔧 <strong>База знаний по ремонту</strong>: в разделе <code>Мой гараж → Ремонт</code> можно найти инструкции по замене расходников (например, воздушного фильтра или свечей зажигания) именно для вашей модели.</li>
+  <li>💬 <strong>Чаты по модели</strong>: общайтесь с другими владельцами <em>Geely Atlas</em>, обсуждайте типичные проблемы и способы их решения.</li>
+  <li>📅 <strong>Напоминания о ТО</strong>: система автоматически рассчитывает, когда нужно менять масло, фильтры или тормозные колодки, исходя из пробега.</li>
+</ul>
+
+<p>Для владельцев <em>Atlas</em> с <code>CVT</code> особенно полезен модуль <strong>мониторинга трансмиссии</strong>. Он отслеживает температуру вариатора и предупреждает о перегреве, что помогает избежать дорогостоящего ремонта. Чтобы активировать эту функцию:</p>
+<ol>
+  <li>Перейдите в <code>Настройки → Датчики → Трансмиссия</code>.</li>
+  <li>Выберите тип коробки — <code>CVT</code>.</li>
+  <li>Укажите предельные значения температуры (для <em>Atlas</em> норма до 90°C, критический порог — 110°C).</li>
+</ol>
+
+<p>Ещё одна малоизвестная возможность — <strong>экспорт данных в Excel</strong>. Это удобно для ведения личной статистики или предоставления данных дилеру при гарантийном ремонте. Чтобы экспортировать журнал:</p>
+<ol>
+  <li>Откройте <code>Бортовой журнал</code>.</li>
+  <li>Нажмите на три точки в правом верхнем углу.</li>
+  <li>Выберите <code>Экспорт → Excel</code>.</li>
+  <li>Укажите период (например, последний месяц).</li>
+  <li>Подтвердите отправку на email.</li>
+</ol>
+
+<h2 id="faq-частые-вопросы-по-geely-atlas-и-drive2">FAQ: Частые вопросы по <em>Geely Atlas</em> и <em>Drive2</em></h2>
+
+<details>
+  <summary>Можно ли подключить <em>Drive2</em> к <em>Geely Atlas</em> без <code>OBD-II</code> адаптера?</summary>
+  <p>Да, но функционал будет ограничен. Вы сможете вручную вводить данные о поездках и расходе топлива, но автоматическое считывание ошибок и параметров двигателя работать не будет. Для полноценной интеграции адаптер необходим.</p>
+</details>
+
+<details>
+  <summary>Почему <em>Drive2</em> показывает расход топлива на 10-15% выше, чем бортовой компьютер <em>Atlas</em>?</summary>
+  <p>Это нормальная погрешность. Бортовой компьютер <em>Geely Atlas</em> часто занижает расход, так как не учитывает прогрев двигателя и короткие поездки. В <em>Drive2</em> алгоритм расчёта более точный, но его тоже можно скорректировать в настройках топливной карты.</p>
+</details>
+
+<details>
+  <summary>Как сбросить ошибку <code>Check Engine</code> через <em>Drive2</em>?</summary>
+  <p>Если ошибка некритичная (например, <code>P0420</code> — низкая эффективность катализатора), её можно сбросить прямо в приложении:
+  <ol>
+    <li>Перейдите в <code>Диагностика → Ошибки ECU</code>.</li>
+    <li>Найдите нужный код в списке.</li>
+    <li>Нажмите <code>Сбросить</code>.</li>
+  </ol>
+  <p>Если ошибка появляется снова — требуется диагностика в сервисе.</p>
+  </p>
+</details>
+
+<details>
+  <summary>Можно ли использовать <em>Drive2</em> для отслеживания другого водителя (например, супруга)?</summary>
+  <p>Да, но для этого нужно:
+  <ol>
+    <li>Создать отдельный аккаунт для второго водителя.</li>
+    <li>Добавить тот же <em>Geely Atlas</em> в его гараж.</li>
+    <li>Настроить совместный доступ к автомобилю в <code>Настройки → Совместное использование</code>.</li>
+  </ol>
+  <p>Все поездки будут фиксироваться в обоих аккаунтах.</p>
+  </p>
+</details>
+
+<details>
+  <summary>Что делать, если <em>Drive2</em> не видит мой <em>Geely Atlas</em> в списке моделей?</summary>
+  <p>Если вашей комплектации нет в базе, выберите ближайшую по характеристикам (например, <em>Atlas 1.5T</em> вместо <em>Atlas 2.0T</em>). После синхронизации с <code>OBD-II</code> или <code>Geely Net</code> система автоматически подтянет правильные параметры.</p>
+</details>
+
+<p>Интеграция <em>Geely Atlas</em> с <em>Drive2</em> открывает новые возможности для контроля над автомобилем. От автоматической записи поездок до диагностики неисправностей — платформа станет вашим надёжным помощником. Главное — правильно настроить всё с самого начала, и тогда вы сэкономите время, деньги и нервы.</p></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#почему-geely-atlas-и-drive2-идеальное-сочетание">Почему Geely Atlas и Drive2 — идеальное сочетание?</a></li><li><a href="#шаг-1-регистрация-и-первичная-настройка-аккаунта-drive2">Шаг 1: Регистрация и первичная настройка аккаунта Drive2</a></li><li><a href="#шаг-2-подключение-geely-atlas-к-drive2-через-obd-ii-адаптер">Шаг 2: Подключение Geely Atlas к Drive2 через OBD-II адаптер</a></li><li><a href="#шаг-3-настройка-автоматической-записи-поездок">Шаг 3: Настройка автоматической записи поездок</a></li><li><a href="#шаг-4-синхронизация-с-бортовой-системой-geely-atlas-без-obd-ii">Шаг 4: Синхронизация с бортовой системой Geely Atlas (без OBD-II)</a></li><li><a href="#распространённые-ошибки-и-их-решения">Распространённые ошибки и их решения</a></li><li><a href="#скрытые-функции-drive2-для-geely-atlas">Скрытые функции Drive2 для Geely Atlas</a></li><li><a href="#faq-частые-вопросы-по-geely-atlas-и-drive2">FAQ: Частые вопросы по Geely Atlas и Drive2</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/o/ot/otzyvy-dzhili-atlas-2019.html" class="related-card">Geely Atlas 2019: реальные отзывы владельцев и экспертный анализ</a></li><li><a href="/articles/o/ob/obzor-dzhili-atlas-2024-polnyj-privod.html" class="related-card">Geely Atlas 2026: полный привод, цены, тест-драйв и отзывы</a></li><li><a href="/articles/r/ra/raskhod-topliva-dzhili-atlas-pro.html" class="related-card">Расход топлива Geely Atlas Pro: реальные данные и советы по экономии</a></li><li><a href="/articles/d/dz/dzhili-atlas-avto-ru.html" class="related-card">Geely Atlas на Auto.ru: цены, отзывы, характеристики 2026</a></li><li><a href="/articles/g/ge/geely-atlas-pro-garantiya.html" class="related-card">Geely Atlas Pro: гарантия 2026, сроки, условия и нюансы</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/o/ot/otzyvy-dzhili-atlas-2019.html" class="related-bottom-card"><span class="related-bottom-title">Geely Atlas 2019: реальные отзывы владельцев и экспертный анализ</span><span class="related-bottom-desc">Подробный разбор отзывов о &lt;em&gt;Geely Atlas&lt;/em&gt; 2019 года: плюсы и минусы, технические нюансы, сравн</span></a><a href="/articles/o/ob/obzor-dzhili-atlas-2024-polnyj-privod.html" class="related-bottom-card"><span class="related-bottom-title">Geely Atlas 2026: полный привод, цены, тест-драйв и отзывы</span><span class="related-bottom-desc">Подробный обзор &lt;em&gt;Geely Atlas 2026&lt;/em&gt; с полным приводом: технические характеристики, сравнение с</span></a><a href="/articles/r/ra/raskhod-topliva-dzhili-atlas-pro.html" class="related-bottom-card"><span class="related-bottom-title">Расход топлива Geely Atlas Pro: реальные данные и советы по экономии</span><span class="related-bottom-desc">Узнайте официальный и реальный расход топлива Geely Atlas Pro 1.5T/2.0T. Сравнение с конкурентами, ф</span></a><a href="/articles/d/dz/dzhili-atlas-avto-ru.html" class="related-bottom-card"><span class="related-bottom-title">Geely Atlas на Auto.ru: цены, отзывы, характеристики 2026</span><span class="related-bottom-desc">Подробный обзор кроссовера Geely Atlas на Auto.ru: технические данные, сравнение комплектаций, реаль</span></a><a href="/articles/g/ge/geely-atlas-pro-garantiya.html" class="related-bottom-card"><span class="related-bottom-title">Geely Atlas Pro: гарантия 2026, сроки, условия и нюансы</span><span class="related-bottom-desc">Полный разбор гарантии на Geely Atlas Pro: официальные сроки, что входит, как не потерять, типичные </span></a><a href="/articles/d/da/datchik-abs-dzhili-atlas.html" class="related-bottom-card"><span class="related-bottom-title">Датчик ABS Geely Atlas: признаки неисправности и замена</span><span class="related-bottom-desc">Полный разбор датчика АБС Джили Атлас: симптомы поломки, коды ошибок, проверка мультиметром и пошаго</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

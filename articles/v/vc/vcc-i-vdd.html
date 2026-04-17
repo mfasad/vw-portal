@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>VCC и VDD: в чем разница, назначение и применение в электронике — VW-portal</title>
+    <meta name="description" content="Подробный разбор обозначений VCC и VDD. Узнайте, чем они отличаются, как правильно их подключать и почему путать их опасно для микросхем.">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/v/vc/vcc-i-vdd.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="VCC и VDD: в чем разница, назначение и применение в электронике">
+    <meta property="og:description" content="Подробный разбор обозначений VCC и VDD. Узнайте, чем они отличаются, как правильно их подключать и почему путать их опасно для микросхем.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">VCC и VDD: в чем разница, назначение и применение в электронике</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>VCC и VDD: полное руководство по обозначениям питания</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#происхождение-терминов-от-транзисторов-к-микросхемам">Происхождение терминов: от транзисторов к микросхемам</a></li><li><a href="#физическая-разница-между-vcc-и-vdd-в-схемотехнике">Физическая разница между VCC и VDD в схемотехнике</a></li><li><a href="#сравнительная-таблица-характеристик-и-применений">Сравнительная таблица характеристик и применений</a></li><li><a href="#особенности-подключения-и-фильтрация-помех">Особенности подключения и фильтрация помех</a></li><li><a href="#типичные-ошибки-и-проблемы-при-проектировании">Типичные ошибки и проблемы при проектировании</a></li><li><a href="#современные-стандарты-и-низковольтная-логика">Современные стандарты и низковольтная логика</a></li><li><a href="#практические-рекомендации-по-выбору-компонентов">Практические рекомендации по выбору компонентов</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>В мире микроэлектроники и схемотехники новички часто сталкиваются с загадочными буквенными обозначениями на принципиальных схемах. Среди них наиболее часто встречаются маркировки <strong>VCC</strong> и <strong>VDD</strong>, которые вызывают недоумение у тех, кто только начинает разбираться в физике полупроводников. Казалось бы, зачем нужны два разных сокращения для обозначения напряжения питания, если оба термина указывают на положительный потенциал относительно земли?</p>
+
+<p>Исторически сложилось так, что эти обозначения произошли от названий выводов транзисторов, которые доминировали в разные эпохи развития электроники. Понимание разницы между ними необходимо не только для правильного чтения документации, но и для предотвращения фатальных ошибок при проектировании печатных плат. В этой статье мы детально разберем этимологию терминов, их физический смысл и практическое применение в современных устройствах.</p>
+
+<p>Вам не нужно быть дипломированным инженером, чтобы усвоить базовые принципы распределения питания. Достаточно внимательно изучить материал, чтобы перестать путаться в аббревиатурах и уверенно читать техническую документацию любого уровня сложности.</p>
+
+<h2 id="происхождение-терминов-от-транзисторов-к-микросхемам">Происхождение терминов: от транзисторов к микросхемам</h2>
+
+<p>Чтобы понять суть обозначений, необходимо вернуться к истокам создания полупроводниковых приборов. Буква "V" в обоих случаях означает Voltage (напряжение). Двойное повторение буквы в конце аббревиатуры (CC или DD) указывает на то, что речь идет о напряжении, приложенном к конкретному выводу устройства относительно общего провода.</p>
+
+<p>Термин <strong>VCC</strong> берет свое начало от биполярных транзисторов (BJT). В таких приборах коллектор обозначается как Collector. Следовательно, удвоенная "C" указывает на напряжение, подаваемое на коллекторную цепь. Это стандарт де-факто для аналоговой электроники и логических схем, построенных на биполярной технологии, таких как знаменитые серии микросхем <em>74xx</em> или <em>NE555</em>.</p>
+
+<p>В свою очередь, обозначение <strong>VDD</strong> пришло из мира полевых транзисторов (MOSFET). Здесь буква "D" происходит от слова Drain (сток). Поскольку современные процессоры, микроконтроллеры и цифровая логика построены преимущественно на КМОП-технологиях (CMOS), именно VDD стал стандартом для цифровых устройств. Важно отметить, что в схемах с полевыми транзисторами также встречаются обозначения VSS (Source) и VGG (Gate).</p>
+
+<blockquote>
+<p>⚠️ Внимание: Никогда не подавайте напряжение питания на входной логический вывод, даже если на схеме он обозначен похоже. Путаница между выводами Gate, Drain и Collector может мгновенно вывести дорогостоящий чип из строя из-за пробоя изоляции.</p>
+</blockquote>
+
+<p>Таким образом, хотя физически оба термина обозначают положительную шину питания, их использование продиктовано технологией производства транзисторов внутри микросхемы. В современной документации инженеры часто используют эти термины как синонимы для обозначения плюсового питания, но технически грамотным специалистам важно знать исходный контекст.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какая технология вам ближе в работе?</strong><ul><li>Биполярные транзисторы (BJT)</li><li>Полевые транзисторы (MOSFET)</li><li>Микроконтроллеры (ARM/AVR)</li><li>Я только начинаю изучать электронику</li></ul></div></div>
+
+<h2 id="физическая-разница-между-vcc-и-vdd-в-схемотехнике">Физическая разница между VCC и VDD в схемотехнике</h2>
+
+<p>Несмотря на то, что в бытовом понимании VCC и VDD часто interchangeable (взаимозаменяемы), в профессиональной среде существуют нюансы. <strong>VCC</strong> чаще ассоциируется с аналоговыми цепями или цепями питания коллекторов биполярных транзисторов, где токи могут быть более стабильными, но требования к шумам — высокими.</p>
+
+<p>Напротив, <strong>VDD</strong> в цифровых схемах часто подразумевает наличие значительных бросков тока в моменты переключения логических состояний. Цифровые микросхемы потребляют ток короткими импульсными всплесками, что требует особого подхода к организации питания. Именно поэтому рядом с выводами VDD почти всегда устанавливают керамические конденсаторы малой емкости.</p>
+
+<p>В сложных системах, таких как материнские платы компьютеров или платы управления промышленными контроллерами, вы можете встретить разделение питания. Например, аналоговая часть датчика может питаться от VCC_A, а цифровой процессор обработки сигналов — от VDD_D. Это делается для минимизации влияния цифровых шумов на чувствительные аналоговые измерения.</p>
+
+<ul>
+<li>🔌 <strong>VCC</strong>: Традиционно используется для биполярных схем, аналоговых компонентов и иногда как общее обозначение напряжения коллектора.</li>
+<li>💻 <strong>VDD</strong>: Стандарт для цифровых схем на полевых транзисторах, микроконтроллеров, процессоров и FPGA.</li>
+<li>📉 <strong>Характер потребления</strong>: VCC часто требует стабильного тока, VDD — способности отдавать большие импульсные токи.</li>
+</ul>
+
+<p>Инженеры-разработчики должны учитывать эти различия при трассировке печатной платы. Дорожки питания для VDD часто делают шире или используют отдельные полигоны, чтобы снизить индуктивность и сопротивление, что критично для высокочастотной цифровой логики.</p>
+
+<h2 id="сравнительная-таблица-характеристик-и-применений">Сравнительная таблица характеристик и применений</h2>
+
+<p>Для систематизации знаний удобно свести основные различия в единую таблицу. Это поможет быстро ориентироваться при чтении datasheet (технической документации) на различные компоненты.</p>
+
+<table>
+<thead>
+<tr>
+<th>Параметр</th>
+<th>VCC (Collector)</th>
+<th>VDD (Drain)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Тип транзисторов</td>
+<td>Биполярные (BJT)</td>
+<td>Полевые (MOSFET, JFET)</td>
+</tr>
+<tr>
+<td>Основная сфера</td>
+<td>Аналоговая электроника, старые логические серии</td>
+<td>Цифровая электроника, микропроцессоры</td>
+</tr>
+<tr>
+<td>Потребление тока</td>
+<td>Относительно постоянное, линейное</td>
+<td>Импульсное, зависит от частоты переключения</td>
+</tr>
+<tr>
+<td>Типичные компоненты</td>
+<td>Операционные усилители, датчики</td>
+<td>МК, FPGA, память, логические вентили</td>
+</tr>
+</tbody>
+</table>
+
+<p>Как видно из таблицы, основное различие кроется в природе управляющего элемента внутри кристалла. Однако в современных смешанных сигнальных микросхемах (Mixed-Signal) вы можете встретить оба обозначения на одном корпусе. Например, у микроконтроллера <em>STM32</em> или <em>ESP32</em> выводы питания могут маркироваться как VDD, в то время как аналоговый референс будет называться VREF или VCCA.</p>
+
+<p>При проектировании собственного устройства всегда проверяйте рекомендованные значения напряжений в документации. Для старых TTL-логик стандартом было 5 Вольт (VCC), тогда как современные CMOS-чипы работают от 3.3В, 1.8В и даже ниже (VDD).</p>
+
+<details class="faq-item"><summary>Почему двойные буквы?</summary><div class="faq-answer"><p>Двойное обозначение (CC, DD, SS, EE) в международной стандартизации IEEE означает, что напряжение прикладывается непосредственно к выводу устройства. Одинарная буква (C, D, S) обычно обозначает напряжение между выводами, например, Vds — напряжение между стоком и истоком.</p></div></details>
+
+<h2 id="особенности-подключения-и-фильтрация-помех">Особенности подключения и фильтрация помех</h2>
+
+<p>Правильное подключение питания — залог стабильной работы любого электронного устройства. Независимо от того, используете вы термин VCC или VDD, физические требования к качеству напряжения остаются высокими. Цифровые схемы, работающие с VDD, генерируют высокочастотные помехи, которые могут распространяться по шинам питания.</p>
+
+<p>Критически важным элементом является установка развязывающих (bypass) конденсаторов. Они должны располагаться максимально близко к выводам питания микросхемы. Для VDD цифровых микросхем стандартом является использование керамических конденсаторов емкостью 100 нФ (0.1 мкФ) на каждый вывод питания.</p>
+
+<pre><code>Схема подключения развязки:
+<p>VDD ----||---- GND</p>
+<p>100nF</code></pre></p>
+
+<p>Если игнорировать это правило, устройство может работать нестабильно, сбрасываться или выдавать ошибочные данные. Аналоговые цепи, питаемые от VCC, часто требуют дополнительных фильтров, таких как ферритовые бусины или LC-фильтры, для подавления низкочастотного гула и высокочастотных выбросов.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка цепи питания</h4><label class="check-item"><input type="checkbox"><span>Проверить номинал конденсаторов</span></label><label class="check-item"><input type="checkbox"><span>Убедиться в близости конденсатора к ножке МК</span></label><label class="check-item"><input type="checkbox"><span>Проверить целостность дорожки GND</span></label><label class="check-item"><input type="checkbox"><span>Замерить уровень пульсаций осциллографом</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<p>Также стоит учитывать падение напряжения на длинных дорожках. Если ваш проект подразумевает передачу питания VDD на расстояние более нескольких сантиметров по тонкой дорожке, напряжение на конце линии может оказаться ниже необходимого минимума, что приведет к сбоям.</p>
+
+<h2 id="типичные-ошибки-и-проблемы-при-проектировании">Типичные ошибки и проблемы при проектировании</h2>
+
+<p>Одной из самых распространенных ошибок новичков является игнорирование разницы между логическими уровнями и напряжениями питания. Подключение вывода, ожидающего 3.3В (VDD), к источнику 5В (VCC) без согласования уровней гарантированно приведет к повреждению входа.</p>
+
+<p>Еще одна частая проблема — "плавающая земля". Если в системе есть несколько источников питания (например, отдельный VCC для моторов и VDD для логики), их земли должны быть объединены в одной точке. Разность потенциалов между "землями" может создать паразитные токи, которые нарушат логику работы устройства.</p>
+
+<blockquote>
+<p>⚠️ Внимание: При использовании внешних источников питания всегда проверяйте полярность. Подача напряжения на вывод GND вместо VCC/VDD (reverse polarity) с высокой вероятностью сожжет микросхему мгновенно.</p>
+</blockquote>
+
+<p>Также часто встречается ошибка недостаточной мощности источника питания. Цифровые схемы потребляют ток неравномерно. Источник, выдающий нужное напряжение без нагрузки, может "просаживаться" под нагрузкой, если он не рассчитан на пиковые токи потребления VDD.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Используйте диод Шоттки последовательно с входом питания для защиты от переполюсовки. Он имеет малое падение напряжения и спасет схему, если вы перепутаете плюс и минус батарейки.</p></div>
+
+<h2 id="современные-стандарты-и-низковольтная-логика">Современные стандарты и низковольтная логика</h2>
+
+<p>С развитием технологий требования к напряжениям питания меняются. Если в эпоху расцвета биполярной логики стандартом было 5В и 12В, то современные нанопроцессоры работают при напряжениях VDDCore около 0.8В - 1.2В. Это делается для снижения тепловыделения и энергопотребления.</p>
+
+<p>В таких системах понятие VCC может встречаться реже, уступая место специфическим обозначениям вроде VDDIO (питание портов ввода-вывода), VDDA (аналоговое питание) и VDDD (цифровое питание). Разделение шин питания внутри одного кристалла позволяет изолировать шумные цифровые части от чувствительных аналоговых.</p>
+
+<p>Инженерам приходится использовать сложные системы DC-DC преобразователей (Buck/Boost converters), чтобы получать необходимые низкие напряжения из стандартных источников. Стабильность этих напряжений критична: отклонение на 5% может привести к нестабильной работе или полной неработоспособности чипа.</p>
+
+<ul>
+<li>⚡ <strong>Энергоэффективность</strong>: Снижение VDD позволяет уменьшить потребляемую мощность по квадратичному закону.</li>
+<li>🌡️ <strong>Тепловой режим</strong>: Меньшее напряжение означает меньшее тепловыделение, что позволяет создавать компактные устройства.</li>
+<li>🔋 <strong>Автономность</strong>: Низковольтная логика продлевает время работы портативных устройств от аккумуляторов.</li>
+</ul>
+
+<p>Понимание этих тенденций необходимо для разработки современной электроники. Старые подходы к питанию, работавшие с VCC 12 вольт, здесь неприменимы и требуют пересмотра элементной базы.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Современная электроника движется к снижению напряжений питания (VDD) для повышения энергоэффективности, что требует более точного контроля качества напряжения и трассировки печатных плат.</p></div>
+
+<h2 id="практические-рекомендации-по-выбору-компонентов">Практические рекомендации по выбору компонентов</h2>
+
+<p>При подборе компонентов для вашей схемы обращайте внимание на диапазон рабочих напряжений, указанный в datasheet. Для цифровых микросхем всегда ищите параметр "Supply Voltage" или "VDD range". Для аналоговых операционных усилителей смотрите "Supply Voltage VCC".</p>
+
+<p>Не экономьте на конденсаторах фильтрации. Дешевые керамические конденсаторы могут иметь микрофонный эффект или низкую надежность. Для критичных узлов лучше использовать компоненты проверенных брендов, таких как <em>Murata</em>, <em>TDK</em> или <em>Samsung</em>.</p>
+
+<p>Если вы проектируете устройство, которое будет работать в условиях промышленных помех, рассмотрите использование отдельных стабилизаторов для VCC и VDD частей схемы, даже если они могут работать от одного источника. Гальваническая развязка или использование линейных стабилизаторов (LDO) для чувствительных узлов часто оправдывает затраты.</p>
+
+<details>
+<summary>Можно ли подавать 5В на устройство, рассчитанное на 3.3В?</summary>
+<p>Категорически нет, если в документации явно не указано, что вход толерантен к 5В (5V tolerant). Превышение напряжения питания VDD выше номинала даже на 10-20% может вызвать пробой оксидного слоя транзисторов внутри чипа, что приведет к необратимому повреждению.</p>
+</details>
+
+<details>
+<summary>В чем разница между VSS и GND?</summary>
+<p>Технически VSS (Voltage Source S) — это напряжение на истоке полевого транзистора, которое в логических схемах обычно соединяется с землей. GND (Ground) — это общий провод или земля. В большинстве схем эти точки соединены, но в сложных аналого-цифровых системах они могут быть развязаны.</p>
+</details>
+
+<details>
+<summary>Почему микросхема греется при подключении питания?</summary>
+<p>Нагрев может указывать на короткое замыкание внутри кристалла, ошибку в монтаже (переполюсовка) или превышение напряжения питания. Также возможен перегрев из-за слишком высокой частоты переключения или большой нагрузки на выходе.</p>
+</details>
+
+<details>
+<summary>Нужно ли экранировать цепи VCC и VDD?</summary>
+<p>В высокочастотных устройствах цепи питания часто закрывают слоем меди (экранируют), соединенным с землей, чтобы предотвратить излучение помех. Для низкочастотных любительских проектов это обычно не требуется, если правильно размещены конденсаторы.</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#происхождение-терминов-от-транзисторов-к-микросхемам">Происхождение терминов: от транзисторов к микросхемам</a></li><li><a href="#физическая-разница-между-vcc-и-vdd-в-схемотехнике">Физическая разница между VCC и VDD в схемотехнике</a></li><li><a href="#сравнительная-таблица-характеристик-и-применений">Сравнительная таблица характеристик и применений</a></li><li><a href="#особенности-подключения-и-фильтрация-помех">Особенности подключения и фильтрация помех</a></li><li><a href="#типичные-ошибки-и-проблемы-при-проектировании">Типичные ошибки и проблемы при проектировании</a></li><li><a href="#современные-стандарты-и-низковольтная-логика">Современные стандарты и низковольтная логика</a></li><li><a href="#практические-рекомендации-по-выбору-компонентов">Практические рекомендации по выбору компонентов</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/v/vc/vcc-chto-eto-takoe-v-avtomobile.html" class="related-card">VCC в автомобиле: что это такое, расшифровка и функции</a></li><li><a href="/articles/m/mo/mozhno-li-zalivat-teplyj-pol-nalivnym-polom.html" class="related-card">Заливать ли теплый пол наливным полом: технологии, риски и нюансы</a></li><li><a href="/articles/t/ti/tiguan-ili-rav-4.html" class="related-card">Тигуан или Рав 4: что выбрать в 2026 году?</a></li><li><a href="/articles/k/kt/kto-snyal-film-polosatyj-rejs.html" class="related-card">Кто снял фильм Полосатый рейс: режиссер и актеры</a></li><li><a href="/articles/r/ra/raspolozhenie-provodov-4216-na-katushke-zazhiganiya.html" class="related-card">Схема катушки зажигания 4216: распиновка и проверка</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/v/vc/vcc-chto-eto-takoe-v-avtomobile.html" class="related-bottom-card"><span class="related-bottom-title">VCC в автомобиле: что это такое, расшифровка и функции</span><span class="related-bottom-desc">Подробно разбираем, что такое VCC в автомобиле. Узнайте о назначении напряжения питания, его роли в </span></a><a href="/articles/m/mo/mozhno-li-zalivat-teplyj-pol-nalivnym-polom.html" class="related-bottom-card"><span class="related-bottom-title">Заливать ли теплый пол наливным полом: технологии, риски и нюансы</span><span class="related-bottom-desc">Экспертный разбор технологии монтажа водяного пола под наливное покрытие. Сравнение смесей, анализ т</span></a><a href="/articles/t/ti/tiguan-ili-rav-4.html" class="related-bottom-card"><span class="related-bottom-title">Тигуан или Рав 4: что выбрать в 2026 году?</span><span class="related-bottom-desc">Подробное сравнение Volkswagen Tiguan и Toyota RAV4. Анализ надежности, расхода топлива, стоимости о</span></a><a href="/articles/k/kt/kto-snyal-film-polosatyj-rejs.html" class="related-bottom-card"><span class="related-bottom-title">Кто снял фильм Полосатый рейс: режиссер и актеры</span><span class="related-bottom-desc">Узнайте, кто снял легендарную советскую комедию Полосатый рейс. Подробный разбор фильма, список акте</span></a><a href="/articles/r/ra/raspolozhenie-provodov-4216-na-katushke-zazhiganiya.html" class="related-bottom-card"><span class="related-bottom-title">Схема катушки зажигания 4216: распиновка и проверка</span><span class="related-bottom-desc">Подробная инструкция по проверке катушки зажигания 4216. Распиновка, схема расположения проводов, му</span></a><a href="/articles/t/te/teyes-cc3l-wifi-kharakteristiki.html" class="related-bottom-card"><span class="related-bottom-title">Teyes CC3L WiFi: полные характеристики и возможности камеры 2026</span><span class="related-bottom-desc">Подробный разбор технических характеристик Teyes CC3L WiFi: разрешение, углы обзора, функции ночного</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

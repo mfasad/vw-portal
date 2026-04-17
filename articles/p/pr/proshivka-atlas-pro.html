@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>Прошивка Атлас Про: обновление ПО и установка своими руками — VW-portal</title>
+    <meta name="description" content="Подробная инструкция по прошивке спутникового ресивера Atlas Pro. Обновление через USB и интернет, устранение ошибок, сброс настроек.">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/p/pr/proshivka-atlas-pro.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Прошивка Атлас Про: обновление ПО и установка своими руками">
+    <meta property="og:description" content="Подробная инструкция по прошивке спутникового ресивера Atlas Pro. Обновление через USB и интернет, устранение ошибок, сброс настроек.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Прошивка Атлас Про: обновление ПО и установка своими руками</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Прошивка Атлас Про: полное руководство по обновлению ПО</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#подготовка-оборудования-и-выбор-версии-по">Подготовка оборудования и выбор версии ПО</a></li><li><a href="#инструкция-по-обновлению-через-usb-накопитель">Инструкция по обновлению через USB-накопитель</a></li><li><a href="#автоматическое-обновление-через-интернет">Автоматическое обновление через интернет</a></li><li><a href="#сброс-настроек-и-восстановление-заводских-параметров">Сброс настроек и восстановление заводских параметров</a></li><li><a href="#решение-распространенных-проблем-при-прошивке">Решение распространенных проблем при прошивке</a></li><li><a href="#faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Современные спутниковые ресиверы требуют регулярного обновления программного обеспечения для корректной работы с новыми транспондерами и сервисами. <strong>Прошивка Атлас Про</strong> — это не просто формальность, а необходимость, обеспечивающая стабильный прием сигнала и доступ к актуальным спискам каналов. Многие пользователи откладывают этот процесс, сталкиваясь впоследствии с «черным экраном» или потерей части пакетов вещания.</p>
+
+<p>Владельцы оборудования часто задаются вопросом, как правильно обновить <em>Atlas Pro</em>, чтобы не превратить устройство в «кирпич». Процесс обновления достаточно прост, если соблюдать последовательность действий и использовать проверенные файлы. В этой статье мы детально разберем все этапы, от подготовки USB-накопителя до сброса настроек, исключив риск повреждения системы.</p>
+
+<p>Если вы хотите, чтобы ваш <strong>спутниковый ресивер</strong> работал как часы, важно понимать разницу между обновлением через интернет и ручной установкой. Автоматический режим удобен, но ручной способ через флешку является более надежным при наличии проблем с сетью. Давайте рассмотрим, что именно необходимо для успешного завершения процедуры.</p>
+
+<h2 id="подготовка-оборудования-и-выбор-версии-по">Подготовка оборудования и выбор версии ПО</h2>
+
+<p>Первым шагом перед началом любых манипуляций является проверка текущей версии программного обеспечения. Вам нужно зайти в меню устройства и найти информацию о системе, чтобы понять, насколько актуальна ваша <strong>версия ПО</strong>. Часто бывает так, что ресивер уже имеет последнюю сборку, и повторная установка не требуется.</p>
+
+<p>Для работы вам понадобится исправный USB-накопитель объемом до 32 Гб. Файловая система флешки должна быть отформатирована в <code>FAT32</code>, так как файловые системы <code>NTFS</code> или <code>exFAT</code> могут не распознаваться загрузчиком. Это критически важный момент, игнорирование которого приведет к тому, что устройство просто «не увидит» файл обновления.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Используйте USB-накопитель без лишних файлов и папок. Наличие большого количества данных может замедлить процесс поиска прошивки или вызвать ошибку чтения.</p></div>
+
+<p>Выбор правильной версии прошивки — залог успеха. Скачивать файлы следует только с официальных источников или проверенных форумов, специализирующихся на спутниковом оборудовании. <em>Atlas Pro</em> имеет множество модификаций, и прошивка от другой модели или региона может некорректно работать или полностью вывести устройство из строя.</p>
+
+<ul>
+<li>📀 Используйте USB-флешку объемом от 1 Гб до 32 Гб.</li>
+<li>💾 Форматируйте накопитель в файловую систему FAT32.</li>
+<li>📥 Скачивайте ПО только для вашей конкретной модели ресивера.</li>
+<li>🔍 Проверьте целостность скачанного архива перед записью.</li>
+</ul>
+
+<h2 id="инструкция-по-обновлению-через-usb-накопитель">Инструкция по обновлению через USB-накопитель</h2>
+
+<p>Ручное обновление через USB является самым надежным способом установки новой версии. Этот метод исключает зависания, связанные с нестабильным интернет-соединением, и позволяет контролировать каждый этап процесса. Вам необходимо скачать архив с прошивкой и распаковать его, найдя файл с расширением <code>.bin</code> или <code>.abs</code>.</p>
+
+<div class="checklist-block"><h4>☑️ Подготовка к обновлению через USB</h4><label class="check-item"><input type="checkbox"><span>Скачать актуальную прошивку:Распаковать архив на компьютере:Скопировать файл в корень флешки:Подключить флешку к выключенному ресиверу</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 1</div></div>
+
+<p>После копирования файла в корневую директорию флешки, вставьте накопитель в USB-порт выключенного ресивера. Включите устройство и дождитесь загрузки основного меню. Перейдите в раздел <code>Меню → Инструменты → Обновление ПО</code> или аналогичный путь, зависящий от версии интерфейса.</p>
+
+<p>В открывшемся окне выберите режим обновления «USB» и нажмите кнопку поиска или старт. Система обнаружит файл на внешнем накопителе и предложит начать процедуру. Во время процесса <strong>индикация на дисплее</strong> может меняться, показывая проценты выполнения, что является нормальным поведением системы.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Каким способом вы предпочитаете обновлять технику?</strong><ul><li>Через USB-флeshку:Автоматически через интернет:Через сервисный центр:Не обновляю, и так работает</li></ul></div></div>
+
+<p>Не прерывайте питание устройства до полного завершения процесса. Даже если кажется, что обновление зависло, подождите несколько минут, так как запись секторов памяти может занимать время. После успешной установки ресивер автоматически перезагрузится, и вы сможете проверить версию ПО в системной информации.</p>
+
+<h2 id="автоматическое-обновление-через-интернет">Автоматическое обновление через интернет</h2>
+
+<p>Современные модели <em>Atlas Pro</em> поддерживают функцию обновления по сети, что значительно упрощает жизнь пользователю. Для этого ваш ресивер должен быть подключен к локальной сети через LAN-кабель или Wi-Fi адаптер. Проверьте сетевые настройки в разделе <code>Система → Сеть</code>, убедившись, что устройство получило IP-адрес.</p>
+
+<p>Чтобы запустить поиск обновлений, перейдите в меню и выберите пункт «Обновление ПО». В режиме «Сеть» система свяжется с сервером производителя и проверит наличие новой версии. Если сервер доступен и найдена более свежая сборка, на экране появится соответствующее уведомление.</p>
+
+<details class="faq-item"><summary>Что делать, если сервер не отвечает?</summary><div class="faq-answer"><p>Часто серверы обновлений могут быть временно недоступны из-за технических работ или высокой нагрузки. В таком случае попробуйте изменить DNS-сервер в настройках сети на публичные адреса Google (8.8.8.8) или просто повторите попытку через несколько часов. Если проблема сохраняется, используйте метод обновления через USB.</p></div></details>
+
+<p>Автоматический режим удобен тем, что не требует поиска файлов и использования компьютера. Однако, если интернет-канал нестабилен или имеет низкую скорость, процесс может прерваться. В таких ситуациях лучше переключиться на <strong>локальное обновление</strong> через флешку, чтобы гарантировать целостность данных.</p>
+
+<h2 id="сброс-настроек-и-восстановление-заводских-параметров">Сброс настроек и восстановление заводских параметров</h2>
+
+<p>После установки новой прошивки рекомендуется выполнить полный сброс настроек. Это действие очищает память от старых конфигураций, которые могут конфликтовать с новым программным кодом. Без этого шага возможны glitches в работе интерфейса или некорректное отображение списков каналов.</p>
+
+<p>Для выполнения сброса перейдите в меню и найдите пункт «Заводские настройки» или «Сброс». Система предупредит вас о том, что все пользовательские данные будут удалены. Подтвердите действие и дождитесь перезагрузки устройства.</p>
+
+<blockquote>
+<p>⚠️ Внимание: Полный сброс удалит все ваши списки каналов, Favorites и настроенные таймеры. Перед процедурой рекомендуется сделать бэкап списка каналов на USB-накопитель, если такая функция поддерживается вашей версией ПО.</p>
+</blockquote>
+
+<p>Процесс восстановления заводских параметров занимает несколько минут. После включения ресивер будет вести себя как новое устройство, требуя первоначальной настройки языка, времени и поиска спутников. Это гарантирует, что <strong>атлас про</strong> будет работать с чистой конфигурацией.</p>
+
+<h2 id="решение-распространенных-проблем-при-прошивке">Решение распространенных проблем при прошивке</h2>
+
+<p>Даже при соблюдении всех инструкций могут возникнуть непредвиденные ситуации. Одной из частых проблем является сообщение «Файл не найден» или «Ошибка обновления». Это часто связано с форматированием флешки или повреждением самого файла прошивки.</p>
+
+<p>Если ресивер завис во время обновления и не реагирует на пульт, попробуйте выполнить жесткую перезагрузку, отключив питание на 10-15 секунд. В некоторых случаях помогает повторное включение с зажатой кнопкой питания на передней панели устройства.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если после неудачной прошивки ресивер не включается (горит только индикатор или горит красным), возможно, потребуется восстановление через консольный кабель или обращение в сервисный центр, так как программный bootloader мог быть поврежден.</p></div>
+
+<p>Таблица ниже поможет вам быстро диагностировать проблему по симптомам:</p>
+
+<table>
+<thead>
+<tr>
+<th>Симптом</th>
+<th>Возможная причина</th>
+<th>Решение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ресивер не видит флешку</td>
+<td>Неверная файловая система</td>
+<td>Отформатировать в FAT32</td>
+</tr>
+<tr>
+<td>Ошибка при записи</td>
+<td>Поврежден файл прошивки</td>
+<td>Перескачать архив заново</td>
+</tr>
+<tr>
+<td>Черный экран после обновления</td>
+<td>Несовместимая версия ПО</td>
+<td>Прошить правильной версией</td>
+</tr>
+<tr>
+<td>Нет звука или картинки</td>
+<td>Сбой настроек вывода</td>
+<td>Сбросить настройки HDMI</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</h2>
+
+<details>
+<summary>Можно ли обновить Атлас Про без компьютера?</summary>
+<p>Да, если у вашего ресивера есть доступ в интернет, вы можете использовать функцию обновления по сети. Однако, если интернет отсутствует или нестабилен, компьютер понадобится для записи файла на флешку.</p>
+</details>
+
+<details>
+<summary>Что будет, если выдернуть флешку во время прошивки?</summary>
+<p>Это критическая ошибка. Прерывание процесса записи может привести к повреждению загрузчика, и устройство перестанет включаться. Всегда дожидайтесь сообщения об успешном завершении.</p>
+</details>
+
+<details>
+<summary>Нужно ли удалять старую прошивку перед установкой новой?</summary>
+<p>Нет, новая версия автоматически перезаписывает старую. Предварительное удаление не требуется и технически невозможно без специальных инструментов.</p>
+</details>
+
+<details>
+<summary>Сбрасываются ли каналы после обновления?</summary>
+<p>Список каналов обычно сохраняется, но после мажорных обновлений ПО рекомендуется выполнить сброс настроек, что приведет к потере списков. Всегда делайте резервную копию.</p>
+</details>
+
+<p>В заключение стоит отметить, что регулярное обслуживание вашего спутникового оборудования продлевает срок его службы. <strong>Прошивка атлас про</strong> — это простая процедура, которая открывает доступ к новым функциям и исправляет ошибки. Следуя нашим рекомендациям, вы сможете легко поддерживать свой ресивер в актуальном состоянии.</p></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#подготовка-оборудования-и-выбор-версии-по">Подготовка оборудования и выбор версии ПО</a></li><li><a href="#инструкция-по-обновлению-через-usb-накопитель">Инструкция по обновлению через USB-накопитель</a></li><li><a href="#автоматическое-обновление-через-интернет">Автоматическое обновление через интернет</a></li><li><a href="#сброс-настроек-и-восстановление-заводских-параметров">Сброс настроек и восстановление заводских параметров</a></li><li><a href="#решение-распространенных-проблем-при-прошивке">Решение распространенных проблем при прошивке</a></li><li><a href="#faq-часто-задаваемые-вопросы">FAQ: Часто задаваемые вопросы</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/s/sh/shtab-6-armii-vvs-i-pvo.html" class="related-card">Штаб 6 армии ВВС и ПВО: структура, задачи и особенности управления</a></li><li><a href="/articles/z/za/zamena-zadnikh-kolodok-nissan-zhuk.html" class="related-card">Замена задних колодок Nissan Juke: пошаговая инструкция 2026</a></li><li><a href="/articles/x/xi/xiaomi-mi-car-charger-100w-cc07zm.html" class="related-card">Xiaomi Mi Car Charger 100W CC07ZM: обзор, тесты и совместимость</a></li><li><a href="/articles/t/te/tenute-del-neccio.html" class="related-card">Tenute del Neccio: история, особенности и выбор для вашего Volkswagen</a></li><li><a href="/articles/f/fo/folksvagen-na-kashirke-ofitsialnyj-sajt.html" class="related-card">Официальный сайт Фольксваген на Каширке: адрес, телефоны, акции 2026</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/s/sh/shtab-6-armii-vvs-i-pvo.html" class="related-bottom-card"><span class="related-bottom-title">Штаб 6 армии ВВС и ПВО: структура, задачи и особенности управления</span><span class="related-bottom-desc">Подробный анализ штаба 6 армии ВВС и ПВО: организационная структура, ключевые задачи, современные вы</span></a><a href="/articles/z/za/zamena-zadnikh-kolodok-nissan-zhuk.html" class="related-bottom-card"><span class="related-bottom-title">Замена задних колодок Nissan Juke: пошаговая инструкция 2026</span><span class="related-bottom-desc">Как самостоятельно поменять задние тормозные колодки на Nissan Juke (J10/J11)? Подробная инструкция </span></a><a href="/articles/x/xi/xiaomi-mi-car-charger-100w-cc07zm.html" class="related-bottom-card"><span class="related-bottom-title">Xiaomi Mi Car Charger 100W CC07ZM: обзор, тесты и совместимость</span><span class="related-bottom-desc">Подробный обзор автомобильной зарядки Xiaomi Mi Car Charger 100W CC07ZM. Тесты скорости, поддержка п</span></a><a href="/articles/t/te/tenute-del-neccio.html" class="related-bottom-card"><span class="related-bottom-title">Tenute del Neccio: история, особенности и выбор для вашего Volkswagen</span><span class="related-bottom-desc">Узнайте всё о &lt;tenute del neccio&gt; — что это, как выбрать и заменить для моделей VW. Пошаговые инстру</span></a><a href="/articles/f/fo/folksvagen-na-kashirke-ofitsialnyj-sajt.html" class="related-bottom-card"><span class="related-bottom-title">Официальный сайт Фольксваген на Каширке: адрес, телефоны, акции 2026</span><span class="related-bottom-desc">Как найти официальный дилер &lt;em&gt;Volkswagen&lt;/em&gt; на Каширском шоссе? Адреса, телефоны, онлайн-запись </span></a><a href="/articles/p/po/po-kakoj-polose-mozhno-dvigatsya-vne-naselennogo-punkta-s-dvumya-polosami.html" class="related-bottom-card"><span class="related-bottom-title">По какой полосе ездить вне города с двумя полосами? ПДД 2026</span><span class="related-bottom-desc">Разбираем правила движения по двухполосной дороге за городом: где можно обгонять, какие штрафы за на</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

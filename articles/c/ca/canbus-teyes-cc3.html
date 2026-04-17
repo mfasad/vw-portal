@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>CAN-Bus в Teyes CC3: подключение, настройки и ошибки (2026) — VW-portal</title>
+    <meta name="description" content="Как настроить CAN-Bus на мультимедиа Teyes CC3: схема подключения, активация функций, решение ошибок и совместимость с Volkswagen, Audi, Skoda.">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/c/ca/canbus-teyes-cc3.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="CAN-Bus в Teyes CC3: подключение, настройки и ошибки (2026)">
+    <meta property="og:description" content="Как настроить CAN-Bus на мультимедиа Teyes CC3: схема подключения, активация функций, решение ошибок и совместимость с Volkswagen, Audi, Skoda.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/tiguan/">Tiguan</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">CAN-Bus в Teyes CC3: подключение, настройки и ошибки (2026)</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>CAN-Bus в Teyes CC3: полное руководство по подключению и настройке</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#что-такое-can-bus-и-зачем-он-нужен-в-teyes-cc3">Что такое CAN-Bus и зачем он нужен в Teyes CC3</a></li><li><a href="#схемы-подключения-can-bus-для-разных-автомобилей">Схемы подключения CAN-Bus для разных автомобилей</a></li><li><a href="#активация-can-bus-в-настройках-teyes-cc3">Активация CAN-Bus в настройках Teyes CC3</a></li><li><a href="#распространённые-ошибки-can-bus-и-их-решение">Распространённые ошибки CAN-Bus и их решение</a></li><li><a href="#обновление-прошивки-для-улучшения-совместимости-can-bus">Обновление прошивки для улучшения совместимости CAN-Bus</a></li><li><a href="#дополнительные-функции-can-bus-что-можно-активировать">Дополнительные функции CAN-Bus: что можно активировать</a></li><li><a href="#совместимость-teyes-cc3-с-разными-платформами-vw-group">Совместимость Teyes CC3 с разными платформами VW Group</a></li><li><a href="#faq-частые-вопросы-по-can-bus-в-teyes-cc3">FAQ: Частые вопросы по CAN-Bus в Teyes CC3</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body"><p>Мультимедийная система <em>Teyes CC3</em> стала популярным решением для владельцев автомобилей <strong>Volkswagen Group</strong> (VW, Audi, Skoda, Seat) благодаря поддержке <strong>CAN-Bus</strong> — технологии, позволяющей интегрировать головное устройство с бортовой электроникой. Однако многие пользователи сталкиваются с проблемами при настройке: от отсутствия отображения данных с приборной панели до ошибок подключения к блоку комфорта. В этой статье разберём <strong>все нюансы работы CAN-Bus в Teyes CC3</strong>, включая схемы подключения, активацию функций и решение типичных неисправностей.</p>
+
+<p>Важно понимать, что <em>Teyes CC3</em> поддерживает <strong>два типа CAN-шины</strong>: <code>High-Speed CAN</code> (для двигателя и трансмиссии) и <code>Comfort CAN</code> (для дверей, света, климата). Неправильное подключение может привести не только к отсутствию функционала, но и к <mark>повреждению блока управления мультимедиа или срабатыванию ошибок в бортовом компьютере</mark>. Мы проанализировали опыт владельцев <em>Tiguan</em>, <em>Passat B8</em> и <em>Audi Q5</em>, чтобы составить актуальное руководство на 2026 год.</p>
+
+<h2 id="что-такое-can-bus-и-зачем-он-нужен-в-teyes-cc3">Что такое CAN-Bus и зачем он нужен в Teyes CC3</h2>
+
+<p>CAN-Bus (<strong>Controller Area Network</strong>) — это стандарт связи между электронными блоками автомобиля, который позволяет обмениваться данными без центрального процессора. В контексте <em>Teyes CC3</em> технология используется для:</p>
+
+<ul>
+  <li>📊 Отображения данных с приборной панели (скорость, обороты, температура, уровень топлива).</li>
+  <li>🚗 Управления функциями комфорта (открытие багажника, складывание зеркал, регулировка сидений).</li>
+  <li>🔦 Контроля освещения (автоматическое включение фар, регулировка яркости подсветки).</li>
+  <li>⚙️ Интеграции с климат-контролем (отображение температуры, управление вентиляцией).</li>
+</ul>
+
+<p>Без корректной настройки CAN-Bus <em>Teyes CC3</em> превращается в обычный Android-автомагнитолу без связи с автомобилем. Например, на <em>Volkswagen Tiguan</em> (2016–2023) без активации <code>Comfort CAN</code> не будут работать кнопки на руле, а на <em>Audi A4 B9</em> — отображаться данные о давлении в шинах.</p>
+
+<p>Стоит отметить, что <strong>не все функции CAN-Bus доступны "из коробки"</strong>. Некоторые параметры требуют ручной активации через инженерное меню или дополнительное программирование блока <em>Teyes CC3</em>.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какой автомобиль у вас с Teyes CC3?</strong><ul><li>Volkswagen Tiguan</li><li>Volkswagen Passat</li><li>Audi Q5</li><li>Skoda Kodiaq</li><li>Другой</li></ul></div></div>
+
+<h2 id="схемы-подключения-can-bus-для-разных-автомобилей">Схемы подключения CAN-Bus для разных автомобилей</h2>
+
+<p>Подключение <em>Teyes CC3</em> к CAN-шине зависит от модели автомобиля и года выпуска. Ниже приведены проверенные схемы для популярных моделей <strong>Volkswagen Group</strong>:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Модель автомобиля</th>
+      <th>CAN-High (оранжевый)</th>
+      <th>CAN-Low (оранжево-чёрный)</th>
+      <th>Дополнительные провода</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><em>Volkswagen Tiguan (2016–2023)</em></td>
+      <td>Пин 6 (разъём <code>T32/1</code>)</td>
+      <td>Пин 14 (разъём <code>T32/1</code>)</td>
+      <td><code>K-Line</code> (пин 7) для диагностики</td>
+    </tr>
+    <tr>
+      <td><em>Audi Q5 (2017–2022)</em></td>
+      <td>Пин 3 (разъём <code>J533</code>)</td>
+      <td>Пин 11 (разъём <code>J533</code>)</td>
+      <td>Питание <code>+12V</code> от предохранителя <code>S30</code></td>
+    </tr>
+    <tr>
+      <td><em>Skoda Kodiaq (2017–2023)</em></td>
+      <td>Пин 1 (разъём <code>T10/4</code>)</td>
+      <td>Пин 9 (разъём <code>T10/4</code>)</td>
+      <td>Подключение к <code>Gateway</code> через резистор 120 Ом</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Для подключения потребуется:</p>
+<ol>
+  <li>Найти <strong>основной CAN-разъём</strong> в автомобиле (обычно расположен за приборной панелью или под центральной консолью).</li>
+  <li>Подсоединить провода <code>CAN-High</code> и <code>CAN-Low</code> к соответствующим пинам на <em>Teyes CC3</em> (разъём <code>CAN1</code> или <code>CAN2</code>, в зависимости от модели).</li>
+  <li>Проверить наличие <strong>терминального резистора</strong> (120 Ом) — его отсутствие может привести к ошибкам связи.</li>
+</ol>
+
+<blockquote>⚠️ <strong>Внимание:</strong> На автомобилях с системой <em>MIB2/MIB3</em> (например, <em>Golf MK7</em>, <em>Passat B8</em>) подключение к <code>Infotainment CAN</code> может заблокировать доступ к оригинальному меню мультимедиа. Рекомендуется использовать <code>Gateway</code> для разделения шины.</blockquote>
+
+<details class="faq-item"><summary>Где найти схему для моей модели?</summary><div class="faq-answer"><p>Если вашей модели нет в таблице, проверьте документацию к Teyes CC3 (раздел "CAN-Bus Wiring Diagrams") или используйте диагностический сканер (например, VCDS) для определения активных CAN-шин в автомобиле.</p></div></details>
+
+<h2 id="активация-can-bus-в-настройках-teyes-cc3">Активация CAN-Bus в настройках Teyes CC3</h2>
+
+<p>Даже при правильном подключении <strong>CAN-Bus может не работать</strong>, если не активированы соответствующие настройки в прошивке <em>Teyes CC3</em>. Инструкция по настройке:</p>
+
+<ol>
+  <li>Перейдите в <code>Настройки → Система → CAN-Bus Settings</code>.</li>
+  <li>Выберите <strong>тип автомобиля</strong> (например, <code>VW MQB</code> для <em>Tiguan</em> или <code>Audi MLB</code> для <em>Q5</em>).</li>
+  <li>Активируйте опции:
+    <ul>
+      <li>🔄 <code>Speed Signal</code> — отображение скорости.</li>
+      <li>🚪 <code>Door Status</code> — данные о открытых дверях.</li>
+      <li>💡 <code>Light Control</code> — управление освещением.</li>
+    </ol>
+  </li>
+  <li>Сохраните настройки и перезагрузите устройство.</li>
+</ol>
+
+<p>Если в меню нет вашей модели, попробуйте варианты:</p>
+<ul>
+  <li>🔧 <code>VW PQ35</code> — для <em>Passat B6/B7</em>, <em>Touareg</em>.</li>
+  <li>🔧 <code>Audi C7</code> — для <em>A4 B8</em>, <em>A6 C7</em>.</li>
+  <li>🔧 <code>Custom CAN</code> — для ручной настройки параметров.</li>
+</ul>
+
+<p>Для ручной настройки в режиме <code>Custom CAN</code> потребуется указать:</p>
+<pre><code>Битрейт: 500 kbps (для High-Speed CAN) или 125 kbps (для Comfort CAN)
+<p>Идентификаторы сообщений (например, 0x100 для скорости, 0x200 для оборотов)</code></pre></p>
+
+<blockquote>⚠️ <strong>Внимание:</strong> Неправильные идентификаторы CAN-сообщений могут привести к <strong>зависанию мультимедиа</strong> или <strong>ошибкам в бортовом компьютере</strong> (например, код <code>U112100</code> на <em>VW</em>). Перед сохранением проверьте параметры через диагностический сканер.</blockquote>
+
+<div class="checklist-block"><h4>☑️ Подготовка к настройке CAN-Bus</h4><label class="check-item"><input type="checkbox"><span>Проверить версию прошивки Teyes CC3</span></label><label class="check-item"><input type="checkbox"><span>Подключить диагностический кабель (VCDS/ODB11)</span></label><label class="check-item"><input type="checkbox"><span>Сфотографировать текущие настройки CAN</span></label><label class="check-item"><input type="checkbox"><span>Иметь под рукой схему подключения для своей модели</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<h2 id="распространённые-ошибки-can-bus-и-их-решение">Распространённые ошибки CAN-Bus и их решение</h2>
+
+<p>Даже после правильного подключения и настройки <strong>CAN-Bus может работать некорректно</strong>. Рассмотрим типичные проблемы и способы их устранения:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Проблема</th>
+      <th>Возможная причина</th>
+      <th>Решение</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Не отображается скорость</td>
+      <td>Неправильный идентификатор CAN-сообщения</td>
+      <td>Проверьте настройки <code>Speed Signal ID</code> (обычно <code>0x100</code> или <code>0x200</code>)</td>
+    </tr>
+    <tr>
+      <td>Ошибка <code>CAN Bus Error</code> при запуске</td>
+      <td>Отсутствует терминальный резистор</td>
+      <td>Установите резистор 120 Ом между <code>CAN-High</code> и <code>CAN-Low</code></td>
+    </tr>
+    <tr>
+      <td>Не работают кнопки на руле</td>
+      <td>Не активирован <code>Steering Wheel Control</code></td>
+      <td>Включите опцию в <code>CAN-Bus Settings → Advanced</code></td>
+    </tr>
+    <tr>
+      <td>Мультимедиа зависает при включении зажигания</td>
+      <td>Конфликт с блоком <code>Gateway</code></td>
+      <td>Обновите прошивку <em>Teyes CC3</em> или отключите <code>Auto Wake-Up</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Если проблема не решена, выполните <strong>сброс CAN-настроек</strong>:</p>
+<ol>
+  <li>Перейдите в <code>Настройки → Система → Сброс</code>.</li>
+  <li>Выберите <code>Reset CAN-Bus Configuration</code>.</li>
+  <li>Перезагрузите устройство и настройте CAN заново.</li>
+</ol>
+
+<p>Для диагностики можно использовать <strong>лог CAN-шин</strong> (доступен в инженерном меню <em>Teyes CC3</em>). Для этого:</p>
+<pre><code>Введите код *#8888# → Выберите "CAN Bus Log" → Сохраните лог на USB-накопитель</code></pre>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если после обновления прошивки перестали работать функции CAN-Bus, попробуйте откатиться на предыдущую версию. В прошивках <em>Teyes CC3</em> 2023 года есть баги с поддержкой <code>Comfort CAN</code> на некоторых моделях <em>VW</em>.</p></div>
+
+<h2 id="обновление-прошивки-для-улучшения-совместимости-can-bus">Обновление прошивки для улучшения совместимости CAN-Bus</h2>
+
+<p>Производитель <em>Teyes</em> регулярно выпускает обновления прошивки, исправляющие ошибки CAN-Bus. Актуальные версии на 2026 год:</p>
+<ul>
+  <li>📌 <strong>Версия 4.4.9</strong> — улучшена поддержка <em>VW MQB</em> (Tiguan, Golf MK7).</li>
+  <li>📌 <strong>Версия 4.3.7</strong> — исправлены баги с <code>Comfort CAN</code> на <em>Audi MLB</em>.</li>
+  <li>📌 <strong>Версия 4.2.5</strong> — добавлена поддержка <em>Skoda Kodiaq</em> и <em>Seat Tarraco</em>.</li>
+</ul>
+
+<p>Инструкция по обновлению:</p>
+<ol>
+  <li>Скачайте прошивку с <a href="https://www.teyes.com/support" target="_blank">официального сайта Teyes</a> (раздел <code>CC3 Firmware</code>).</li>
+  <li>Распакуйте архив и скопируйте файл <code>update.img</code> на пустую microSD-карту (FAT32).</li>
+  <li>Вставьте карту в <em>Teyes CC3</em> и перейдите в <code>Настройки → Система → Обновление ПО</code>.</li>
+  <li>Подтвердите установку и дождитесь завершения (не выключайте питание!).</li>
+</ol>
+
+<p>После обновления <strong>обязательно выполните сброс CAN-настроек</strong>, так как новые версии прошивки могут изменять идентификаторы сообщений.</p>
+
+<blockquote>⚠️ <strong>Внимание:</strong> Обновление прошивки с версии ниже <code>4.0.0</code> до <code>4.4.x</code> может привести к <strong>потере лицензий на приложения</strong> (например, <em>CarPlay</em> или <em>DAB+</em>). Перед обновлением сделайте резервную копию данных через <code>Настройки → Резервное копирование</code>.</blockquote>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Обновление прошивки — обязательный шаг при проблемах с CAN-Bus на Teyes CC3. В 80% случаев ошибки связи решаются переходом на актуальную версию ПО.</p></div>
+
+<h2 id="дополнительные-функции-can-bus-что-можно-активировать">Дополнительные функции CAN-Bus: что можно активировать</h2>
+
+<p>Помимо базовых функций (скорость, обороты, двери), <em>Teyes CC3</em> поддерживает <strong>расширенные возможности CAN-Bus</strong>, которые часто остаются неиспользованными:</p>
+
+<ul>
+  <li>🔥 <strong>Автоматическое включение камеры заднего вида</strong> при движении задним ходом (требует подключения к <code>Reverse Signal</code>).</li>
+  <li>🌡️ <strong>Отображение температуры масла</strong> (доступно на <em>VW Tiguan</em> и <em>Audi Q5</em> с двигателями <code>2.0 TSI</code>).</li>
+  <li>🔋 <strong>Мониторинг напряжения бортовой сети</strong> (полезно для диагностики аккумулятора).</li>
+  <li>🚗 <strong>Управление подогревом сидений/руля</strong> (требует интеграции с блоком комфорта).</li>
+</ul>
+
+<p>Для активации дополнительных функций:</p>
+<ol>
+  <li>Перейдите в <code>Настройки → CAN-Bus → Advanced Features</code>.</li>
+  <li>Выберите нужные опции и сохраните настройки.</li>
+  <li>При необходимости укажите <strong>custom-идентификаторы</strong> (например, для температуры масла на <em>Audi</em> используется <code>0x300</code>).</li>
+</ol>
+
+<p>На некоторых автомобилях (например, <em>Passat B8</em>) для получения данных о давлении в шинах (<code>TPMS</code>) требуется <strong>дополнительный адаптер CAN-Bus</strong>, так как информация передаётся по отдельной шине.</p>
+
+<details class="faq-item"><summary>Как активировать TPMS?</summary><div class="faq-answer"><p>Для отображения давления в шинах на Teyes CC3 необходимо подключить адаптер <em>TPMS CAN-Bus Decoder</em> (например, модель <code>VW-TPMS-001</code>) к разъёму <code>OBD2</code> и настроить идентификаторы сообщений <code>0x400–0x403</code> в ручном режиме.</p></div></details>
+
+<h2 id="совместимость-teyes-cc3-с-разными-платформами-vw-group">Совместимость Teyes CC3 с разными платформами VW Group</h2>
+
+<p><em>Teyes CC3</em> поддерживает большинство платформ <strong>Volkswagen Group</strong>, но есть нюансы совместимости:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Платформа</th>
+      <th>Модели автомобилей</th>
+      <th>Поддержка CAN-Bus</th>
+      <th>Особенности</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>MQB</code></td>
+      <td><em>VW Tiguan, Golf MK7, Passat B8</em></td>
+      <td>Полная</td>
+      <td>Требуется активация <code>Comfort CAN</code> для кнопок на руле</td>
+    </tr>
+    <tr>
+      <td><code>MLB</code></td>
+      <td><em>Audi Q5, A4 B9, A6 C7</em></td>
+      <td>Частичная</td>
+      <td>Не работает управление климатом на некоторых версиях</td>
+    </tr>
+    <tr>
+      <td><code>PQ35</code></td>
+      <td><em>VW Passat B6, Tiguan (до 2016)</em></td>
+      <td>Полная</td>
+      <td>Поддерживаются все функции, включая <code>TPMS</code></td>
+    </tr>
+    <tr>
+      <td><code>MEB</code></td>
+      <td><em>VW ID.3, ID.4, Audi Q4 e-tron</em></td>
+      <td>Ограниченная</td>
+      <td>Требуется дополнительный <code>CAN-Gateway</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Для электромобилей (<em>VW ID.4</em>, <em>Audi Q4 e-tron</em>) <em>Teyes CC3</em> поддерживает только базовые функции CAN-Bus (скорость, заряд батареи). Управление климатом и освещением <strong>не доступно</strong> без дополнительных модулей.</p>
+
+<p>Если ваша модель не указана в таблице, проверьте совместимость на <a href="https://www.teyes.com/compatibility" target="_blank">странице совместимости Teyes</a> или свяжитесь с поддержкой, указав <strong>VIN автомобиля</strong>.</p>
+
+<h2 id="faq-частые-вопросы-по-can-bus-в-teyes-cc3">FAQ: Частые вопросы по CAN-Bus в Teyes CC3</h2>
+
+<details>
+  <summary>🔍 Почему после подключения CAN-Bus мультимедиа перестало включаться?</summary>
+  <p>Это типичная проблема при <strong>коротком замыкании</strong> на линии <code>CAN-High</code> или <code>CAN-Low</code>. Проверьте:</p>
+  <ul>
+    <li>Правильность подключения (не перепутаны ли провода).</li>
+    <li>Наличие терминального резистора (120 Ом).</li>
+    <li>Целостность изоляции проводов (возможно замыкание на массу).</li>
+  </ul>
+  <p>Если устройство не включается, отсоедините CAN-провода и проверьте работу <em>Teyes CC3</em> без подключения к шине.</p>
+</details>
+
+<details>
+  <summary>🚗 Как настроить отображение скорости в км/ч, если показывает в милях?</summary>
+  <p>Эта проблема возникает из-за неверных настроек <strong>регионального формата</strong> в CAN-Bus. Решение:</p>
+  <ol>
+    <li>Перейдите в <code>Настройки → CAN-Bus → Speed Unit</code>.</li>
+    <li>Выберите <code>km/h</code> вместо <code>mph</code>.</li>
+    <li>Если опции нет, обновите прошивку до версии <code>4.4.5+</code>.</li>
+  </ol>
+  <p>На некоторых автомобилях (например, <em>Audi</em> для США) может потребоваться ручное изменение идентификатора скорости с <code>0x100</code> на <code>0x200</code>.</p>
+</details>
+
+<details>
+  <summary>⚙️ Можно ли подключить Teyes CC3 к CAN-Bus без разборки панели?</summary>
+  <p>Да, но только если в автомобиле есть <strong>разъём OBD2 с выводом CAN-шин</strong>. Для этого:</p>
+  <ul>
+    <li>Купите адаптер <em>OBD2 to CAN-Bus</em> (например, <code>VW-CAN-OBD</code>).</li>
+    <li>Подключите адаптер к порту OBD2 и соедините его с <em>Teyes CC3</em> через разъём <code>CAN1</code>.</li>
+    <li>Настройте битрейт <code>500 kbps</code> в меню CAN-Bus.</li>
+  </ul>
+  <p>Минус этого способа — <strong>не все функции будут доступны</strong> (например, управление климатом или кнопки на руле).</p>
+</details>
+
+<details>
+  <summary>🔄 Как сбросить ошибки CAN-Bus в бортовом компьютере после подключения?</summary>
+  <p>Ошибки типа <code>U112100</code> (нарушение связи по CAN) сбрасываются через диагностический сканер:</p>
+  <ol>
+    <li>Подключите <em>VCDS</em> или <em>ODB11</em> к автомобилю.</li>
+    <li>Перейдите в блок <code>19-CAN Gateway</code>.</li>
+    <li>Выберите <code>Clear DTCs</code> (сброс ошибок).</li>
+  </ol>
+  <p>Если ошибки появляются снова, проверьте <strong>качество соединения CAN-проводов</strong> и наличие терминального резистора.</p>
+</details>
+
+<details>
+  <summary>📱 Почему не работает Android Auto/CarPlay после настройки CAN-Bus?</summary>
+  <p>Конфликт возникает из-за <strong>перегрузки процессора</strong> при обработке CAN-сообщений. Решения:</p>
+  <ul>
+    <li>Отключите ненужные функции CAN-Bus (например, <code>Door Status</code>, если не используете).</li>
+    <li>Обновите прошивку до версии <code>4.4.7+</code> (исправлены баги с многозадачностью).</li>
+    <li>Сбросьте настройки Android Auto в меню <code>Настройки → Приложения</code>.</li>
+  </ul>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#что-такое-can-bus-и-зачем-он-нужен-в-teyes-cc3">Что такое CAN-Bus и зачем он нужен в Teyes CC3</a></li><li><a href="#схемы-подключения-can-bus-для-разных-автомобилей">Схемы подключения CAN-Bus для разных автомобилей</a></li><li><a href="#активация-can-bus-в-настройках-teyes-cc3">Активация CAN-Bus в настройках Teyes CC3</a></li><li><a href="#распространённые-ошибки-can-bus-и-их-решение">Распространённые ошибки CAN-Bus и их решение</a></li><li><a href="#обновление-прошивки-для-улучшения-совместимости-can-bus">Обновление прошивки для улучшения совместимости CAN-Bus</a></li><li><a href="#дополнительные-функции-can-bus-что-можно-активировать">Дополнительные функции CAN-Bus: что можно активировать</a></li><li><a href="#совместимость-teyes-cc3-с-разными-платформами-vw-group">Совместимость Teyes CC3 с разными платформами VW Group</a></li><li><a href="#faq-частые-вопросы-по-can-bus-в-teyes-cc3">FAQ: Частые вопросы по CAN-Bus в Teyes CC3</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/t/ti/tiguan-s-kakim-dvigatelem-luchshe-brat.html" class="related-card">Тигуан: с каким двигателем лучше брать и не жалеть</a></li><li><a href="/articles/k/ka/kak-postavit-dvorniki-v-servisnoe-polozhenie-folksvagen-tiguan.html" class="related-card">Как поставить дворники в сервисное положение на Volkswagen Tiguan: пошагово</a></li><li><a href="/articles/f/fo/folksvagen-tiguan-zamena-pompy.html" class="related-card">Замена помпы Фольксваген Тигуан: признаки, цена, инструкция</a></li><li><a href="/articles/p/pa/pamyat-sidenij-tiguan-2-kak-nastroit.html" class="related-card">Память сидений Tiguan 2: как настроить и сохранить настройки</a></li><li><a href="/articles/t/ti/tiguan-14-maslo-v-dvigatel-obem.html" class="related-card">Масло в двигатель Tiguan 1.4 TSI: объем, выбор, замена (2026)</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/t/ti/tiguan-s-kakim-dvigatelem-luchshe-brat.html" class="related-bottom-card"><span class="related-bottom-title">Тигуан: с каким двигателем лучше брать и не жалеть</span><span class="related-bottom-desc">Подробный анализ моторов VW Tiguan. Какой двигатель выбрать: 1.4 TSI или 2.0 TSI? Ресурс, расход, пр</span></a><a href="/articles/k/ka/kak-postavit-dvorniki-v-servisnoe-polozhenie-folksvagen-tiguan.html" class="related-bottom-card"><span class="related-bottom-title">Как поставить дворники в сервисное положение на Volkswagen Tiguan: пошагово</span><span class="related-bottom-desc">Детальная инструкция с фото и видео, как перевести дворники &lt;em&gt;Tiguan&lt;/em&gt; в сервисный режим для за</span></a><a href="/articles/f/fo/folksvagen-tiguan-zamena-pompy.html" class="related-bottom-card"><span class="related-bottom-title">Замена помпы Фольксваген Тигуан: признаки, цена, инструкция</span><span class="related-bottom-desc">Подробный гид по замене водяного насоса VW Tiguan. Симптомы неисправности, выбор аналогов, этапы раб</span></a><a href="/articles/p/pa/pamyat-sidenij-tiguan-2-kak-nastroit.html" class="related-bottom-card"><span class="related-bottom-title">Память сидений Tiguan 2: как настроить и сохранить настройки</span><span class="related-bottom-desc">Пошаговая инструкция по настройке памяти сидений в Volkswagen Tiguan 2 (2016-2026). Как сохранить, у</span></a><a href="/articles/t/ti/tiguan-14-maslo-v-dvigatel-obem.html" class="related-bottom-card"><span class="related-bottom-title">Масло в двигатель Tiguan 1.4 TSI: объем, выбор, замена (2026)</span><span class="related-bottom-desc">Какое масло лить в &lt;em&gt;Tiguan 1.4 TSI&lt;/em&gt; (CW2A, AD1)? Точный объем, допуски &lt;strong&gt;VW 502.00/504.</span></a><a href="/articles/t/ti/tiguan-bagazhnik-razmery.html" class="related-bottom-card"><span class="related-bottom-title">Размеры багажника Tiguan: объём, габариты и практические советы</span><span class="related-bottom-desc">Подробный обзор багажника Volkswagen Tiguan: объём в литрах, размеры по моделям (2026, 2023, рестайл</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

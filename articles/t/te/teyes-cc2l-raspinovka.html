@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>Teyes CC2L распиновка: схемы подключения и настройка — VW-portal</title>
+    <meta name="description" content="Подробная распиновка Teyes CC2L, схемы проводов, установка CAN-шины и решение проблем с автозапуском. Руководство по подключению магнитолы.">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/t/te/teyes-cc2l-raspinovka.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Teyes CC2L распиновка: схемы подключения и настройка">
+    <meta property="og:description" content="Подробная распиновка Teyes CC2L, схемы проводов, установка CAN-шины и решение проблем с автозапуском. Руководство по подключению магнитолы.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Teyes CC2L распиновка: схемы подключения и настройка</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Teyes CC2L распиновка: схемы, настройка CAN-шины и автозапуска</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#основная-цветовая-маркировка-и-разъемы-питания">Основная цветовая маркировка и разъемы питания</a></li><li><a href="#подключение-can-шины-и-управление-кнопками-руля">Подключение CAN-шины и управление кнопками руля</a></li><li><a href="#схема-подключения-камер-и-видеовыходов">Схема подключения камер и видеовыходов</a></li><li><a href="#настройка-автозапуска-и-логика-работы-acc">Настройка автозапуска и логика работы ACC</a></li><li><a href="#работа-с-внешним-усилителем-и-сабвуфером">Работа с внешним усилителем и сабвуфером</a></li><li><a href="#диагностика-проблем-и-сброс-настроек">Диагностика проблем и сброс настроек</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body">
+<p>Установка современной мультимедийной системы в автомобиль часто требует глубокого понимания электрических схем, особенно когда речь заходит о китайских головных устройствах на Android. <strong>Teyes CC2L распиновка</strong> — это ключевой запрос для тех, кто решил самостоятельно заменить штатную магнитолу и сохранить все функции управления автомобилем. Правильное соединение проводов гарантирует стабильную работу рулевых кнопок, парктроников и системы климат-контроля.</p>
+<p>В отличие от простых автомагнитол, модель CC2L обладает сложной архитектурой подключения, включающей отдельные разъемы для CAN-шины, видеовыходов и управления внешними усилителями. Ошибка при коммутации даже одного провода может привести к тому, что экран не включится или перестанет работать звук. Именно поэтому детальное изучение схемы перед началом работ является обязательным этапом подготовки.</p>
+<p>В данной статье мы разберем цветовую маркировку проводов, логику работы разъемов и особенности настройки программного обеспечения для различных марок автомобилей. Вы узнаете, как правильно подключить камеру заднего вида и настроить управление через CAN-адаптер, чтобы избежать распространенных ошибок инсталляции.</p>
+
+<h2 id="основная-цветовая-маркировка-и-разъемы-питания">Основная цветовая маркировка и разъемы питания</h2>
+<p>Главный разъем устройства Teyes CC2L обычно разделен на несколько секций, каждая из которых отвечает за определенный набор функций. <strong>Питание</strong> подается через толстые провода красного, желтого и черного цветов, и здесь критически важно не перепутать полярность. Красный провод (ACC) отвечает за управление включением, желтый (B+) — за постоянное питание памяти, а черный — за массу.</p>
+<p>Аудиовыходы на магнитолах Teyes часто имеют нестандартную разводку по сравнению с европейскими стандартами ISO. Например, передние динамики могут быть разнесены по разным пинам, а центральный сабвуфер выведен на отдельный канал. Для корректной работы звука необходимо сверяться с конкретной схемой, идущей в комплекте, или использовать мультиметр для прозвонки.</p>
+<blockquote>
+<p>⚠️ Внимание: Перед подключением аккумулятора обязательно проверьте напряжение бортовой сети. Скачки напряжения выше 14.5В могут вывести из строя внутренний блок питания головного устройства.</p>
+</blockquote>
+<p>Отдельного внимания заслуживает провод управления антенной. В большинстве случаев это синий провод с белой полосой, который подает +12В на активный усилитель антенны только при включенном радио. Если в вашем автомобиле установлена пассивная антенна или усилитель питается постоянно, этот провод можно оставить незадействованным.</p>
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Используйте термоусадку на всех скрутках проводов питания, даже если вы используете качественные клеммы. Вибрация в автомобиле со временем может нарушить контакт.</p></div>
+
+<h2 id="подключение-can-шины-и-управление-кнопками-руля">Подключение CAN-шины и управление кнопками руля</h2>
+<p>Одной из самых важных функций при установке является сохранение управления кнопками на руле. В системе Teyes CC2L за это отвечает модуль CAN-шины, который подключается через специальный разъем, часто маркируемый как "CAN" или "Steering Wheel". <strong>Протоколы обмена данными</strong> могут различаться в зависимости от марки автомобиля, поэтому выбор правильного декодера в настройках — критический шаг.</p>
+<p>Процесс настройки начинается с выбора производителя автомобиля в меню заводских настроек. После этого система предложит выбрать конкретную модель и год выпуска. Если все провода CAN High и CAN Low подключены верно, на экране появится сообщение об успешном получении данных от бортового компьютера.</p>
+<ul>
+<li>🚗 Выберите марку автомобиля в меню "Car Setting"</li>
+<li>🔌 Подключите провода CAN к соответствующим пинам разъема</li>
+<li>⚙️ Введите код доступа к заводским настройкам (обычно 8878 или 1234)</li>
+<li>🎛️ Протестируйте каждую кнопку руля и назначьте ей функцию</li>
+</ul>
+<p>Иногда случается так, что кнопки работают некорректно или нажимаются сами по себе. В этом случае необходимо проверить качество соединения проводов CAN и попробовать сменить протокол в настройках на соседний по списку. Часто помогает сброс настроек CAN-адаптера до заводских значений.</p>
+<div class="attention-box attention-info"><div><strong>📊 С какой проблемой при подключении CAN-шины вы столкнулись?</strong><ul><li>Кнопки не работают</li><li>Неверные функции кнопок</li><li>Экран гаснет при нажатии</li><li>Все работает идеально</li></ul></div></div>
+
+<h2 id="схема-подключения-камер-и-видеовыходов">Схема подключения камер и видеовыходов</h2>
+<p>Мультимедийный центр Teyes CC2L поддерживает подключение нескольких видеоисточников, что делает его универсальным решением для современных авто. Основное внимание уделяется входу для камеры заднего вида, который активируется сигналом реверса. Этот сигнал подается по отдельному проводу, часто маркируемому как "Back" или "Rear Cam".</p>
+<p>Для автомобилей с динамической парковкой (линии, двигающиеся при повороте руля) требуется подключение провода, идущего от датчиков скорости или CAN-шины, к соответствующему входу на магнитоле. Статические линии рисуются программно в настройках дисплея и не требуют дополнительных физических подключений.</p>
+<table>
+<thead>
+<tr>
+<th>Тип подключения</th>
+<th>Цвет провода (пример)</th>
+<th>Функция</th>
+<th>Напряжение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Камера задняя</td>
+<td>Коричневый / Violet</td>
+<td>Видеосигнал + Триггер</td>
+<td>12В (триггер)</td>
+</tr>
+<tr>
+<td>Камера передняя</td>
+<td>Желтый (CVBS In)</td>
+<td>Только видеосигнал</td>
+<td>5В</td>
+</tr>
+<tr>
+<td>Вход DVR</td>
+<td>USB порт</td>
+<td>Цифровой видеорегистратор</td>
+<td>5В</td>
+</tr>
+<tr>
+<td>Выход TV</td>
+<td>3.5 мм Jack</td>
+<td>Подключение мониторов</td>
+<td>1В</td>
+</tr>
+</tbody>
+</table>
+<p>Важно отметить, что для подключения второй камеры (передней или боковой) часто требуется активация функции в инженерном меню. Без программной активации физическое подключение провода к разъему "Front Cam" не даст результата.</p>
+<details class="faq-item"><summary>Секрет активации второй камеры</summary><div class="faq-answer"><p>Зайдите в Factory Settings -> General -> Park Assist Line и выберите тип "Dynamic" или активируйте опцию "Front Camera" в списке дополнительных функций вашего авто.</p></div></details>
+
+<h2 id="настройка-автозапуска-и-логика-работы-acc">Настройка автозапуска и логика работы ACC</h2>
+<p>Владельцы автомобилей с сигнализациями и автозапуском часто сталкиваются с проблемой циклической перезагрузки магнитолы. Это происходит из-за того, что при дистанционном запуске двигателя имитируется поворот ключа зажигания, и головное устройство воспринимает это как команду на включение, хотя двигатель еще не прогрет.</p>
+<p>Чтобы избежать этого, в Teyes CC2L предусмотрена гибкая настройка логики работы провода ACC. Вы можете выбрать режим, при котором магнитола включается только после полной инициализации бортовой сети или, наоборот, игнорирует кратковременные скачки напряжения.</p>
+<blockquote>
+<p>⚠️ Внимание: Неправильная настройка таймера задержки выключения может привести к разряду аккумулятора, если магнитола останется включенной после глушения двигателя.</p>
+</blockquote>
+<p>Для реализации сложного алгоритма работы (например, отключение магнитолы при постановке на охрану) может потребоваться вмешательство в проводку замка зажигания. В некоторых случаях приходится устанавливать дополнительное реле, которое будет разрывать цепь питания ACC по сигналу от сигнализации.</p>
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Для автозапуска критически важно настроить задержку включения питания на магнитолу (Delay On) минимум на 3-5 секунд после появления напряжения в сети.</p></div>
+
+<h2 id="работа-с-внешним-усилителем-и-сабвуфером">Работа с внешним усилителем и сабвуфером</h2>
+<p>Аудиофильские возможности Teyes CC2L позволяют подключать внешние усилители мощности. Для этого используется линейный выход (Line Out), который часто скрыт в дополнительном разъеме или совмещен с основным пучком проводов. <strong>Уровень сигнала</strong> на этих выходах значительно выше, чем на выходах для обычных динамиков, что обеспечивает чистый звук без искажений.</p>
+<p>Если в вашей системе планируется использование активного сабвуфера, необходимо правильно настроить кроссовер в эквалайзере магнитолы. Это отсечет низкие частоты от основных динамиков и передаст их сабвуферу, улучшив общее звучание.</p>
+<ul>
+<li>🔊 Подключите RCA кабели к выходам Subwoofer Out</li>
+<li>🎚️ Настройте частоту среза (обычно 60-80 Гц)</li>
+<li>⚡ Проверьте фазировку динамиков при помощи тестового трека</li>
+<li>🎛️ Отрегулируйте баланс и фейдер для получения объемного звука</li>
+</ul>
+<p>Не забывайте, что при подключении внешнего усилителя штатные динамики могут работать тише или, наоборот, хрипеть, если не отключить их программно. В настройках звука выберите опцию "External Amp", чтобы перенаправить весь звук на внешние выходы.</p>
+
+<h2 id="диагностика-проблем-и-сброс-настроек">Диагностика проблем и сброс настроек</h2>
+<p>В процессе эксплуатации или после установки могут возникнуть программные сбои: магнитола зависает, не видит USB-флешку или перестает реагировать на касания. Первым шагом в таких случаях всегда должна быть проверка электрических соединений, так как плохой контакт массы часто вызывает хаотичное поведение электроники.</p>
+<p>Если аппаратная часть в порядке, можно выполнить сброс до заводских настроек. Это действие удалит все пользовательские данные, приложения и настройки радио, но вернет систему к стабильному состоянию. Для глубокой очистки используется функция "Factory Reset" в меню восстановления.</p>
+<div class="checklist-block"><h4>☑️ Диагностика при зависании</h4><label class="check-item"><input type="checkbox"><span>Проверить предохранитель питания</span></label><label class="check-item"><input type="checkbox"><span>Перезагрузить кнопкой Reset</span></label><label class="check-item"><input type="checkbox"><span>Проверить контакт массы</span></label><label class="check-item"><input type="checkbox"><span>Сбросить настройки до заводских</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+<p>В редких случаях требуется перепрошивка устройства. Перед этим необходимо точно определить версию "железа" (CPU, RAM, Screen), так как установка неподходящей прошивки может превратить магнитолу в "кирпич". Информацию о версии можно найти в разделе "О устройстве" или на наклейке на металлическом корпусе.</p>
+
+<details>
+<summary>Какой код доступа к заводским настройкам Teyes CC2L?</summary>
+<p>Наиболее распространенные коды для входа в инженерное меню: 8878, 1234, 0000, 3368, 1617. Код зависит от конкретной версии прошивки и года выпуска устройства. Попробуйте их по очереди, если стандартный не подходит.</p>
+</details>
+<details>
+<summary>Почему не работает камера заднего вида?</summary>
+<p>Проверьте, подключен ли провод триггера (обычно коричневый или с надписью Back) к плюсовому проводу фонаря заднего хода. Также убедитесь, что в настройках выбран правильный формат камеры (NTSC или PAL) — большинство камер используют NTSC.</p>
+</details>
+<details>
+<summary>Как улучшить прием радиосигнала?</summary>
+<p>Убедитесь, что подключен синий провод (Antenna Power) для питания активного усилителя антенны. Если антенна пассивная, попробуйте использовать переходник с усилителем сигнала или проверьте целостность штатного антенного кабеля.</p>
+</details>
+<details>
+<summary>Можно ли подключить OBD2 сканер к Teyes CC2L?</summary>
+<p>Да, через USB-порт или Bluetooth. Вам понадобится специальный USB-to-OBD2 адаптер и приложение Torque или встроенное приложение Car Info, если оно поддерживается вашей версией прошивки.</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#основная-цветовая-маркировка-и-разъемы-питания">Основная цветовая маркировка и разъемы питания</a></li><li><a href="#подключение-can-шины-и-управление-кнопками-руля">Подключение CAN-шины и управление кнопками руля</a></li><li><a href="#схема-подключения-камер-и-видеовыходов">Схема подключения камер и видеовыходов</a></li><li><a href="#настройка-автозапуска-и-логика-работы-acc">Настройка автозапуска и логика работы ACC</a></li><li><a href="#работа-с-внешним-усилителем-и-сабвуфером">Работа с внешним усилителем и сабвуфером</a></li><li><a href="#диагностика-проблем-и-сброс-настроек">Диагностика проблем и сброс настроек</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/s/sy/syrost-pod-polom-v-chastnom-dome-kak-izbavitsya.html" class="related-card">Сырость под полом в частном доме: 7 способов устранить навсегда</a></li><li><a href="/articles/f/fa/farshirovannye-pertsy-polovinki-na-skovorode.html" class="related-card">Фаршированные перцы половинки на сковороде: рецепт</a></li><li><a href="/articles/r/re/rezhim-sport-na-nissan-zhuk.html" class="related-card">Режим спорт на Ниссан Жук: как включить и что дает?</a></li><li><a href="/articles/s/sk/skachat-elsa-vw-na-russkom-besplatno.html" class="related-card">ELSA VW на русском — где скачать бесплатно и как установить (2026)</a></li><li><a href="/articles/p/pr/proverka-daty-vvoza-avto-v-rb.html" class="related-card">Как проверить дату ввоза авто в Беларусь: пошаговый гайд 2026</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/s/sy/syrost-pod-polom-v-chastnom-dome-kak-izbavitsya.html" class="related-bottom-card"><span class="related-bottom-title">Сырость под полом в частном доме: 7 способов устранить навсегда</span><span class="related-bottom-desc">Появился запах плесени или грибок под полом? Узнайте причины сырости в частном доме и проверенные ме</span></a><a href="/articles/f/fa/farshirovannye-pertsy-polovinki-na-skovorode.html" class="related-bottom-card"><span class="related-bottom-title">Фаршированные перцы половинки на сковороде: рецепт</span><span class="related-bottom-desc">Сочные фаршированные перцы половинки на сковороде готовятся быстрее целых. Узнайте секреты выбора ов</span></a><a href="/articles/r/re/rezhim-sport-na-nissan-zhuk.html" class="related-bottom-card"><span class="related-bottom-title">Режим спорт на Ниссан Жук: как включить и что дает?</span><span class="related-bottom-desc">Подробный разбор функции Sport Mode на Nissan Juke. Узнайте, как активация режима спорт меняет работ</span></a><a href="/articles/s/sk/skachat-elsa-vw-na-russkom-besplatno.html" class="related-bottom-card"><span class="related-bottom-title">ELSA VW на русском — где скачать бесплатно и как установить (2026)</span><span class="related-bottom-desc">Полное руководство по скачиванию ELSA VW на русском языке бесплатно: проверенные источники, инструкц</span></a><a href="/articles/p/pr/proverka-daty-vvoza-avto-v-rb.html" class="related-bottom-card"><span class="related-bottom-title">Как проверить дату ввоза авто в Беларусь: пошаговый гайд 2026</span><span class="related-bottom-desc">Узнайте все способы проверки даты ввоза автомобиля в РБ: через ГАИ, таможню, VIN-декодеры. Актуальны</span></a><a href="/articles/p/po/polozhenie-ruk-na-rule-po-pdd.html" class="related-bottom-card"><span class="related-bottom-title">Положение рук на руле по ПДД 2026: правила и штрафы в России</span><span class="related-bottom-desc">Как правильно держать руки на руле по ПДД? Разбираем требования ГИБДД, оптимальные позиции 10 и 2, ш</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

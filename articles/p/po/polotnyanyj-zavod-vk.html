@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>Полотняный завод ВК: как обновить ПО на Volkswagen с МИБ2/МИБ3 — VW-portal</title>
+    <meta name="description" content="Пошаговая инструкция по обновлению прошивки полотняного завода (VW) через USB или OTA. Разбор ошибок, совместимость с МИБ2/МИБ3 и советы по безопасности.">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/p/po/polotnyanyj-zavod-vk.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Полотняный завод ВК: как обновить ПО на Volkswagen с МИБ2/МИБ3">
+    <meta property="og:description" content="Пошаговая инструкция по обновлению прошивки полотняного завода (VW) через USB или OTA. Разбор ошибок, совместимость с МИБ2/МИБ3 и советы по безопасности.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Полотняный завод ВК: как обновить ПО на Volkswagen с МИБ2/МИБ3</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Обновление полотняного завода ВК на Volkswagen: инструкция 2026 года</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#что-такое-полотняный-завод-и-почему-его-нужно-обновлять">Что такое «полотняный завод» и почему его нужно обновлять</a></li><li><a href="#как-узнать-текущую-версию-прошивки-полотняного-завода">Как узнать текущую версию прошивки полотняного завода</a></li><li><a href="#способы-обновления-ota-vs-usb">Способы обновления: OTA vs USB</a></li><li><a href="#пошаговая-инструкция-обновление-через-usb">Пошаговая инструкция: обновление через USB</a></li><li><a href="#обновление-по-воздуху-ota-для-mib3">Обновление по воздуху (OTA) для MIB3</a></li><li><a href="#типичные-ошибки-и-как-их-исправить">Типичные ошибки и как их исправить</a></li><li><a href="#как-откатить-прошивку-если-обновление-прошло-неудачно">Как откатить прошивку, если обновление прошло неудачно</a></li><li><a href="#faq-частые-вопросы-по-обновлению-полотняного-завода">FAQ: Частые вопросы по обновлению полотняного завода</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body"><p>Если вы владелец <strong>Volkswagen</strong> с мультимедийной системой <em>MIB2</em> или <em>MIB3</em> (известной в среде автовладельцев как «полотняный завод»), то рано или поздно столкнётесь с необходимостью обновления программного обеспечения. Термин «полотняный завод» (<em>VW</em>) возник из-за характерного логотипа на загрузочном экране — стилизованной ткани, напоминающей фабричный узор. Но за этой визуальной метафорой скрывается сложная система, требующая регулярных апдейтов для исправления багов, добавления новых функций (например, поддержки <em>Apple CarPlay</em> или <em>Android Auto</em>) и улучшения стабильности.</p>
+
+<p>В этой статье мы разберём <strong>все актуальные способы обновления</strong> — от официального OTA (по воздуху) до ручной прошивки через USB, а также расскажем, как избежать типичных ошибок, например, <code>ERROR 2</code> или зависания на этапе <code>Updating...</code>. Особое внимание уделим совместимости с моделями <em>Golf</em>, <em>Passat</em>, <em>Tiguan</em> и <em>T-Roc</em>, где полотняный завод встречается чаще всего. Если вы никогда не обновляли ПО самостоятельно — не переживайте: пошаговые инструкции с фото и видео (ссылки в конце статьи) помогут разобраться даже новичкам.</p>
+
+<h2 id="что-такое-полотняный-завод-и-почему-его-нужно-обновлять">Что такое «полотняный завод» и почему его нужно обновлять</h2>
+
+<p>«Полотняный завод» — это неофициальное название мультимедийных систем <em>Volkswagen Group</em>, разработанных на платформах <em>MIB2</em> (выпуск с 2015 по 2019 год) и <em>MIB3</em> (с 2020 года). Название пошло от заставки при включении, где на чёрном фоне отображается логотип <strong>VW</strong> с абстрактным узором, напоминающим тканое полотно. Эта система управляет:</p>
+
+<ul>
+  <li>📻 Радио и медиапроигрывателем (включая <em>DAB+</em>)</li>
+  <li>📱 Подключением смартфонов (<em>CarPlay</em>, <em>Android Auto</em>, <em>MirrorLink</em>)</li>
+  <li>🗺️ Навигацией (встроенной или через <em>Here WeGo</em>)</li>
+  <li>🔊 Звуковыми настройками (эквалайзер, <em>Sound System</em> от <em>Harman Kardon</em>)</li>
+  <li>🚗 Бортовой диагностикой (вывод ошибок двигателя, давления в шинах и т.д.)</li>
+</ul>
+
+<p>Обновления для полотняного завода выходят регулярно — примерно <strong>1–2 раза в год</strong>. Они решают критические проблемы:</p>
+
+<ul>
+  <li>⚡ <strong>Баги с подключением телефонов</strong> (например, обрыв связи <em>CarPlay</em> после 10 минут использования).</li>
+  <li>🔄 <strong>Ошибки навигации</strong> (некорректное отображение карт или зависание при построении маршрута).</li>
+  <li>🎵 <strong>Проблемы со звуком</strong> (искажения на высоких частотах, отсутствие басов).</li>
+  <li>🔋 <strong>Утечки энергии</strong> (разряд аккумулятора из-за «ушедшей в фон» мультимедии).</li>
+</ul>
+
+<blockquote>⚠️ <strong>Внимание:</strong> Если ваш <em>Volkswagen</em> выпущен до 2015 года, скорее всего, у вас стоит <em>MIB1</em> (или <em>RNS 510</em>), и эта инструкция не подходит. Проверьте версию системы в меню <code>Настройки → Информация о системе</code>.</blockquote>
+
+<h2 id="как-узнать-текущую-версию-прошивки-полотняного-завода">Как узнать текущую версию прошивки полотняного завода</h2>
+
+<p>Прежде чем обновляться, нужно понять, какая прошивка установлена сейчас. Для этого:</p>
+
+<ol>
+  <li>Запустите автомобиль (двигатель можно не включать, достаточно зажигания).</li>
+  <li>Нажмите кнопку <code>MENU</code> на мультимедийной системе.</li>
+  <li>Перейдите в <code>Настройки → Информация о системе</code> (<em>System Information</em>).</li>
+  <li>Прокрутите вниз до пункта <code>Версия программного обеспечения</code> (<em>Software Version</em>).</li>
+</ol>
+
+<p>Вы увидите строку вида:</p>
+<pre><code>SW: 0526 / HW: H53 / MAP: 1.20.1</code></pre>
+
+<p>Расшифровка:</p>
+<table>
+  <thead>
+    <tr>
+      <th>Параметр</th>
+      <th>Что означает</th>
+      <th>Пример значения</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>SW</code></td>
+      <td>Версия прошивки (<em>Software</em>)</td>
+      <td><code>0526</code> (актуальная на 2026 год — <code>0750+</code>)</td>
+    </tr>
+    <tr>
+      <td><code>HW</code></td>
+      <td>Версия аппаратной платформы (<em>Hardware</em>)</td>
+      <td><code>H53</code> (для <em>MIB2</em>) или <code>MST2</code> (для <em>MIB3</em>)</td>
+    </tr>
+    <tr>
+      <td><code>MAP</code></td>
+      <td>Версия карт навигации</td>
+      <td><code>1.20.1</code> (обновляется отдельно)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Если ваша версия <code>SW</code> ниже <code>0700</code>, рекомендуется обновиться — в старых прошивках есть уязвимости, позволяющие хакерам <strong>удалённо получить доступ к мультимедии</strong> через Bluetooth или Wi-Fi.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какая у вас версия прошивки полотняного завода?</strong><ul><li>Ниже 0500</li><li>0500–0600</li><li>0600–0700</li><li>Выше 0700</li><li>Не знаю</li></ul></div></div>
+
+<h2 id="способы-обновления-ota-vs-usb">Способы обновления: OTA vs USB</h2>
+
+<p>Существует два официальных способа обновления полотняного завода: <strong>по воздуху (OTA)</strong> и <strong>через USB-накопитель</strong>. У каждого есть плюсы и минусы:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Метод</th>
+      <th>Плюсы</th>
+      <th>Минусы</th>
+      <th>Подходит для</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>OTA (по воздуху)</strong></td>
+      <td>✅ Не нужно скачивать файлы<br>✅ Автоматическая проверка совместимости</td>
+      <td>❌ Требует стабильный Wi-Fi или 4G<br>❌ Длительное время загрузки (до 2 часов)<br>❌ Не все регионы поддерживаются</td>
+      <td><em>MIB3</em> (с 2020 года)</td>
+    </tr>
+    <tr>
+      <td><strong>USB</strong></td>
+      <td>✅ Работает без интернета<br>✅ Можно выбрать конкретную версию<br>✅ Быстрее, чем OTA</td>
+      <td>❌ Нужно скачивать большие файлы (до 8 ГБ)<br>❌ Риск ошибок при неправильной записи на флешку</td>
+      <td><em>MIB2</em> и <em>MIB3</em></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Для <em>MIB2</em> (до 2019 года) <strong>USB — единственный официальный способ</strong>, так как OTA не поддерживается. Для <em>MIB3</em> можно использовать оба метода, но USB надёжнее, если у вас медленный интернет.</p>
+
+<blockquote>⚠️ <strong>Внимание:</strong> Некоторые «пиратские» прошивки с торрентов могут <mark>навсегда заблокировать мультимедийную систему</mark>, если в них отсутствует цифровая подпись <strong>Volkswagen</strong>. Используйте только файлы с официального сайта или проверенных источников (например, <em>VW Vortex</em>).</blockquote>
+
+<h2 id="пошаговая-инструкция-обновление-через-usb">Пошаговая инструкция: обновление через USB</h2>
+
+<p>Этот метод подходит для большинства моделей <em>Volkswagen</em> с <em>MIB2/MIB3</em>. Вам понадобится:</p>
+<ul>
+  <li>💾 USB-накопитель (желательно <strong>FAT32</strong>, до 32 ГБ).</li>
+  <li>💻 Компьютер с доступом в интернет.</li>
+  <li>⏳ 30–60 минут свободного времени.</li>
+</ul>
+
+<p><strong>Шаг 1. Скачайте прошивку</strong></p>
+<p>Официальные файлы обновлений можно найти:</p>
+<ul>
+  <li>На сайте <a href="https://www.volkswagen.de" target="_blank"><em>Volkswagen</em> для вашего региона</a> (раздел «Поддержка → Обновления ПО»).</li>
+  <li>На форумах <em>VW Vortex</em> или <em>GolfMK7</em> (если официальный источник недоступен).</li>
+</ul>
+<p>Имя файла обычно имеет формат:</p>
+<pre><code>SWDL_MIB2_PQ_XXXXX.zip</code></pre>
+<p>где <code>XXXXX</code> — номер версии (например, <code>0750</code>).</p>
+
+<p><strong>Шаг 2. Подготовьте USB-накопитель</strong></p>
+
+<p>Форматируйте USB в FAT32 (не NTFS!)</p>
+<p>Скачайте архив с прошивкой и распакуйте его</p>
+<p>Переименуйте папку с прошивкой в <code>update</code> (без кавычек)</p>
+<p>Скопируйте папку <code>update</code> в корень USB-накопителя</p>
+<p>Убедитесь, что на флешке нет других файлов--></p>
+
+<p><strong>Шаг 3. Обновите систему</strong></p>
+<ol>
+  <li>Вставьте USB в порт мультимедии (обычно под экраном или в бардачке).</li>
+  <li>Запустите автомобиль (достаточно зажигания).</li>
+  <li>Нажмите <code>MENU → Настройки → Обновление ПО → Обновить с USB</code>.</li>
+  <li>Подтвердите начало процесса (система перезагрузится).</li>
+</ol>
+
+<p>Обновление займёт <strong>20–40 минут</strong>. Не выключайте зажигание и не извлекайте USB! Если увидите ошибку <code>ERROR 2</code>, значит:</p>
+<ul>
+  <li>🔌 Флешка отформатирована не в <strong>FAT32</strong>.</li>
+  <li>📁 Папка с прошивкой называется не <code>update</code>.</li>
+  <li>🔍 Файлы прошивки повреждены (перекачайте архив).</li>
+</ul>
+
+<details class="faq-item"><summary>Что делать если обновление зависло на 99%?</summary><div class="faq-answer"><p>
+<p>Если процесс остановился на <code>99%</code> и не движется более 30 минут:</p>
+<ol>
+  <li>Подождите ещё 10 минут — иногда система «думает» перед финальной перезагрузкой.</li>
+  <li>Если не помогло, <strong>выключите зажигание</strong>, достаньте USB и включите снова.</li>
+  <li>Повторите обновление — обычно со второго раза проходит.</li>
+  <li>Если ошибка повторяется, скачайте прошивку с другого источника (возможно, файл битый).</li>
+</ol>
+<p></p></div></details></p>
+
+<h2 id="обновление-по-воздуху-ota-для-mib3">Обновление по воздуху (OTA) для MIB3</h2>
+
+<p>Если у вас <em>MIB3</em> (установлен на <em>Golf 8</em>, <em>ID.4</em>, <em>Tiguan 2021+</em> и др.), система может обновляться автоматически через интернет. Для этого:</p>
+
+<ol>
+  <li>Подключите автомобиль к Wi-Fi (в меню <code>Настройки → Сеть</code>).</li>
+  <li>Перейдите в <code>Настройки → Обновление ПО → Проверить обновления</code>.</li>
+  <li>Если обновление доступно, нажмите <code>Загрузить и установить</code>.</li>
+</ol>
+
+<p>Процесс займёт <strong>от 30 минут до 2 часов</strong> в зависимости от скорости интернета. Важные нюансы:</p>
+<ul>
+  <li>🔋 Заряд аккумулятора должен быть <strong>не менее 50%</strong> (или подключите зарядное устройство).</li>
+  <li>📶 Используйте <strong>стабильный Wi-Fi</strong> — при обрыве связи обновление прервётся.</li>
+  <li>🚗 Не выключайте зажигание во время загрузки!</li>
+</ul>
+
+<blockquote>⚠️ <strong>Внимание:</strong> После OTA-обновления некоторые настройки (например, <em>CarPlay</em> или радиостанции) могут сброситься. <mark>Запишите их заранее или сделайте скриншоты на телефон</mark>.</blockquote>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если OTA-обновление не находится, попробуйте сменить регион в настройках системы на <em>Германию</em> или <em>США</em> — иногда новые прошивки появляются там раньше.</p></div>
+
+<h2 id="типичные-ошибки-и-как-их-исправить">Типичные ошибки и как их исправить</h2>
+
+<p>При обновлении полотняного завода пользователи часто сталкиваются с ошибками. Вот самые распространённые и способы их решения:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Ошибка</th>
+      <th>Причина</th>
+      <th>Решение</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>ERROR 2</code></td>
+      <td>Неправильная структура файлов на USB</td>
+      <td>Перепроверьте имя папки (<code>update</code>) и формат USB (<strong>FAT32</strong>)</td>
+    </tr>
+    <tr>
+      <td><code>ERROR 5</code></td>
+      <td>Несовместимая версия прошивки</td>
+      <td>Скачайте прошивку, соответствующую вашей модели и году выпуска</td>
+    </tr>
+    <tr>
+      <td><code>No Update Found</code></td>
+      <td>USB не распознаётся или файлы повреждены</td>
+      <td>Попробуйте другой USB-накопитель (желательно оригинальный от <em>SanDisk</em>)</td>
+    </tr>
+    <tr>
+      <td>Зависание на <code>Updating...</code></td>
+      <td>Сбой в процессе записи</td>
+      <td>Подождите 10–15 минут. Если не помогает — перезагрузите систему (выключите/включите зажигание)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Если после обновления система <strong>не включается</strong> или выдаёт <code>System Fault</code>, возможно, произошла критичная ошибка. В этом случае:</p>
+<ol>
+  <li>Попробуйте <strong>сбросить настройки</strong> (удерживайте кнопку <code>MENU</code> 10 секунд).</li>
+  <li>Если не поможет — обратитесь в сервис <strong>Volkswagen</strong> для перепрошивки через диагностический разъём.</li>
+</ol>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Никогда не прерывайте обновление на этапе <code>Writing to memory</code> — это может привести к «окирпичиванию» системы и дорогому ремонту.</p></div>
+
+<h2 id="как-откатить-прошивку-если-обновление-прошло-неудачно">Как откатить прошивку, если обновление прошло неудачно</h2>
+
+<p>Если после апдейта полотняный завод начал глючить (например, <em>CarPlay</em> не подключается или экран мерцает), можно попытаться откатиться на предыдущую версию. Для этого:</p>
+
+<ol>
+  <li>Скачайте <strong>предыдущую стабильную прошивку</strong> (например, <code>SW: 0650</code> вместо <code>0750</code>).</li>
+  <li>Повторите процесс обновления через USB (см. раздел выше).</li>
+</ol>
+
+<p>Важно: <strong>не все версии совместимы</strong> с откатом. Например, если вы обновились с <code>0526</code> до <code>0750</code>, то откат на <code>0500</code> может не сработать из-за изменений в структуре ПО.</p>
+
+<blockquote>⚠️ <strong>Внимание:</strong> Откат прошивки <mark>сбрасывает все пользовательские данные</mark> (сохранённые радиостанции, аккаунты <em>Spotify</em>, настройки эквалайзера). Заранее экспортируйте важные данные, если это возможно.</blockquote>
+
+<p>Если откат не помогает, остаётся два варианта:</p>
+<ul>
+  <li>🔧 Обратиться в <strong>официальный сервис VW</strong> (гарантия сохраняется, если обновление проводилось по инструкции).</li>
+  <li>💻 Самостоятельно перепрошить систему через <em>ODIS</em> или <em>VCDS</em> (требуется диагностический кабель и опыт).</li>
+</ul>
+
+<h2 id="faq-частые-вопросы-по-обновлению-полотняного-завода">FAQ: Частые вопросы по обновлению полотняного завода</h2>
+
+<details>
+  <summary>Можно ли обновлять полотняный завод через Bluetooth?</summary>
+  <p>Нет, официально <strong>Volkswagen</strong> не поддерживает обновление по Bluetooth. Единственные рабочие способы — USB или OTA (для <em>MIB3</em>). Некоторые «кустарные» методы через <em>OBDeleven</em> могут предлагать прошивку по Bluetooth, но это <strong>небезопасно</strong> и часто приводит к ошибкам.</p>
+</details>
+
+<details>
+  <summary>Сколько стоит обновление в сервисе VW?</summary>
+  <p>Стоимость зависит от модели и региона. В среднем:</p>
+  <ul>
+    <li>🇷🇺 Россия: <strong>3 000–8 000 ₽</strong> (включая диагностику).</li>
+    <li>🇺🇦 Украина: <strong>1 500–4 000 ₴</strong>.</li>
+    <li>🇪🇺 Европа: <strong>50–150 €</strong>.</li>
+  </ul>
+  <p>Самостоятельное обновление через USB <strong>бесплатное</strong>, если не учитывать стоимость флешки.</p>
+</details>
+
+<details>
+  <summary>Можно ли прошить полотняный завод на Android Auto, если его нет?</summary>
+  <p>Да, но только если ваша система <strong>поддерживает</strong> эту функцию аппаратно. Например:</p>
+  <ul>
+    <li>✅ <em>MIB2</em> с версией <code>SW: 0650+</code> — поддерживает <em>Android Auto</em> после обновления.</li>
+    <li>❌ <em>MIB1</em> или старые версии <em>MIB2</em> (ниже <code>0500</code>) — не поддерживают.</li>
+  </ul>
+  <p>Проверьте совместимость на сайте <a href="https://www.volkswagen.com" target="_blank"><em>Volkswagen</em></a> по VIN-коду автомобиля.</p>
+</details>
+
+<details>
+  <summary>Что будет, если обновлять полотняный завод с подключённым телефоном?</summary>
+  <p>Ничего критичного, но <strong>рекомендуется отключить все устройства</strong> (телефон, USB-накопители) перед обновлением. В редких случаях подключённый <em>CarPlay</em> или <em>Android Auto</em> может вызвать конфликт драйверов, что приведёт к ошибке <code>ERROR 5</code>.</p>
+</details>
+
+<details>
+  <summary>Где скачать прошивку, если на официальном сайте её нет?</summary>
+  <p>Если на сайте <em>Volkswagen</em> для вашего региона нет актуальной прошивки, попробуйте:</p>
+  <ul>
+    <li>🌍 Сменить регион в настройках мультимедии на <em>Германию</em> или <em>США</em> и проверить OTA-обновления.</li>
+    <li>💬 Форумы:
+      <ul>
+        <li><a href="https://www.vwvortex.com" target="_blank"><em>VW Vortex</em></a> (раздел <code>MIB2/MIB3</code>)</li>
+        <li><a href="https://www.golfmk7.com" target="_blank"><em>GolfMK7</em></a></li>
+      </ul>
+    </li>
+    <li>📧 Написать в поддержку <em>Volkswagen</em> с указанием VIN-кода — иногда высылают прошивку по запросу.</li>
+  </ul>
+  <p><strong>Не скачивайте прошивки с торрентов или сомнительных сайтов!</strong> Риск нарваться на вирус или «битую» версию слишком высок.</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#что-такое-полотняный-завод-и-почему-его-нужно-обновлять">Что такое «полотняный завод» и почему его нужно обновлять</a></li><li><a href="#как-узнать-текущую-версию-прошивки-полотняного-завода">Как узнать текущую версию прошивки полотняного завода</a></li><li><a href="#способы-обновления-ota-vs-usb">Способы обновления: OTA vs USB</a></li><li><a href="#пошаговая-инструкция-обновление-через-usb">Пошаговая инструкция: обновление через USB</a></li><li><a href="#обновление-по-воздуху-ota-для-mib3">Обновление по воздуху (OTA) для MIB3</a></li><li><a href="#типичные-ошибки-и-как-их-исправить">Типичные ошибки и как их исправить</a></li><li><a href="#как-откатить-прошивку-если-обновление-прошло-неудачно">Как откатить прошивку, если обновление прошло неудачно</a></li><li><a href="#faq-частые-вопросы-по-обновлению-полотняного-завода">FAQ: Частые вопросы по обновлению полотняного завода</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/k/kt/kto-vypisyvaet-shtraf-za-musor-v-nepolozhennom-meste.html" class="related-card">Кто выписывает штраф за мусор в неположенном месте? Разбираемся в 2026</a></li><li><a href="/articles/h/hy/hyundai-accent-2023-2025.html" class="related-card">Hyundai Accent 2023-2026: цены, комплектации, тест-драйв и отзывы</a></li><li><a href="/articles/s/sk/skolko-masla-v-variatore-nissan-zhuk.html" class="related-card">Сколько масла в вариаторе Nissan Juke: объем, тип и замена</a></li><li><a href="/articles/o/ot/otlichie-shirokopolosnykh-dinamikov-ot-koaksialnykh.html" class="related-card">Широкополосные vs коаксиальные динамики: ключевые отличия и выбор</a></li><li><a href="/articles/f/fo/format-audio-acc.html" class="related-card">AAC формат: что это, преимущества и как конвертировать</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/k/kt/kto-vypisyvaet-shtraf-za-musor-v-nepolozhennom-meste.html" class="related-bottom-card"><span class="related-bottom-title">Кто выписывает штраф за мусор в неположенном месте? Разбираемся в 2026</span><span class="related-bottom-desc">Узнайте, какие органы имеют право штрафовать за мусор в неположенном месте, размеры санкций и как об</span></a><a href="/articles/h/hy/hyundai-accent-2023-2025.html" class="related-bottom-card"><span class="related-bottom-title">Hyundai Accent 2023-2026: цены, комплектации, тест-драйв и отзывы</span><span class="related-bottom-desc">Все о новом Hyundai Accent 2023-2026: технические характеристики, изменения в дизайне, плюсы и минус</span></a><a href="/articles/s/sk/skolko-masla-v-variatore-nissan-zhuk.html" class="related-bottom-card"><span class="related-bottom-title">Сколько масла в вариаторе Nissan Juke: объем, тип и замена</span><span class="related-bottom-desc">Точный объем масла в вариаторе Nissan Juke (JF015E/JF016E) для разных поколений. Какое масло лить, к</span></a><a href="/articles/o/ot/otlichie-shirokopolosnykh-dinamikov-ot-koaksialnykh.html" class="related-bottom-card"><span class="related-bottom-title">Широкополосные vs коаксиальные динамики: ключевые отличия и выбор</span><span class="related-bottom-desc">Чем отличаются широкополосные динамики от коаксиальных? Сравнение конструкции, звука, установки и це</span></a><a href="/articles/f/fo/format-audio-acc.html" class="related-bottom-card"><span class="related-bottom-title">AAC формат: что это, преимущества и как конвертировать</span><span class="related-bottom-desc">Разбираем формат AAC: особенности, сравнение с MP3, как открыть и конвертировать. Экспертный гайд дл</span></a><a href="/articles/u/ub/ubrat-zhuki-na-avtomobile-svoimi-rukami.html" class="related-bottom-card"><span class="related-bottom-title">Как убрать жуков с кузова автомобиля своими руками: 7 проверенных способов</span><span class="related-bottom-desc">Пошаговая инструкция по удалению насекомых с лакокрасочного покрытия автомобиля без повреждений. Эфф</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

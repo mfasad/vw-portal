@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>Схема TEYES CC3: распиновка, настройка и установка — VW-portal</title>
+    <meta name="description" content="Полная схема TEYES CC3: распиновка портов, схема подключения камеры, настройка CAN-bus и устранение ошибок. Инструкция для экспертов.">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/s/sk/skhema-teyes-cc3.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Схема TEYES CC3: распиновка, настройка и установка">
+    <meta property="og:description" content="Полная схема TEYES CC3: распиновка портов, схема подключения камеры, настройка CAN-bus и устранение ошибок. Инструкция для экспертов.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Схема TEYES CC3: распиновка, настройка и установка</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Схема TEYES CC3: распиновка, настройка и установка</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#введение-в-архитектуру-teyes-cc3">Введение в архитектуру TEYES CC3</a></li><li><a href="#детальная-распиновка-основного-разъема">Детальная распиновка основного разъема</a></li><li><a href="#подключение-аудиосистемы-и-усилителей">Подключение аудиосистемы и усилителей</a></li><li><a href="#настройка-can-bus-и-рулевого-управления">Настройка CAN-bus и рулевого управления</a></li><li><a href="#видеовыходы-и-подключение-камер">Видеовыходы и подключение камер</a></li><li><a href="#диагностика-и-устранение-неисправностей">Диагностика и устранение неисправностей</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<h2 id="введение-в-архитектуру-teyes-cc3">Введение в архитектуру TEYES CC3</h2>
+<p>Современные мультимедийные системы на базе <strong>TEYES CC3</strong> стали стандартом де-факто для замены штатных головных устройств благодаря своей универсальности и высокой производительности. Понимание внутренней структуры и схемы подключения необходимо не только для первичной инсталляции, но и для глубокой диагностики возникающих проблем. <em>Android-платформа</em>, используемая в этих устройствах, требует точного соблюдения последовательности подключения проводов во избежание коротких замыканий или программных сбоев.</p>
+<p>Основой стабильной работы является правильное распределение питания и заземления, так как схема TEYES CC3 чувствительна к перепадам напряжения в бортовой сети автомобиля. Неправильная коммутация может привести к зависанию <strong>процессора</strong> или повреждению выходных каскадов усилителя. Именно поэтому детальный разбор распиновки основного разъема является критически важным этапом перед началом любых монтажных работ.</p>
+<p>В отличие от бюджетных аналогов, данная серия оснащена выделенными модулями для обработки звука и видеосигналов, что накладывает дополнительные требования к качеству соединений. <mark>Схема TEYES CC3 базируется на чипсете Unisoc, что отличает её от более старых моделей на Rockchip и требует специфического подхода к настройке CAN-шины.</mark> Игнорирование особенностей архитектуры может привести к некорректной работе рулевого управления или отсутствию звука.</p>
+
+<h2 id="детальная-распиновка-основного-разъема">Детальная распиновка основного разъема</h2>
+<p>Центральным элементом подключения является 16-контактный разъем питания, который подает напряжение на все узлы устройства. В схеме TEYES CC3 красный провод отвечает за постоянный плюс (B+), желтый — за питание при включенном зажигании (ACC), а черный — за массу (GND). Ошибка в подключении B+ и ACC часто приводит к тому, что магнитола не выключается вместе с автомобилем или, наоборот, сбрасывает настройки времени при каждом запуске.</p>
+<p>Особое внимание следует уделить проводам управления, таким как <code>PWR/ANT</code> (управление антенной или усилителем) и <code>BACK</code> (сигнал заднего хода). Провод <strong>PWR/ANT</strong> обычно подает 12 вольт на активную антенну или внешний усилитель при включении радио, но его можно перенастроить в меню. Сигнальный провод <code>BACK</code> должен соединяться с проводом фонаря заднего хода, чтобы система автоматически переключалась на камеру при движении назад.</p>
+<p>Для интеграции с внешними устройствами часто используются дополнительные разъемы, такие как <em>J1</em> или <em>J2</em>, которые выведены на отдельные шлейфы. Здесь располагаются входы для микрофона, AUX и специфические линии управления. При работе с этими контактами необходимо использовать мультиметр для проверки полярности, так как цветовая маркировка проводов в автомобиле может не совпадать со стандартами TEYES.</p>
+
+
+<div class="attention-box attention-info"><div><strong>📊 Используете ли вы переходник ISO или режете провода?</strong><ul><li>Паяю напрямую</li><li>Использую переходник ISO</li><li>Обращаюсь к специалистам</li><li>Пока не знаю</li></ul></div></div>
+
+<ul>
+<li>🔴 <strong>Красный провод</strong>: Постоянное питание от аккумулятора (B+), обеспечивает память настроек.</li>
+<li>🟡 <strong>Желтый провод</strong>: Питание от замка зажигания (ACC), активирует включение устройства.</li>
+<li>⚫ <strong>Черный провод</strong>: Общая масса (GND), должна быть подключена к кузову автомобиля.</li>
+<li>🔵 <strong>Синий/Белый провод</strong>: Управление активной антенной или внешним усилителем (12В).</li>
+</ul>
+
+<h2 id="подключение-аудиосистемы-и-усилителей">Подключение аудиосистемы и усилителей</h2>
+<p>Встроенный усилитель TEYES CC3 обеспечивает мощность 4x45 Вт, что достаточно для большинства штатных динамиков, но для качественного звука часто требуется подключение внешнего усилителя. Схема предусматривает наличие линейных выходов (RCA) или возможность использования высокоуровневых входов через специальный адаптер. Важно правильно настроить <strong>Gain</strong> (чувствительность) внешнего усилителя, чтобы избежать искажений и хрипов на высоких частотах.</p>
+<p>Если вы планируете использовать сабвуфер, необходимо задействовать выход <code>SUB OUT</code> или перенастроить один из каналов RCA через программное обеспечение. В настройках звука следует выбрать режим <em>2.1</em> или <em>4.1</em> в зависимости от конфигурации вашей акустической системы. Это позволит разделить частоты и направить низкие басы исключительно на сабвуфер, разгрузив основные динамики.</p>
+<p>Качество звука также зависит от целостности проводки и отсутствия наводок. Провода питания усилителя должны быть проложены отдельно от сигнальных кабелей, чтобы минимизировать фоновый шум. Использование качественных межблочных кабелей с экранированием является обязательным условием для реализации потенциала <strong>ЦАП</strong> (цифро-аналогового преобразователя), установленного в устройстве.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Используйте ферритовые кольца на проводах питания усилителя, если слышите свист или писк при изменении оборотов двигателя.</p></div>
+
+<h2 id="настройка-can-bus-и-рулевого-управления">Настройка CAN-bus и рулевого управления</h2>
+<p>Одной из самых сложных задач при установке является настройка CAN-bus декодера, который отвечает за передачу данных от автомобиля к магнитоле. Схема TEYES CC3 поддерживает широкий спектр протоколов, но требует точного выбора производителя автомобиля и модели в меню настроек. Неправильный выбор протокола может привести к тому, что кнопки на руле не будут работать или, наоборот, будут выполнять неверные действия.</p>
+<p>Для настройки необходимо перейти в <code>Настройки → Заводские настройки → CAN</code> и ввести пароль (обычно <code>8888</code> или <code>1234</code>). В открывшемся меню выбирается бренд авто, затем модель и год выпуска. Если готового профиля нет, можно использовать режим обучения, последовательно назначая функции кнопкам руля, однако это требует времени и терпения.</p>
+<p>Частой проблемой является конфликт протоколов, когда магнитола считывает данные, но не может их интерпретировать. В таких случаях помогает обновление прошивки CAN-декодера или использование универсального профиля <em>General</em>. Также стоит проверить, подключены ли провода CAN-H и CAN-L к соответствующим пинам в разъеме автомобиля, так как в некоторых моделях они могут быть перепутаны.</p>
+
+
+<div class="checklist-block"><h4>☑️ Проверка подключения проводов CAN-H и CAN-L</h4><label class="check-item"><input type="checkbox"><span>Выбран правильный бренд авто в настройках</span></label><label class="check-item"><input type="checkbox"><span>Проверена целостность проводов</span></label><label class="check-item"><input type="checkbox"><span>Обновлен CAN-протокол</span></label><label class="check-item"><input type="checkbox"><span>Проведен тест кнопок руля</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 4</div></div>
+
+<blockquote>
+<p>⚠️ <strong>Внимание:</strong> Неправильная настройка CAN-шины может привести к разряду аккумулятора, так как магнитола может не уходить в спящий режим и продолжать потреблять ток даже при выключенном зажигании.</p>
+</blockquote>
+
+<h2 id="видеовыходы-и-подключение-камер">Видеовыходы и подключение камер</h2>
+<p>Схема TEYES CC3 предусматривает несколько видеовходов, основным из которых является <code>Camera In</code> или <code>CVBS IN</code>. Именно сюда подключается камера заднего вида, сигнал которой активируется проводом <code>BACK</code>. Для камер с высоким разрешением (AHD) необходимо в настройках видеовхода выбрать соответствующий формат сигнала (1080P или 720P), иначе изображение будет черно-белым или отсутствовать.</p>
+<p>Для подключения камеры переднего вида или видеорегистратора используется вход <code>DVR IN</code> или <code>Front Cam</code>. В отличие от задней камеры, фронтальная часто требует ручной активации через приложение или виджет на рабочем столе. Важно убедиться, что разрешение камеры совпадает с поддерживаемыми форматами головного устройства, чтобы избежать артефактов изображения.</p>
+<p>Некоторые пользователи пытаются подключить камеры через USB-интерфейс, используя USB-камеры, но это создает дополнительную нагрузку на процессор и может вызывать задержки в выводе изображения. Классическое аналоговое подключение через тюльпан (RCA) остается наиболее надежным и быстрым способом передачи видеосигнала в реальном времени.</p>
+
+<table>
+<thead>
+<tr>
+<th>Порт</th>
+<th>Тип сигнала</th>
+<th>Назначение</th>
+<th>Разрешение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Camera In</code></td>
+<td>CVBS/AHD</td>
+<td>Камера заднего вида</td>
+<td>720P/1080P</td>
+</tr>
+<tr>
+<td><code>DVR In</code></td>
+<td>USB/CVBS</td>
+<td>Камера переднего вида / Регистратор</td>
+<td>720P/1080P</td>
+</tr>
+<tr>
+<td><code>TV In</code></td>
+<td>CVBS</td>
+<td>Цифровое ТВ (опционально)</td>
+<td>576i/480i</td>
+</tr>
+<tr>
+<td><code>HDMI In</code></td>
+<td>Цифровой</td>
+<td>Внешние источники (консоли)</td>
+<td>1080P</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="диагностика-и-устранение-неисправностей">Диагностика и устранение неисправностей</h2>
+<p>Если устройство не включается, первым делом необходимо проверить предохранитель на проводе питания и целостность цепи massa-плюс. Схема TEYES CC3 имеет встроенную защиту, но скачки напряжения могут вывести из строя внутренние компоненты. Использование тестера позволит быстро определить, поступает ли напряжение в 12 вольт на разъем устройства при включенном зажигании.</p>
+<p>Проблемы со звуком часто решаются сбросом настроек эквалайзера или проверкой баланса каналов. Если хрипят только определенные динамики, возможно, повреждена проводка в двери или динамик вышел из строя. Программный сброс (Reset) через отверстие на передней панели помогает устранить зависания системы, но не решает аппаратные проблемы.</p>
+<p>В случае отсутствия реакции на сенсорный экран или хаотичных нажатий, рекомендуется проверить шлейф дисплея и калибровку экрана. Иногда помогает калибровка через инженерное меню, доступное по коду или через настройки. Если экран гаснет, но звук остается, возможно, проблема в подсветке или шлейфе матрицы.</p>
+
+<details class="faq-item"><summary>Секреты инженерного меню TEYES-->
+<!--WIDGET</summary><div class="faq-answer"><p>spoiler:Для доступа к расширенным настройкам часто используется код *#*#888#*#* или вход через приложение Factory Settings с паролем 8888. Там можно изменить загрузочную картинку, настроить поведение кнопок и увидеть температуру процессора.</p></div></details>
+
+<blockquote>
+<p>⚠️ <strong>Внимание:</strong> Не пытайтесь разбирать устройство и паять компоненты внутри, если оно находится на гарантии. Любые следы вскрытия корпуса аннулируют гарантийные обязательства производителя.</p>
+</blockquote>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+<details>
+<summary>Какой пароль для входа в заводские настройки TEYES CC3?</summary>
+<p>Стандартными паролями являются <code>8888</code>, <code>1234</code>, <code>0000</code> или <code>1617</code>. Если они не подходят, пароль может быть указан в инструкции к конкретной модификации устройства или на сайте производителя.</p>
+</details>
+<details>
+<summary>Почему не работает камера заднего вида?</summary>
+<p>Проверьте подключение провода <code>BACK</code> к плюсу фонаря заднего хода. Убедитесь, что в настройках видеовхода выбран правильный формат сигнала (PAL/NTSC или AHD). Также стоит проверить целостность самого кабеля камеры.</p>
+</details>
+<details>
+<summary>Как увеличить громкость микрофона при разговоре?</summary>
+<p>В меню <code>Заводские настройки</code> найдите раздел <em>Микрофон</em> или <em>Mic Gain</em> и увеличьте значение усиления. Также убедитесь, что микрофон подключен правильно и не закрыт шумоизоляцией.</p>
+</details>
+<details>
+<summary>Можно ли установить приложения из Google Play?</summary>
+<p>Да, TEYES CC3 работает на базе Android, что позволяет устанавливать приложения из Google Play Market или через APK-файлы. Однако интерфейс оптимизирован для горизонтального экрана, поэтому некоторые телефонные приложения могут отображаться некорректно.</p>
+</details>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Правильная схема подключения и настройка CAN-bus — это 90% успеха в стабильной работе мультимедийной системы TEYES CC3.</p></div></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#введение-в-архитектуру-teyes-cc3">Введение в архитектуру TEYES CC3</a></li><li><a href="#детальная-распиновка-основного-разъема">Детальная распиновка основного разъема</a></li><li><a href="#подключение-аудиосистемы-и-усилителей">Подключение аудиосистемы и усилителей</a></li><li><a href="#настройка-can-bus-и-рулевого-управления">Настройка CAN-bus и рулевого управления</a></li><li><a href="#видеовыходы-и-подключение-камер">Видеовыходы и подключение камер</a></li><li><a href="#диагностика-и-устранение-неисправностей">Диагностика и устранение неисправностей</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/r/ra/raspolozhenie-rele-niva-shevrole.html" class="related-card">Где находится реле в Ниве Шевроле: схема и фото 2026</a></li><li><a href="/articles/n/ne/ne-otkryvaetsya-polovina-sajtov-v-internete.html" class="related-card">Не открываются сайты? 10 причин и решений проблемы (2026)</a></li><li><a href="/articles/d/da/datchik-polozheniya-raspredvala-umz-4216.html" class="related-card">Датчик распредвала УМЗ 4216: признаки неисправности и замена</a></li><li><a href="/articles/h/hy/hyundai-accent-iii.html" class="related-card">Hyundai Accent III: полный обзор, характеристики и отзывы владельцев</a></li><li><a href="/articles/t/te/teyes-cc3-2k-360-instruktsiya-na-russkom.html" class="related-card">Teyes CC3 2K 360°: полная инструкция на русском языке</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/r/ra/raspolozhenie-rele-niva-shevrole.html" class="related-bottom-card"><span class="related-bottom-title">Где находится реле в Ниве Шевроле: схема и фото 2026</span><span class="related-bottom-desc">Подробная схема расположения реле в Chevrolet Niva: блок предохранителей, монтажный блок, реле старт</span></a><a href="/articles/n/ne/ne-otkryvaetsya-polovina-sajtov-v-internete.html" class="related-bottom-card"><span class="related-bottom-title">Не открываются сайты? 10 причин и решений проблемы (2026)</span><span class="related-bottom-desc">Почему половина сайтов не грузится в браузере? Разбираем блокировки, ошибки DNS, проблемы с провайде</span></a><a href="/articles/d/da/datchik-polozheniya-raspredvala-umz-4216.html" class="related-bottom-card"><span class="related-bottom-title">Датчик распредвала УМЗ 4216: признаки неисправности и замена</span><span class="related-bottom-desc">Как проверить датчик положения распредвала на двигателе УМЗ 4216? Признаки поломки, ошибки, инструкц</span></a><a href="/articles/h/hy/hyundai-accent-iii.html" class="related-bottom-card"><span class="related-bottom-title">Hyundai Accent III: полный обзор, характеристики и отзывы владельцев</span><span class="related-bottom-desc">Подробный анализ Hyundai Accent III (2006-2010). Двигатели, расход топлива, типичные поломки, стоимо</span></a><a href="/articles/t/te/teyes-cc3-2k-360-instruktsiya-na-russkom.html" class="related-bottom-card"><span class="related-bottom-title">Teyes CC3 2K 360°: полная инструкция на русском языке</span><span class="related-bottom-desc">Подробное руководство по настройке, подключению и использованию видеорегистратора Teyes CC3 2K 360° </span></a><a href="/articles/f/fo/folksvagen-vento-19-dizel.html" class="related-bottom-card"><span class="related-bottom-title">Volkswagen Vento 1.9 TDI: отзывы, расход, проблемы дизеля</span><span class="related-bottom-desc">Подробный обзор Volkswagen Vento 1.9 TDI: технические характеристики, реальный расход топлива, типич</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

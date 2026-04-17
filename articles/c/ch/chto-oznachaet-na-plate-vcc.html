@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>VCC на плате: что это, отличие от VDD и напряжение питания — VW-portal</title>
+    <meta name="description" content="Подробный разбор маркировки VCC на печатных платах. Узнайте, что означает VCC, как измерить питание мультиметром и чем оно отличается от VDD и GND.">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/c/ch/chto-oznachaet-na-plate-vcc.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="VCC на плате: что это, отличие от VDD и напряжение питания">
+    <meta property="og:description" content="Подробный разбор маркировки VCC на печатных платах. Узнайте, что означает VCC, как измерить питание мультиметром и чем оно отличается от VDD и GND.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">VCC на плате: что это, отличие от VDD и напряжение питания</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>VCC на плате: что это и как проверить питание</h1>
+                    
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>При ремонте электроники или изучении принципиальных схем радиолюбители часто сталкиваются с загадочной аббревиатурой VCC. Эта маркировка наносится рядом с контактами, пятаками или выводами микросхем на печатной плате. Для новичка она может показаться просто набором букв, но на самом деле это фундаментальное обозначение, без понимания которого невозможна диагностика неисправностей.</p>
+<p><strong>VCC</strong> указывает на точку подключения положительного напряжения питания для аналоговых компонентов или цепей коллектора в биполярных транзисторах. Именно сюда подается энергия, необходимая для работы устройства. Если на этом контакте отсутствует требуемый потенциал, электроника попросту не запустится.</p>
+<p>Понимание природы этого обозначения критически важно при прозвонке дорожек и поиске обрывов. В отличие от цифровых обозначений, <em>VCC</em> исторически сложилось как стандарт для аналогового сектора схемы. Давайте разберемся, откуда пошло это название и как правильно работать с ним.</p>
+
+<p>Аббревиатура происходит от английского термина <strong>Voltage Common Collector</strong>, что дословно переводится как «напряжение общего коллектора». Это обозначение укоренилось в эпоху, когда доминировала схемотехника на биполярных транзисторах. В таких схемах коллекторы транзисторов часто объединялись и подключались к положительному полюсу источника питания через нагрузочный резистор.</p>
+<p>Существует также схожее обозначение <em>VEE</em>, которое означает «напряжение общего эмиттера» и обычно соответствует отрицательному полюсу питания или «земле» в двухполярных схемах. Однако в современной бытовой электронике под VCC почти всегда подразумевают «плюс» питания относительно земли <strong>GND</strong>.</p>
+<p>Важно различать контекст использования. Если вы видите маркировку на плате старого усилителя или аналогового блока питания, VCC будет означать именно питание аналоговой части. В цифровых микросхемах чаще встречается <em>VDD</em>, хотя на практике инженеры часто используют эти термины как синонимы положительного напряжения.</p>
+
+<blockquote>
+<p>⚠️ <strong>Внимание:</strong> Не путайте VCC с высоким напряжением. На большинстве цифровых плат это 3.3В или 5В, но в силовой электронике или ламповой технике потенциал в этой точке может достигать сотен вольт, что смертельно опасно.</p>
+</blockquote>
+
+<p>С развитием микроэлектроники и переходом на КМОП-технологии (CMOS) термин VCC не исчез, хотя логика работы изменилась. В полевых транзисторах нет коллекторов, есть стоки (Drain), поэтому логичнее было бы использовать VDD (Voltage Drain). Однако традиция оказалась сильнее, и <strong>VCC</strong> прочно закрепилось в документации как общий символ положительного напряжения питания.</p>
+<p>На современных печатных платах вы можете встретить вариации: <em>VCC_IO</em> для питания портов ввода-вывода или <strong>VCC_CORE</strong> для питания ядра процессора. Это сделано для разделения цепей питания, чтобы шум от одной части схемы не мешал работе другой.</p>
+<p>Часто возле контакта с маркировкой VCC располагается конденсатор. Он служит для сглаживания пульсаций и фильтрации высокочастотных помех. Отсутствие такого конденсатора может привести к нестабильной работе микросхемы, даже если напряжение формально присутствует.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 С какой маркировкой питания вы сталкиваетесь чаще всего?</strong><ul><li>VCC</li><li>VDD</li><li>V+</li><li>5V/12V</li></ul></div></div>
+
+<p>Главное практическое отличие VCC от VDD заключается в типе компонентов, для которых предназначено питание. Хотя вольтметр покажет одинаковое значение напряжения (например, 5 Вольт), физический смысл и требования к стабильности тока могут различаться.</p>
+<p><strong>VCC</strong> традиционно ассоциируется с аналоговыми цепями и биполярной техникой. Эти цепи часто более чувствительны к шумам, но потребляют относительно стабильный ток. В то же время <em>VDD</em> — это удел цифровой логики и полевых транзисторов, где потребление тока резко меняется в моменты переключения логических уровней.</p>
+<p>Вот ключевые различия, которые стоит запомнить:</p>
+<ul>
+<li>🔌 <strong>Происхождение:</strong> VCC — от коллектора (биполярные), VDD — от стока (полевые).</li>
+<li>📉 <strong>Характер нагрузки:</strong> VCC часто питает аналоговые узлы, VDD — цифровые ядра и логику.</li>
+<li>🔊 <strong>Требования к фильтрации:</strong> VDD требует больше развязывающих конденсаторов из-за скачков потребления.</li>
+</ul>
+<p>На сложных материнских платах компьютеров или смартфонов вы можете увидеть сразу несколько линий: <strong>VCC</strong>, <em>VDD</em>, <strong>VPP</strong> (программное напряжение) и другие. Все они являются «плюсом», но разведены по разным дорожкам для изоляции шумных цифровых частей от чувствительной аналоговой периферии.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Если вы ремонтируете плату и не знаете, куда подать питание для проверки, ищите конденсаторы рядом с маркировкой VCC — это самые безопасные точки для подключения щупов мультиметра.</p></div>
+
+<p>Для проведения качественной диагностики необходимо уметь быстро находить точки питания на плате. Маркировка <strong>VCC</strong> может быть нанесена шелкографией рядом с отверстием под пайку, на самой микросхеме или в виде текстового поля на слое печатного проводника.</p>
+<p>Используйте мультиметр в режиме прозвонки диодов или измерения сопротивления. Один щуп поставьте на известный <em>GND</em> (минус батареи или USB-разъем), а вторым коснитесь контакта VCC. Если плата исправна и не закорочена, вы увидите определенное сопротивление. Если сопротивление близко к нулю — вероятен пробой компонента.</p>
+<p>При измерении напряжения включите мультиметр в режим DC Voltage (постоянный ток). Черный щуп на землю, красный — на <strong>VCC</strong>. Показания должны соответствовать номиналу устройства. Для 5-вольтовой логики допустимы отклонения в пределах 5%, то есть от 4.75В до 5.25В.</p>
+
+<div class="checklist-block"><h4>☑️ Диагностика цепи питания</h4><label class="check-item"><input type="checkbox"><span>Найти маркировку VCC на плате</span></label><label class="check-item"><input type="checkbox"><span>Определить общую землю (GND)</span></label><label class="check-item"><input type="checkbox"><span>Измерить напряжение в режиме DC</span></label><label class="check-item"><input type="checkbox"><span>Сравнить с номиналом микросхемы</span></label><label class="check-item"><input type="checkbox"><span>Проверить наличие КЗ на землю</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 5</div></div>
+
+<p>Часто возникает ситуация, когда напряжение VCC просаживается под нагрузкой. Это может означать неисправность блока питания или короткое замыкание в одном из потребителей. Чтобы найти виновника, можно использовать метод «заморозки» или локального нагрева, но это требует осторожности.</p>
+<p>Если на контакте VCC напряжение отсутствует полностью, проверьте предохранители и входные цепи. Иногда <strong>VCC</strong> формируется локальным стабилизатором (LDO) прямо на плате. В таком случае нужно искать входное напряжение на этот стабилизатор.</p>
+
+<blockquote>
+<p>⚠️ <strong>Внимание:</strong> Никогда не подавайте внешнее питание на контакт VCC, не убедившись, что родной блок питания отключен. Конфликт двух источников напряжения гарантированно приведет к выгоранию дорожек или микросхем.</p>
+</blockquote>
+
+<p>Для систематизации знаний о типах напряжений на плате, рассмотрим сравнительную таблицу основных обозначений. Это поможет не запутаться в многообразии аббревиатур.</p>
+
+<table>
+<thead>
+<tr>
+<th>Обозначение</th>
+<th>Полное название</th>
+<th>Тип компонентов</th>
+<th>Полярность</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>VCC</strong></td>
+<td>Voltage Common Collector</td>
+<td>Биполярные, аналог</td>
+<td>Плюс (+)</td>
+</tr>
+<tr>
+<td><em>VDD</em></td>
+<td>Voltage Drain Drain</td>
+<td>Полевые, цифра</td>
+<td>Плюс (+)</td>
+</tr>
+<tr>
+<td><strong>VEE</strong></td>
+<td>Voltage Emitter Emitter</td>
+<td>Биполярные</td>
+<td>Минус (-)</td>
+</tr>
+<tr>
+<td><em>VSS</em></td>
+<td>Voltage Source Source</td>
+<td>Полевые</td>
+<td>Минус/Земля</td>
+</tr>
+<tr>
+<td><strong>GND</strong></td>
+<td>Ground</td>
+<td>Общая земля</td>
+<td>0 Вольт</td>
+</tr>
+</tbody>
+</table>
+
+<p>Как видно из таблицы, парные обозначения (CC и EE, DD и SS) указывают на тип транзисторов и полярность. Знание этой логики позволяет интуитивно понимать назначение контактов даже на незнакомых платах.</p>
+<p>В современной документации <mark>VCC часто используется как универсальный синоним положительного напряжения питания независимо от типа транзисторов</mark>, что упрощает чтение схем, но требует внимательности к номиналам.</p>
+
+<details class="faq-item"><summary>Почему иногда VCC меньше, чем VDD?</summary><div class="faq-answer"><p>В некоторых сложных системах VCC питает периферию (например, 3.3В), а VDD — ядро процессора (например, 1.2В). Всегда сверяйтесь с даташитом конкретной микросхемы, так как стандарты могут варьироваться в зависимости от производителя.</p></div></details>
+
+<p>Одной из частых проблем при ремонте является нестабильное напряжение в точке VCC. Если вольтметр показывает «плавающие» значения, это сигнал о неисправности. Причины могут быть разными: от высохших конденсаторов до межвиткового замыкания в дросселях.</p>
+<p>Проверьте цепь на наличие «холодной» пайки. Трещина в припое под разъемом или микросхемой создает переходное сопротивление, которое растет при нагреве, вызывая просадку <strong>VCC</strong>. Прогрев феном может временно восстановить контакт, подтверждая диагноз.</p>
+<p>Также стоит осмотреть плату на предмет вздувшихся конденсаторов в цепи фильтрации питания. Даже если вздутия нет, <em>ESR</em> (эквивалентное последовательное сопротивление) конденсатора могло вырасти, и он перестал выполнять свою функцию сглаживания пульсаций.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Стабильность напряжения VCC — главный индикатор здоровья блока питания и цепей распределения энергии на плате. Любые отклонения требуют немедленного поиска причины.</p></div>
+
+<p>Работа с высокими частотами накладывает свои требования. Сигнал VCC не должен иметь значительных высокочастотных шумов. Для проверки используйте осциллограф. На экране вы должны видеть прямую линию с минимальными искажениями.</p>
+<p>Если на осциллограмме видны «пилы» или выбросы, это говорит о плохой фильтрации или работе импульсного преобразователя в нештатном режиме. В цифровой технике такие помехи могут вызывать сбои в логике и перезагрузки.</p>
+<p>Иногда инженеры специально развязывают <strong>VCC</strong> ферритовыми бусинами. Это маленькие компоненты, похожие на резисторы, которые пропускают постоянный ток, но гасят высокочастотные помехи. Проверка целостности такой бусины — важный этап диагностики.</p>
+
+<details>
+<summary>Можно ли подать 5В на контакт VCC, если там написано 3.3В?</summary>
+<p>Категорически нет. Превышение напряжения питания даже на 1-2 вольта может привести к мгновенному тепловому пробою полупроводниковых переходов микросхемы. Всегда сверяйтесь с маркировкой на корпусе чипа или документацией.</p>
+</details>
+
+<details>
+<summary>Почему VCC иногда называют просто «питаловом»?</summary>
+<p>Это сленговое название среди ремонтников. Поскольку VCC — это основная точка приложения силы для работы устройства, мастера часто говорят «проверить питалово», имея в виду измерение напряжения именно в этой точке.</p>
+</details>
+
+<details>
+<summary>Что делать, если VCC коротит на землю?</summary>
+<p>Необходимо исключить внешние цепи. Если коротыш остается на отключенной плате, используйте метод прогрева (поиск горячего элемента) или подачу низкого напряжения с ограничением тока, чтобы найти греющийся компонент, который и является причиной замыкания.</p>
+</details>
+
+<p>В заключение, маркировка <strong>VCC</strong> является одним из базовых элементов грамотного чтения электронных схем. Понимание того, что это напряжение питания, и знание способов его проверки, позволит вам эффективно ремонтировать технику любой сложности.</p>
+<p>Не бойтесь экспериментировать с измерениями, но всегда соблюдайте технику безопасности. Правильная диагностика цепей питания решает 80% всех проблем с неработающей электроникой.</p></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/p/p0/p050700-oshibka-folksvagen.html" class="related-card">Ошибка P050700 на Volkswagen: причины и как устранить самостоятельно</a></li><li><a href="/articles/t/to/tormoznaya-zhidkost-s-dopuskom-vw-501-14.html" class="related-card">Тормозная жидкость VW 501 14: допуск, особенности и выбор для Фольксваген</a></li><li><a href="/articles/v/ve/vera-polozkova-i-katis-butylkoj.html" class="related-card">Вера Полозкова и «Катись бутылкой»: история песни, текст и смысл</a></li><li><a href="/articles/r/ra/raspolozhenie-rychagov-na-nive.html" class="related-card">Рычаги управления в Ниве: расположение, назначение и советы</a></li><li><a href="/articles/o/ot/otzyvy-magnitoly-teyes-cc3.html" class="related-card">Teyes CC3: честные отзывы владельцев 2026 года — плюсы и минусы</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/p/p0/p050700-oshibka-folksvagen.html" class="related-bottom-card"><span class="related-bottom-title">Ошибка P050700 на Volkswagen: причины и как устранить самостоятельно</span><span class="related-bottom-desc">Разбираем код ошибки P050700 на Фольксваген: что означает, почему возникает на &lt;em&gt;Golf&lt;/em&gt;, &lt;em&gt;Pa</span></a><a href="/articles/t/to/tormoznaya-zhidkost-s-dopuskom-vw-501-14.html" class="related-bottom-card"><span class="related-bottom-title">Тормозная жидкость VW 501 14: допуск, особенности и выбор для Фольксваген</span><span class="related-bottom-desc">Разбираемся, что значит допуск VW 501 14 для тормозной жидкости, какие бренды подходят для Golf, Pas</span></a><a href="/articles/v/ve/vera-polozkova-i-katis-butylkoj.html" class="related-bottom-card"><span class="related-bottom-title">Вера Полозкова и «Катись бутылкой»: история песни, текст и смысл</span><span class="related-bottom-desc">Разбор песни Веры Полозковой «Катись бутылкой»: история создания, скрытый смысл, текст с пояснениями</span></a><a href="/articles/r/ra/raspolozhenie-rychagov-na-nive.html" class="related-bottom-card"><span class="related-bottom-title">Рычаги управления в Ниве: расположение, назначение и советы</span><span class="related-bottom-desc">Подробное руководство по рычагам в LADA 4x4: где находятся, как работают и что делать при неисправно</span></a><a href="/articles/o/ot/otzyvy-magnitoly-teyes-cc3.html" class="related-bottom-card"><span class="related-bottom-title">Teyes CC3: честные отзывы владельцев 2026 года — плюсы и минусы</span><span class="related-bottom-desc">Реальные отзывы о магнитоле Teyes CC3: анализ функций, качество звука, проблемы с Android 12 и сравн</span></a><a href="/articles/t/tr/trekhpolosnaya-akusticheskaya-sistema-svoimi-rukami.html" class="related-bottom-card"><span class="related-bottom-title">Трехполосная акустическая система своими руками: руководство</span><span class="related-bottom-desc">Подробный гид, как собирается трехполосная акустическая система своими руками. Выбор динамиков, расч</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

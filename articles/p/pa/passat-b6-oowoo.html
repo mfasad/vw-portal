@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>Passat B6: OOWOO и ошибки иммобилайзера — полное руководство — VW-portal</title>
+    <meta name="description" content="Подробный разбор кода OOWOO на Passat B6. Причины блокировки ЭБУ, методы обхода и восстановления доступа к блокам управления двигателя.">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/p/pa/passat-b6-oowoo.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Passat B6: OOWOO и ошибки иммобилайзера — полное руководство">
+    <meta property="og:description" content="Подробный разбор кода OOWOO на Passat B6. Причины блокировки ЭБУ, методы обхода и восстановления доступа к блокам управления двигателя.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/passat/">Passat</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Passat B6: OOWOO и ошибки иммобилайзера — полное руководство</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Passat B6 OOWOO: диагностика и решение проблем</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#природа-возникновения-кода-oowoo">Природа возникновения кода OOWOO</a></li><li><a href="#необходимое-оборудование-для-диагностики">Необходимое оборудование для диагностики</a></li><li><a href="#алгоритм-устранения-ошибки">Алгоритм устранения ошибки</a></li><li><a href="#работа-с-компонентной-защитой">Работа с компонентной защитой</a></li><li><a href="#профилактика-проблем-с-иммобилайзером">Профилактика проблем с иммобилайзером</a></li><li><a href="#когда-требуется-замена-блока-управления">Когда требуется замена блока управления</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Владельцы <strong>Passat B6</strong> часто сталкиваются с загадочной надписью <em>OOWOO</em> на экране диагностического сканера. Это не просто набор символов, а критический сигнал о том, что <strong>иммобилайзер</strong> заблокировал работу <strong>блока управления двигателем</strong> (ECU). Ситуация усугубляется тем, что автомобиль может заводиться, но глохнуть через секунду или вообще не реагировать на поворот ключа.</p>
+
+<p>Проблема кроется в рассинхронизации данных между <em>приборной панелью</em> и <strong>ECU</strong>. Система безопасности Volkswagen Group, известная как <em>Immobilizer 4</em>, перестает видеть «свои» компоненты после замены аккумуляторов, скачков напряжения или некорректного чип-тюнинга. <mark>Код OOWOO часто появляется именно после попытки неудачной адаптации ключей или замены блока управления без привязки.</mark></p>
+
+<p>Для успешного устранения неисправности потребуется качественное диагностическое оборудование, например, <strong>VCDS</strong> или <em>VAG-COM</em>. Простого сброса ошибок здесь будет недостаточно, так как требуется глубокая перепрошивка или адаптация компонентов через защищенные каналы связи. В этой статье мы детально разберем алгоритм действий.</p>
+
+<h2 id="природа-возникновения-кода-oowoo">Природа возникновения кода OOWOO</h2>
+
+<p>Появление сообщения <em>OOWOO</em> свидетельствует о том, что в <strong>блоке управления</strong> сработал защитный механизм. Это состояние часто называют «замороженным» состоянием ECU. <strong>Иммобилайзер</strong> блокирует подачу искры и топлива, считая, что автомобиль угнан. Причиной может стать разряд <em>аккумулятора</em> в момент обращения к памяти.</p>
+
+<p>Часто проблема возникает при использовании нелицензионного софта для чип-тюнинга. Если процесс записи прервался или была выбрана неверная версия прошивки, <strong>ECU</strong> переходит в аварийный режим. В этом режиме доступ к большинству параметров закрыт, и сканер видит только базовые данные или тот самый код <em>OOWOO</em>.</p>
+
+<blockquote>⚠️ <strong>Внимание:</strong> Попытка «вслепую» записать новую прошивку без предварительного чтения дампа может окончательно вывести блок управления из строя, превратив его в «кирпич».</blockquote>
+
+<p>Важно понимать разницу между программной ошибкой и физическим повреждением. Если после появления <strong>OOWOO</strong> автомобиль ведет себя адекватно до момента запуска двигателя, то, скорее всего, целы все микросхемы памяти. Однако игнорирование проблемы приведет к полной блокировке <em>Passat B6</em>.</p>
+
+<details class="faq-item"><summary>Технические детали блокировки</summary><div class="faq-answer"><p>Внутри блока управления двигателем находится специальная ячейка памяти, хранящая статус иммобилайзера. При рассинхронизации битов в этой ячейке, процессор блокирует выполнение основных скриптов управления впрыском. Код OOWOO — это визуальное отображение этого статуса в диагностическом протоколе K-Line или CAN.</p></div></details>
+
+<h2 id="необходимое-оборудование-для-диагностики">Необходимое оборудование для диагностики</h2>
+
+<p>Для работы с <strong>Passat B6</strong> и кодом <em>OOWOO</em> обычного OBDII сканера из магазина электроники будет недостаточно. Вам потребуется профессиональный интерфейс, поддерживающий протоколы <strong>VAG</strong>. Наиболее распространенным решением является кабель <em>VCDS (VAG-COM)</em> с актуальной прошивкой.</p>
+
+<p>Также широко используются мультимарочные сканеры уровня <strong>Autel</strong> или <em>Launch</em>, но они могут не иметь доступа к заводским функциям адаптации иммобилайзера. Для глубокой работы часто требуется ноутбук с установленным специализированным софтом, таким как <em>ODIS</em> или <strong>BitBox</strong>.</p>
+
+<ul>
+<li>🔌 <strong>Интерфейс диагностики:</strong> Поддерживающий протоколы K-Line и CAN-Bus для связи с блоками.</li>
+<li>💻 <strong>Ноутбук:</strong> С установленными драйверами FTDI и актуальным ПО для <em>Passat</em>.</li>
+<li>🔋 <strong>Стабилизатор напряжения:</strong> Для поддержания 12.5-13.5В в бортовой сети во время работы.</li>
+<li>🔑 <strong>Пин-код:</strong> Доступ к компонентной защите требует знания секретного кода.</li>
+</ul>
+
+<p>Особое внимание следует уделить состоянию проводки. Окисленные контакты в разъеме <strong>ECU</strong> могут вызывать помехи, которые система воспринимает как атаку на шифрование. Перед подключением дорогого оборудования проверьте целостность контактов в подкапотном блоке предохранителей.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Используйте источник питания с током не менее 20 Ампер. Во время адаптации ключей или прошивки ECU потребление тока может резко возрастать, и просадка напряжения ниже 11В приведет к ошибке записи.</p></div>
+
+<h2 id="алгоритм-устранения-ошибки">Алгоритм устранения ошибки</h2>
+
+<p>Процесс восстановления начинается с попытки установить стабильное соединение с <strong>блоком управления</strong>. Если сканер видит код <em>OOWOO</em>, но не может считать остальные параметры, необходимо выполнить процедуру «разморозки». Часто помогает сброс адаптационных значений через меню <code>Адаптация → Сброс</code>.</p>
+
+<p>Если программный сброс не помогает, требуется перепрошивка. Для этого блок управления часто приходится вскрывать. На плате <strong>ECU</strong> (обычно это блоки <em>Bosch Motronic</em>) необходимо найти тестовые точки для перехода в режим <strong>Bootloader</strong>. Это позволяет записать новый дамп, игнорируя защиту иммобилайзера.</p>
+
+<div class="checklist-block"><h4>☑️ Чек-лист перед прошивкой ECU</h4><label class="check-item"><input type="checkbox"><span>Проверить заряд аккумулятора</span></label><label class="check-item"><input type="checkbox"><span>Подключить внешний источник питания</span></label><label class="check-item"><input type="checkbox"><span>Считать оригинальный дамп EEPROM</span></label><label class="check-item"><input type="checkbox"><span>Проверить целостность файла прошивки</span></label><label class="check-item"><input type="checkbox"><span>Подготовить пин-код от иммобилайзера</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 5</div></div>
+
+<p>После успешной записи дампа необходимо выполнить адаптацию ключей. В меню <em>Immobilizer</em> выбирается пункт «Адаптация ключей». Количество ключей должно быть указано точно. Если у вас два ключа, вводим цифру 2. Затем по очереди вставляем каждый ключ и включаем зажигание.</p>
+
+<blockquote>⚠️ <strong>Внимание:</strong> При адаптации ключей на <em>Passat B6</em> интервал между вставкой ключей не должен превышать 15 секунд, иначе процесс придется начинать заново.</blockquote>
+
+<h2 id="работа-с-компонентной-защитой">Работа с компонентной защитой</h2>
+
+<p>В автомобилях <strong>Passat B6</strong> активно используется компонентная защита (Component Protection). Это означает, что даже исправный блок управления, снятый с другой машины, не будет работать без снятия защиты через сервер <em>Volkswagen</em>. Код <em>OOWOO</em> может быть следствием активации этой защиты.</p>
+
+<p>Для снятия защиты требуется онлайн-доступ к базе данных производителя. Официальные дилеры делают это бесплатно при предъявлении документов на автомобиль. В независимых сервисах используют эмуляторы серверов, что требует высокой квалификации мастера и специального софта.</p>
+
+<table>
+<thead>
+<tr>
+<th>Блок управления</th>
+<th>Тип защиты</th>
+<th>Необходимый доступ</th>
+<th>Риск блокировки</th>
+</tr>
+<p>tr></p>
+<tbody>
+<tr>
+<td>Двигатель (ECU)</td>
+<td>Иммобилайзер + Компонентная</td>
+<td>Онлайн / Оффлайн эмуляция</td>
+<td>Высокий</td>
+</tr>
+<tr>
+<td>Приборная панель</td>
+<td>Иммобилайзер</td>
+<td>Пин-код</td>
+<td>Средний</td>
+</tr>
+<tr>
+<td>Блок комфорта</td>
+<td>Компонентная</td>
+<td>Онлайн</td>
+<td>Низкий</td>
+</tr>
+<tr>
+<td>Рулевая колонка</td>
+<td>Компонентная</td>
+<td>Онлайн</td>
+<td>Средний</td>
+</tr>
+</tbody>
+</table>
+
+<p>Если компонентная защита не снята, на экране приборной панели может мигать надпись <em>Component Protection</em>, а в логах ошибок будут записи о недоступности функций. В таком случае <strong>OOWOO</strong> является вторичным симптомом.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Сталкивались ли вы с блокировкой иммобилайзера на VAG?</strong><ul><li>Да, после замены АКБ</li><li>Да, после чип-тюнинга</li><li>Нет, но боюсь</li><li>У меня другая марка авто</li></ul></div></div>
+
+<h2 id="профилактика-проблем-с-иммобилайзером">Профилактика проблем с иммобилайзером</h2>
+
+<p>Чтобы избежать появления кода <em>OOWOO</em> в будущем, необходимо следить за состоянием <strong>электрической сети</strong> автомобиля. Слабый аккумулятор — главный враг электроники <em>Passat B6</em>. При напряжении ниже 10В при запуске могут происходить сбои записи в энергонезависимую память.</p>
+
+<p>При проведении любых работ с электрикой (установка сигнализации, музыки) рекомендуется отключать <strong>минусовую клемму</strong> аккумулятора. Однако даже кратковременное отключение питания на некоторых версиях <strong>ECU</strong> может вызвать рассинхронизацию, если не были соблюдены процедуры «засыпания» блоков.</p>
+
+<ul>
+<li>⚡ <strong>Регулярная проверка:</strong> Контролируйте напряжение на клеммах АКБ.</li>
+<li>🛑 <strong>Осторожность:</strong> Не прерывайте процесс диагностики принудительно.</li>
+<li>💾 <strong>Бэкап:</strong> Всегда делайте резервные копии конфигурации перед изменениями.</li>
+</ul>
+
+<p>Использование дешевых китайских копий ключей зажигания также может привести к проблемам. Чип в таких ключах может работать нестабильно, вызывая сбои в опросе <strong>иммобилайзера</strong>. Лучше использовать оригинальные заготовки <em>VAG</em> или проверенные аналоги.</p>
+
+<blockquote>⚠️ <strong>Внимание:</strong> Не оставляйте ключ в замке зажигания на длительное время при выключенном двигателе. Это приводит к разряду аккумулятора и потенциальным сбоям в работе блока комфорта и ECU.</blockquote>
+
+<h2 id="когда-требуется-замена-блока-управления">Когда требуется замена блока управления</h2>
+
+<p>Иногда программные методы лечения <em>OOWOO</em> не помогают. Это происходит, если вышла из строя сама микросхема памяти или процессор <strong>ECU</strong>. В таких случаях требуется замена блока управления на исправный. Новый блок должен быть совместим по номеру детали и индексу.</p>
+
+<p>После физической установки нового <strong>ECU</strong> необходимо провести полную адаптацию. Это включает в себя привязку к иммобилайзеру, адаптацию дроссельной заслонки и проверку систем впрыска. Без этого автомобиль не заведется.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Замена ECU на Passat B6 — сложный процесс, требующий не только механической установки, но и глубокой программной адаптации через защищенные каналы связи.</p></div>
+
+<p>Стоимость нового оригинального блока высока, поэтому многие владельцы обращаются к восстановленным вариантам. Важно убедиться, что восстановленный блок уже «обезличен» (имеет чистый дамп), что упростит процедуру привязки к вашему <em>Passat</em>.</p>
+
+<details>
+<summary>Можно ли удалить иммобилайзер полностью?</summary>
+<p>Технически возможно программно отключить иммобилайзер (Immo Off), изменив дап блока управления. Однако это снижает угоняемость автомобиля и может вызвать проблемы при прохождении техосмотра или продаже авто. Кроме того, на современных <strong>ECU</strong> сделать это качественно сложно.</p>
+</details>
+
+<details>
+<summary>Сколько времени занимает адаптация ключей?</summary>
+<p>Процесс адаптации ключей через диагностический сканер занимает от 5 до 15 минут, если оборудование исправно, а пин-код верен. Основная часть времени уходит на подготовку и поиск пин-кода в базе данных.</p>
+</details>
+
+<details>
+<summary>Что делать, если потерян пин-код?</summary>
+<p>Пин-код можно восстановить через официальных дилеров по VIN-номеру и документам на автомобиль. Также существуют сервисы по восстановлению пин-кодов онлайн, но они требуют оплаты и не всегда гарантируют результат для старых моделей.</p>
+</details>
+
+<details>
+<summary>Влияет ли OOWOO на другие системы авто?</summary>
+<p>Да, блокировка двигателя может привести к отключению систем помощи (ESP, ABS), так как они завязаны на работу <strong>ECU</strong>. Также может перестать работать круиз-контроль и система стабилизации.</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#природа-возникновения-кода-oowoo">Природа возникновения кода OOWOO</a></li><li><a href="#необходимое-оборудование-для-диагностики">Необходимое оборудование для диагностики</a></li><li><a href="#алгоритм-устранения-ошибки">Алгоритм устранения ошибки</a></li><li><a href="#работа-с-компонентной-защитой">Работа с компонентной защитой</a></li><li><a href="#профилактика-проблем-с-иммобилайзером">Профилактика проблем с иммобилайзером</a></li><li><a href="#когда-требуется-замена-блока-управления">Когда требуется замена блока управления</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/d/dv/dvernye-karty-passat-b7.html" class="related-card">Дверные карты Passat B7: выбор, замена и ремонт своими руками</a></li><li><a href="/articles/t/tu/turbina-passat-b6.html" class="related-card">Турбина Passat B6: диагностика, коды ошибок, выбор и замена</a></li><li><a href="/articles/t/tr/trambler-na-passat-b3.html" class="related-card">Трамблер на Passat B3: устройство, неисправности и замена</a></li><li><a href="/articles/p/pa/passat-b6-snyatie-rulevoj-rejki.html" class="related-card">Снятие рулевой рейки Пассат B6: пошаговая инструкция с нюансами</a></li><li><a href="/articles/z/za/zamena-toplivnogo-filtra-passat-b6-20-fsi.html" class="related-card">Замена топливного фильтра Пассат Б6 2.0 FSI: Пошаговая инструкция</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/d/dv/dvernye-karty-passat-b7.html" class="related-bottom-card"><span class="related-bottom-title">Дверные карты Passat B7: выбор, замена и ремонт своими руками</span><span class="related-bottom-desc">Подробный гайд по дверным картам &lt;em&gt;Volkswagen Passat B7&lt;/em&gt;: как снять, отремонтировать или замен</span></a><a href="/articles/t/tu/turbina-passat-b6.html" class="related-bottom-card"><span class="related-bottom-title">Турбина Passat B6: диагностика, коды ошибок, выбор и замена</span><span class="related-bottom-desc">Подробный гид по турбокомпрессорам Passat B6. Симптомы неисправности, расшифровка ошибок, выбор OEM </span></a><a href="/articles/t/tr/trambler-na-passat-b3.html" class="related-bottom-card"><span class="related-bottom-title">Трамблер на Passat B3: устройство, неисправности и замена</span><span class="related-bottom-desc">Подробный гайд по трамблёру &lt;em&gt;Volkswagen Passat B3&lt;/em&gt;: признаки поломки, диагностика, регулировк</span></a><a href="/articles/p/pa/passat-b6-snyatie-rulevoj-rejki.html" class="related-bottom-card"><span class="related-bottom-title">Снятие рулевой рейки Пассат B6: пошаговая инструкция с нюансами</span><span class="related-bottom-desc">Детальное руководство по демонтажу рулевой рейки &lt;em&gt;Volkswagen Passat B6&lt;/em&gt; (2005-2010) с фото, и</span></a><a href="/articles/z/za/zamena-toplivnogo-filtra-passat-b6-20-fsi.html" class="related-bottom-card"><span class="related-bottom-title">Замена топливного фильтра Пассат Б6 2.0 FSI: Пошаговая инструкция</span><span class="related-bottom-desc">Как заменить топливный фильтр на VW Passat B6 2.0 FSI своими руками. Артикулы, цена, интервалы замен</span></a><a href="/articles/r/ra/razem-obd-passat-b6.html" class="related-bottom-card"><span class="related-bottom-title">Разъем OBD Пассат Б6: где находится и как подключить сканер</span><span class="related-bottom-desc">Где находится разъем OBD2 на Passat B6? Инструкция по поиску диагностического порта, распиновка и со</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

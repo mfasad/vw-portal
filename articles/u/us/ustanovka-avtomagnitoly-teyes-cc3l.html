@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>Установка Teyes CC3L своими руками: подробная инструкция — VW-portal</title>
+    <meta name="description" content="Полный гид по установке магнитолы Teyes CC3L. Схема подключения, настройка CAN-шины, устранение ошибок звука и установка приложений.">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/u/us/ustanovka-avtomagnitoly-teyes-cc3l.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Установка Teyes CC3L своими руками: подробная инструкция">
+    <meta property="og:description" content="Полный гид по установке магнитолы Teyes CC3L. Схема подключения, настройка CAN-шины, устранение ошибок звука и установка приложений.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/drugoe/">Другое</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Установка Teyes CC3L своими руками: подробная инструкция</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Профессиональная установка автомагнитолы Teyes CC3L: пошаговый гайд</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#необходимые-инструменты-и-подготовка-к-демонтажу">Необходимые инструменты и подготовка к демонтажу</a></li><li><a href="#демонтаж-штатной-магнитолы-и-подготовка-места">Демонтаж штатной магнитолы и подготовка места</a></li><li><a href="#схема-подключения-и-коммутация-проводов">Схема подключения и коммутация проводов</a></li><li><a href="#настройка-can-шины-и-кнопок-на-руле">Настройка CAN-шины и кнопок на руле</a></li><li><a href="#подключение-камер-и-парктроников">Подключение камер и парктроников</a></li><li><a href="#финальная-сборка-и-проверка-систем">Финальная сборка и проверка систем</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body">
+
+<p>Замена штатного головного устройства на современную мультимедийную систему Teyes CC3L становится популярным решением для тех, кто хочет значительно расширить функционал автомобиля без потери внешнего вида салона. Этот процесс требует аккуратности, понимания основ электрики и правильной подготовки инструментов, но вполне реализуем в гаражных условиях. Правильно выполненная установка обеспечит стабильную работу навигации, видеорегистратора и мультимедийных функций на долгие годы.</p>
+
+<p>В данном руководстве мы подробно разберем все этапы монтажа, от демонтажа старой магнитолы до финальной калибровки <strong>CAN-шины</strong>. Особое внимание уделим нюансам подключения проводов питания, так как именно ошибки на этом этапе чаще всего приводят к проблемам со звуком или внезапным перезагрузкам системы. Качественная подготовка рабочего места — залог успешного завершения операции.</p>
+
+<p>Перед началом работ настоятельно рекомендуется отключить минусовую клемму аккумулятора во избежание короткого замыкания. Это стандартная процедура безопасности при работе с электрооборудованием автомобиля. Убедитесь, что у вас под рукой есть весь необходимый инструмент, включая пластиковые лопатки, набор отверток и мультиметр для проверки цепей.</p>
+
+<h2 id="необходимые-инструменты-и-подготовка-к-демонтажу">Необходимые инструменты и подготовка к демонтажу</h2>
+
+<p>Качественная установка невозможна без соответствующего инструментария. Вам потребуется не только стандартный набор отверток, но и специализированные приспособления для разборки пластиковых панелей салона без риска повреждения. Пластик современных автомобилей часто бывает хрупким, особенно в холодное время года, поэтому действовать нужно осторожно и без резких рывков.</p>
+
+<p>Обязательно подготовьте изоленту высокого качества или термоусадку для изоляции скруток, если потребуется удлинение проводов. Также полезен будет фонарик для подсветки труднодоступных мест в торпедо. Для фиксации мелких винтов и саморезов используйте магнитный поднос или контейнер с отсеками, чтобы ничего не потерять в недрах приборной панели.</p>
+
+<p>Список основных инструментов для работы:</p>
+<ul>
+<li>🔧 Набор пластиковых монтажных лопаток для снятия панелей</li>
+<li>🪛 Крестовые и плоские отвертки различных размеров</li>
+<li>🔌 Мультиметр для проверки напряжения и целостности цепей</li>
+<li>📏 Рулетка или линейка для примерки рамок</li>
+</ul>
+
+<p>Важно заранее убедиться, что приобретенная модель <em>Teyes CC3L</em> полностью соответствует марке и году выпуска вашего автомобиля. Несоответствие разъемов или геометрии корпуса может потребовать дополнительных переходников или доработки посадочного места, что усложнит процесс.</p>
+
+<h2 id="демонтаж-штатной-магнитолы-и-подготовка-места">Демонтаж штатной магнитолы и подготовка места</h2>
+
+<p>Процесс снятия старого устройства варьируется в зависимости от марки автомобиля, но общие принципы остаются схожими. Сначала необходимо аккуратно снять декоративные накладки вокруг магнитолы, используя пластиковые лопатки. Движения должны быть поступательными, направленными от центра к краям, чтобы равномерно распределить усилие и не сломать защелки.</p>
+
+<p>После снятия декоративной рамки откроется доступ к крепежным винтам самого головного устройства. Выкрутите их и плавно потяните магнитолу на себя. На этом этапе важно не делать резких движений, так как сзади могут оставаться подключенными антенные кабели или разъемы кнопок управления на руле, которые нужно аккуратно отсоединить.</p>
+
+<blockquote>⚠️ Внимание: При снятии штатной магнитолы будьте предельно осторожны с шлейфами кнопок управления климатом, если они выведены на отдельный блок. Резкий рывок может повредить контакты или порвать тонкие проводники.</blockquote>
+
+<p>Очистите освободившуюся нишу от пыли и посторонних предметов. Проверьте состояние штатной проводки: провода не должны иметь потертостей или оплавленной изоляции. Если вы обнаружите повреждения, их необходимо устранить до подключения нового оборудования.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 С какой сложностью вы столкнулись при снятии старой магнитолы?</strong><ul><li>Сняли без проблем/Нужно было ломать пластик/Запутался в проводах/Не смог снять без спец инструмента</li></ul></div></div>
+
+<h2 id="схема-подключения-и-коммутация-проводов">Схема подключения и коммутация проводов</h2>
+
+<p>Самый ответственный этап — подключение разъемов. В комплекте с <em>Teyes CC3L</em> обычно идет переходник, который позволяет выполнить подключение методом <strong>Plug-and-Play</strong> без пайки штатных проводов. Однако в некоторых случаях, например при установке усилителя или камеры заднего вида, может потребоваться вмешательство в проводку.</p>
+
+<p>Основной разъем питания обычно включает в себя постоянный плюс (BAT+), управляющий плюс (ACC) и массу (GND). Перепутывание этих проводов может привести к выходу устройства из строя или разряду аккумулятора. Постоянный плюс отвечает за сохранение настроек и времени, а управляющий включает магнитолу при повороте ключа зажигания.</p>
+
+<p>Таблица стандартной цветовой маркировки проводов (может отличаться в зависимости от авто):</p>
+<table>
+<thead>
+<tr>
+<th>Функция</th>
+<th>Цвет провода (стандарт ISO)</th>
+<th>Назначение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Постоянный плюс</td>
+<td>Желтый (Yellow)</td>
+<td>Питание памяти</td>
+</tr>
+<tr>
+<td>Управляющий плюс</td>
+<td>Красный (Red)</td>
+<td>Включение по зажиганию</td>
+</tr>
+<tr>
+<td>Масса</td>
+<td>Черный (Black)</td>
+<td>Заземление</td>
+</tr>
+<tr>
+<td>Антенна</td>
+<td>Синий (Blue)</td>
+<td>Усиление сигнала</td>
+</tr>
+</tbody>
+</table>
+
+<p>Если в вашем автомобиле установлена сложная система управления звуком, может потребоваться активация выхода <code>AMP</code> в настройках головного устройства. Это позволит магнитоле подавать сигнал на включение внешнего усилителя. Без этого шага звука в динамиках не будет, хотя система будет работать.</p>
+
+<div class="checklist-block"><h4>☑️ Проверка подключения</h4><label class="check-item"><input type="checkbox"><span>Проверено напряжение на желтом проводе/Масса звонится на кузов/Разъемы защелкнулись до щелчка/Нет лишних проводов в нише</span></label><div class="check-progress">Выполнено: <span class="check-count">0</span> / 1</div></div>
+
+<h2 id="настройка-can-шины-и-кнопок-на-руле">Настройка CAN-шины и кнопок на руле</h2>
+
+<p>Интеграция нового устройства с бортовым компьютером автомобиля осуществляется через CAN-шину. Для корректной работы кнопок на руле, отображения информации об открытии дверей и температуры необходимо правильно выбрать протокол в настройках. В меню <em>Teyes</em> перейдите в раздел <code>Car Settings</code> -> <code>Canbus</code>.</p>
+
+<p>В открывшемся списке выберите производителя вашего автомобиля и соответствующую модель. Если выбор сделан верно, после перезагрузки системы кнопки на руле начнут работать, а на экране появится информация из бортового компьютера. В некоторых случаях может потребоваться ручная перенастройка кнопок через специальное приложение.</p>
+
+<p>Для продвинутых пользователей доступен режим отладки через ADB. Подключившись к устройству по Wi-Fi, можно использовать команды для глубокой настройки параметров системы. Например, команда <pre><code>adb shell am start -n com.teyes.settings/.MainActivity</code></pre> позволяет запустить скрытое меню инженерных настроек, если оно не доступно через стандартный интерфейс.</p>
+
+<blockquote>⚠️ Внимание: Неправильный выбор типа CAN-шины может привести к некорректному отображению данных или появлению ошибок на приборной панели автомобиля. Если после выбора протокола возникли сбои, верните настройки к заводским.</blockquote>
+
+<p>Часто встречается ситуация, когда кнопки работают, но с задержкой или выполняют неверные действия. В таком случае попробуйте выбрать соседний протокол в списке или используйте функцию обучения кнопок, если она предусмотрена для вашей модели <em>Teyes CC3L</em>.</p>
+
+<h2 id="подключение-камер-и-парктроников">Подключение камер и парктроников</h2>
+
+<p>Установка камеры заднего вида требует подключения видеосигнала в разъем с маркировкой <code>CAM-IN</code> или <code>REAR CAM</code>. Важно не перепутать его с видеовходом для фронтальной камеры или видеорегистратора (<code>DVR-IN</code>). Качество изображения напрямую зависит от правильного соединения и качества самого кабеля.</p>
+
+<p>Для активации камеры при включении задней передачи необходимо подключить провод управления (обычно красного цвета) к проводу фонаря заднего хода. На этот провод при переключении в режим <em>R</em> подается напряжение 12 Вольт, что служит сигналом для магнитолы переключиться на видеовход.</p>
+
+<ul>
+<li>🎥 Убедитесь, что камера поддерживает формат сигнала, указанный в инструкции (AHD/CVBS)</li>
+<li>⚡ Проверьте полярность подключения питания камеры, если оно берется от фонарей</li>
+<li>🛑 Настройте парковочные линии в соответствии с габаритами вашего авто</li>
+</ul>
+
+<p>Если вы устанавливаете парктроники, их датчики подключаются к соответствующему блоку, который затем коммутируется с магнитолой. Это позволяет выводить расстояние до препятствий на экран в виде графической шкалы. Точность показаний зависит от правильной калибровки датчиков при установке в бампер.</p>
+
+<details class="faq-item"><summary>Что делать если нет изображения с камеры?</summary><div class="faq-answer"><p>Если изображение отсутствует, проверьте питание камеры мультиметром. Часто проблема кроется в перегоревшем предохранителе или плохом контакте в разъеме RCA. Также убедитесь, что в настройках выбран правильный формат видеосигнала (PAL/NTSC/AHD).</p></div></details>
+
+<h2 id="финальная-сборка-и-проверка-систем">Финальная сборка и проверка систем</h2>
+
+<p>Перед окончательной установкой магнитолы в посадочное место необходимо провести тщательную проверку всех функций. Включите зажигание и проверьте работу звука на всех динамиках, переключение треков, работу радио и навигации. Убедитесь, что экран реагирует на касания по всей площади.</p>
+
+<p>Аккуратно уложите лишнюю длину проводов в глубине торпедо, избегая мест, где они могут быть пережаты механизмами или острыми краями металла. Используйте пластиковые хомуты для фиксации жгутов, чтобы они не гремели при движении автомобиля по неровностям дороги.</p>
+
+<p>Установите магнитолу в рамку и закрепите крепежными винтами. Не затягивайте их слишком сильно, чтобы не повредить пластиковый корпус устройства. После этого установите декоративную панель салона, убедившись, что все защелки встали на свои места с характерным щелчком.</p>
+
+<blockquote>⚠️ Внимание: Если после сборки вы слышите посторонние шумы или гул в динамиках, проверьте надежность подключения массы. Плохой контакт с кузовом — частая причина наводок и помех в аудиосистеме.</blockquote>
+
+<p>Завершающим этапом станет калибровка экрана и настройка пользовательских параметров под свои предпочтения. Установите необходимые приложения из Play Market, настройте виджеты и обои рабочего стола. Теперь ваше устройство полностью готово к эксплуатации.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Используйте качественную термоусадку для изоляции любых соединений, даже если они кажутся надежными. Вибрация автомобиля со временем может ослабить изоляционную ленту, что приведет к короткому замыканию.</p></div>
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Главный критерий успешной установки — стабильная работа системы после длительной поездки без самопроизвольных перезагрузок.</p></div>
+
+<h2 id="часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</h2>
+
+<details>
+<summary>Почему магнитола Teyes CC3L выключается при запуске двигателя?</summary>
+<p>Это может происходить из-за просадки напряжения в бортовой сети в момент работы стартера. Проверьте надежность подключения массы и состояние аккумулятора. Также убедитесь, что провод ACC подключен к цепи, которая не обестучивается в момент запуска.</p>
+</details>
+
+<details>
+<summary>Как сбросить настройки Teyes CC3L до заводских?</summary>
+<p>Для сброса перейдите в меню <code>Настройки</code> -> <code>Заводские настройки</code>. Вам может потребоваться ввести пароль, который обычно указан в инструкции (часто это 0000, 1234 или 8888). Будьте внимательны, так как все ваши данные будут удалены.</p>
+</details>
+
+<details>
+<summary>Можно ли установить Teyes CC3L без CAN-шины?</summary>
+<p>Да, устройство будет работать и без подключения CAN-адаптера, но у вас не будут работать кнопки на руле, не будет отображаться информация об открытии дверей и заряде аккумулятора. Функционал мультимедиа при этом сохранится полностью.</p>
+</details>
+
+<details>
+<summary>Какой формат видео поддерживает Teyes CC3L?</summary>
+<p>Устройство поддерживает большинство популярных форматов, включая MKV, MP4, AVI и другие. Однако для воспроизведения тяжелых файлов с высоким битрейтом рекомендуется использовать встроенный видеоплеер или сторонние приложения из Google Play, оптимизированные для Android.</p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#необходимые-инструменты-и-подготовка-к-демонтажу">Необходимые инструменты и подготовка к демонтажу</a></li><li><a href="#демонтаж-штатной-магнитолы-и-подготовка-места">Демонтаж штатной магнитолы и подготовка места</a></li><li><a href="#схема-подключения-и-коммутация-проводов">Схема подключения и коммутация проводов</a></li><li><a href="#настройка-can-шины-и-кнопок-на-руле">Настройка CAN-шины и кнопок на руле</a></li><li><a href="#подключение-камер-и-парктроников">Подключение камер и парктроников</a></li><li><a href="#финальная-сборка-и-проверка-систем">Финальная сборка и проверка систем</a></li><li><a href="#часто-задаваемые-вопросы-faq">Часто задаваемые вопросы (FAQ)</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/p/pr/predokhraniteli-lada-priora-raspolozhenie.html" class="related-card">Предохранители Lada Priora: схема расположения и назначение</a></li><li><a href="/articles/g/ga/gazel-nekst-predokhranitel-prikurivatelya-raspolozhenie.html" class="related-card">Где находится предохранитель прикуривателя в Газель Некст: схема и замена</a></li><li><a href="/articles/s/sb/sbil-cheloveka-v-nepolozhennom-meste-kakoe-nakazanie.html" class="related-card">Сбил человека на пешеходном переходе вне зоны: какое наказание в 2026?</a></li><li><a href="/articles/p/pr/predokhraniteli-dzhili-mk-raspolozhenie.html" class="related-card">Предохранители Джили МК: схемы, расположение блоков, замена</a></li><li><a href="/articles/f/fc/fcc-dji-fly-apk.html" class="related-card">FCC DJI Fly APK: Разблокировка США, установка и FCC ID</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/p/pr/predokhraniteli-lada-priora-raspolozhenie.html" class="related-bottom-card"><span class="related-bottom-title">Предохранители Lada Priora: схема расположения и назначение</span><span class="related-bottom-desc">Где находятся предохранители на Приоре? Подробная схема блоков, назначение каждого элемента и советы</span></a><a href="/articles/g/ga/gazel-nekst-predokhranitel-prikurivatelya-raspolozhenie.html" class="related-bottom-card"><span class="related-bottom-title">Где находится предохранитель прикуривателя в Газель Некст: схема и замена</span><span class="related-bottom-desc">Точное расположение предохранителя прикуривателя в &lt;em&gt;Газель Некст&lt;/em&gt; (2013–2026 гг.). Схемы блок</span></a><a href="/articles/s/sb/sbil-cheloveka-v-nepolozhennom-meste-kakoe-nakazanie.html" class="related-bottom-card"><span class="related-bottom-title">Сбил человека на пешеходном переходе вне зоны: какое наказание в 2026?</span><span class="related-bottom-desc">Юридические последствия наезда на пешехода в неположенном месте: штрафы, лишение прав, уголовная отв</span></a><a href="/articles/p/pr/predokhraniteli-dzhili-mk-raspolozhenie.html" class="related-bottom-card"><span class="related-bottom-title">Предохранители Джили МК: схемы, расположение блоков, замена</span><span class="related-bottom-desc">Где находятся предохранители Geely MK? Подробная схема блоков, номиналы, поиск неисправностей и инст</span></a><a href="/articles/f/fc/fcc-dji-fly-apk.html" class="related-bottom-card"><span class="related-bottom-title">FCC DJI Fly APK: Разблокировка США, установка и FCC ID</span><span class="related-bottom-desc">Подробный гид по FCC DJI Fly APK: как получить американский сертификат, установить мод на Android, п</span></a><a href="/articles/m/ma/maslo-yacco-0w20.html" class="related-bottom-card"><span class="related-bottom-title">Масло Yacco 0W20: характеристики, преимущества и совместимость</span><span class="related-bottom-desc">Подробный обзор моторного масла Yacco 0W20: технические параметры, для каких двигателей подходит, ка</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>

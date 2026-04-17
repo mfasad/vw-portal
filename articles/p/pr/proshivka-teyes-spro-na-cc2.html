@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🚘</text></svg>">
+    <title>Прошивка Teyes SPRO на CC2: пошаговое руководство и нюансы — VW-portal</title>
+    <meta name="description" content="Как правильно прошить магнитолу Teyes SPRO на &lt;em&gt;Volkswagen CC2&lt;/em&gt;: выбор файлов, инструкция, ошибки и их решение. Актуальные версии ПО 2026.">
+    <link rel="canonical" href="https://vw-portal.vercel.app/articles/p/pr/proshivka-teyes-spro-na-cc2.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Прошивка Teyes SPRO на CC2: пошаговое руководство и нюансы">
+    <meta property="og:description" content="Как правильно прошить магнитолу Teyes SPRO на &lt;em&gt;Volkswagen CC2&lt;/em&gt;: выбор файлов, инструкция, ошибки и их решение. Актуальные версии ПО 2026.">
+    <meta property="og:locale" content="ru_RU">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1776420855">
+    <style>
+    .site-footer-premium {
+        margin-top: 60px; padding: 40px 0 0; background: #1e293b; color: #94a3b8;
+    }
+    .footer-grid {
+        display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+        padding-bottom: 32px; border-bottom: 1px solid #334155;
+    }
+    .footer-brand { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+    .footer-about { font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+    .footer-updated { font-size: 0.8rem; color: #64748b; }
+    .footer-col h4 { color: #f1f5f9; font-size: 0.95rem; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-col a:hover { color: #60a5fa; }
+    .footer-bottom { padding: 20px 0; text-align: center; font-size: 0.85rem; }
+    @media (max-width: 640px) {
+        .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .cookie-popup {
+        position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; color: #fff;
+        padding: 16px; transition: transform 0.5s ease; z-index: 9999; border-top: 2px solid #2563eb;
+        transform: translateY(100%);
+    }
+    .cookie-popup.visible { transform: translateY(0); }
+    .cookie-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.9rem; }
+    .cookie-btn { background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .cookie-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+        .cookie-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+    
+    <!--#include virtual="/ssi/head.html" -->
+</head>
+<body>
+        <!--#include virtual="/ssi/body_top.html" -->
+    <style>
+    .nav-dropdown { position: relative; display: inline-block; }
+    .dropdown-toggle {
+        background: none; border: none; cursor: pointer;
+        font: inherit; color: inherit; padding: 8px 12px;
+        border-radius: 8px; transition: background 0.2s;
+    }
+    .dropdown-toggle:hover { background: rgba(0,0,0,0.05); }
+    .dropdown-menu {
+        display: none; position: absolute; right: 0; top: 100%;
+        min-width: 240px; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e7eb);
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        padding: 8px 0; z-index: 1000;
+    }
+    .nav-dropdown::after {
+        content: ''; position: absolute; left: 0; right: 0;
+        top: 100%; height: 12px;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu { display: block; }
+    .dropdown-item {
+        display: block; padding: 10px 20px; color: var(--text, #1f2937);
+        text-decoration: none; font-size: 0.95rem; transition: background 0.15s;
+        white-space: nowrap;
+    }
+    .dropdown-item:hover { background: rgba(37,99,235,0.06); color: var(--primary, #2563eb); }
+    @media (max-width: 768px) {
+        .main-nav > .nav-link { display: none; }
+        .dropdown-toggle { display: none; }
+        .dropdown-menu {
+            display: block !important; position: static;
+            box-shadow: none; border: none; border-radius: 0;
+            min-width: auto; max-height: none; padding: 0;
+            background: transparent;
+        }
+        .dropdown-item {
+            padding: 8px 0; font-size: 1rem;
+        }
+    }
+    </style>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🚘</span>
+                <span>VW-portal</span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Меню" id="menuBtn">☰</button>
+            <nav class="main-nav" id="mainNav">
+                <a href="/category/passat/" class="nav-link">📁 Passat</a>
+<a href="/category/polo/" class="nav-link">📁 Polo</a>
+<a href="/category/golf/" class="nav-link">📁 Golf</a>
+<a href="/category/tiguan/" class="nav-link">📁 Tiguan</a>
+<div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle">📂 Все разделы ▾</button>
+            <div class="dropdown-menu"><a href="/category/passat/" class="dropdown-item">📁 Passat</a>
+<a href="/category/polo/" class="dropdown-item">📁 Polo</a>
+<a href="/category/golf/" class="dropdown-item">📁 Golf</a>
+<a href="/category/tiguan/" class="dropdown-item">📁 Tiguan</a>
+<a href="/category/touareg/" class="dropdown-item">📁 Touareg</a>
+<a href="/category/jetta/" class="dropdown-item">📁 Jetta</a>
+<a href="/category/atlas/" class="dropdown-item">📁 Atlas</a>
+<a href="/category/transporter/" class="dropdown-item">📁 Transporter</a>
+<a href="/category/cc/" class="dropdown-item">📁 Cc</a>
+<a href="/category/beetle/" class="dropdown-item">📁 Beetle</a>
+<a href="/category/multivan/" class="dropdown-item">📁 Multivan</a>
+<a href="/category/amarok/" class="dropdown-item">📁 Amarok</a>
+<a href="/category/sharan/" class="dropdown-item">📁 Sharan</a>
+<a href="/category/touran/" class="dropdown-item">📁 Touran</a>
+<a href="/category/caravelle/" class="dropdown-item">📁 Caravelle</a>
+<a href="/category/crafter/" class="dropdown-item">📁 Crafter</a>
+<a href="/category/caddy/" class="dropdown-item">📁 Caddy</a>
+<a href="/category/teramont/" class="dropdown-item">📁 Teramont</a>
+<a href="/category/arteon/" class="dropdown-item">📁 Arteon</a>
+<a href="/category/bora/" class="dropdown-item">📁 Bora</a>
+<a href="/category/phaeton/" class="dropdown-item">📁 Phaeton</a>
+<a href="/category/taos/" class="dropdown-item">📁 Taos</a>
+<a href="/category/scirocco/" class="dropdown-item">📁 Scirocco</a>
+<a href="/category/accent/" class="dropdown-item">📁 Accent</a>
+<a href="/category/id.4/" class="dropdown-item">📁 Id.4</a>
+<a href="/category/t-roc/" class="dropdown-item">📁 T Roc</a>
+<a href="/category/drugoe/" class="dropdown-item">📁 Другое</a></div>
+        </div>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <div class="container"><a href="/">Главная</a><span class="breadcrumb-sep">›</span><a href="/category/cc/">Cc</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Прошивка Teyes SPRO на CC2: пошаговое руководство и нюансы</span></div>
+    </nav>
+
+    <main class="site-main">
+        <div class="container">
+            <div class="article-layout">
+                <article class="article-main">
+                    
+                    <h1>Прошивка магнитолы Teyes SPRO на Volkswagen CC2: полное руководство с разбором ошибок</h1>
+                    <nav class="mobile-toc"><details><summary>📋 Содержание</summary><ul><li><a href="#почему-нужно-обновлять-прошивку-teyes-spro-на-cc2">Почему нужно обновлять прошивку Teyes SPRO на CC2?</a></li><li><a href="#какие-версии-прошивок-совместимы-с-volkswagen-cc2">Какие версии прошивок совместимы с Volkswagen CC2?</a></li><li><a href="#подготовка-к-прошивке-что-нужно-сделать-до-начала">Подготовка к прошивке: что нужно сделать до начала</a></li><li><a href="#пошаговая-инструкция-по-прошивке-teyes-spro">Пошаговая инструкция по прошивке Teyes SPRO</a></li><li><a href="#распространённые-ошибки-и-их-решения">Распространённые ошибки и их решения</a></li><li><a href="#настройка-teyes-spro-после-прошивки">Настройка Teyes SPRO после прошивки</a></li><li><a href="#откат-на-предыдущую-версию-прошивки">Откат на предыдущую версию прошивки</a></li><li><a href="#faq-ответы-на-частые-вопросы">FAQ: ответы на частые вопросы</a></li></ul></details></nav>
+                    <!--#include virtual="/ssi/article_before.html" -->
+                    <div class="article-body"><p>Прошивка мультимедийной системы <em>Teyes SPRO</em> на <em>Volkswagen CC второго поколения</em> (CC2) — задача, с которой сталкиваются владельцы, желающие получить новые функции, исправить баги или адаптировать головное устройство под специфику автомобиля. Однако процесс обновления ПО таит в себе риски: от потери настроек до полного "окирпичивания" устройства, если выбрать неверную версию прошивки или нарушить последовательность действий.</p>
+
+<p>В этой статье мы разберём <strong>официальные и кастомные прошивки</strong> для <em>Teyes SPRO</em>, совместимые с <em>CC2</em>, подробно опишем каждый этап установки — от подготовки USB-накопителя до восстановления после сбоев. Особое внимание уделим <strong>распространённым ошибкам</strong> (например, код <code>ERR 03</code> или зависание на логотипе) и способам их устранения. Если вы планируете обновиться с версии <code>MCU 1.XX</code> на <code>2.XX</code> или интегрировать <strong>Apple CarPlay/Android Auto</strong> — здесь найдёте актуальные инструкции и файлы.</p>
+
+<h2 id="почему-нужно-обновлять-прошивку-teyes-spro-на-cc2">Почему нужно обновлять прошивку Teyes SPRO на CC2?</h2>
+
+<p>Производитель регулярно выпускает обновления для <em>Teyes SPRO</em>, но не все владельцы <em>Volkswagen CC2</em> понимают, зачем тратить время на прошивку. Вот ключевые причины:</p>
+
+<ul>
+  <li>🔄 <strong>Исправление багов</strong>: в старых версиях ПО часто встречаются глюки с подключением Bluetooth, тормоза интерфейса или самопроизвольные перезагрузки. Например, в прошивках до <code>2.08</code> была проблема с отображением кириллицы в названиях треков.</li>
+  <li>📱 <strong>Поддержка новых устройств</strong>: свежие версии добавляют совместимость с последними смартфонами (например, <em>iPhone 15</em> или <em>Samsung Galaxy S24</em>) и исправляют ошибки подключения по <code>Wireless CarPlay</code>.</li>
+  <li>🎵 <strong>Новые функции</strong>: в прошивках после <code>2.10</code> появилась поддержка <code>DAB+</code> (цифровое радио), улучшенный эквалайзер и возможность настройки цветовой схемы подсветки кнопок.</li>
+  <li>🚗 <strong>Адаптация под CC2</strong>: кастомные прошивки позволяют корректно отображать данные с <code>CAN-шины</code> (например, уровень топлива или температуру двигателя) без ошибок.</li>
+</ul>
+
+<p>Однако обновление не всегда оправдано. Если ваша магнитола работает стабильно, а новые функции вам не нужны — рисковать не стоит. <mark>Прошивка версии 2.12+ может конфликтовать с оригинальным CAN-адаптером Volkswagen, если он не обновлён до версии 3.01</mark>.</p>
+
+<div class="attention-box attention-info"><div><strong>📊 Какая версия прошивки у вас сейчас?</strong><ul><li>Не знаю</li><li>1.XX (старая)</li><li>2.00–2.08</li><li>2.09–2.11</li><li>2.12 и новее</li></ul></div></div>
+
+<h2 id="какие-версии-прошивок-совместимы-с-volkswagen-cc2">Какие версии прошивок совместимы с Volkswagen CC2?</h2>
+
+<p>Для <em>Teyes SPRO</em> на <em>CC2</em> подходят далеко не все доступные прошивки. Основные критерии выбора:</p>
+
+<ul>
+  <li>🔧 <strong>Совместимость с CAN-адаптером</strong>: магнитолы в <em>CC2</em> используют адаптер <code>VW CAN 2.0</code> или <code>3.0</code>. Прошивки старше <code>2.05</code> требуют версии адаптера не ниже <code>2.1</code>.</li>
+  <li>📌 <strong>Региональные настройки</strong>: для России нужны прошивки с пометкой <code>RU</code> или <code>EUR</code> (например, <code>SPRO_2.10_EUR</code>). Азиатские версии (<code>ASIA</code>) могут не поддерживать кириллицу.</li>
+  <li>🖥️ <strong>Разрешение экрана</strong>: <em>CC2</em> оснащаются дисплеями <code>800×480</code> или <code>1024×600</code>. Прошивка должна соответствовать разрешению вашего устройства.</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>Версия прошивки</th>
+      <th>Поддержка CAN</th>
+      <th>Wireless CarPlay</th>
+      <th>DAB+</th>
+      <th>Примечания</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>1.98–2.04</code></td>
+      <td>CAN 1.0–2.0</td>
+      <td>❌ Нет</td>
+      <td>❌ Нет</td>
+      <td>Стабильная, но устаревшая. Подходит для автомобилей до 2015 года.</td>
+    </tr>
+    <tr>
+      <td><code>2.05–2.09</code></td>
+      <td>CAN 2.0+</td>
+      <td>✅ Да (с багами)</td>
+      <td>❌ Нет</td>
+      <td>Первые версии с поддержкой <em>Android Auto</em> по проводу.</td>
+    </tr>
+    <tr>
+      <td><code>2.10–2.11</code></td>
+      <td>CAN 2.1+</td>
+      <td>✅ Да (стабильно)</td>
+      <td>✅ Да</td>
+      <td>Рекомендована для <em>CC2</em> 2016–2017 годов. Исправлены ошибки с Bluetooth.</td>
+    </tr>
+    <tr>
+      <td><code>2.12+</code></td>
+      <td>CAN 3.0</td>
+      <td>✅ Да (Wireless)</td>
+      <td>✅ Да</td>
+      <td>Требует обновлённого адаптера. Возможны конфликты с оригинальной электроникой.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Где скачать прошивки? Официальные версии доступны на сайте <a href="https://www.teyes.com" target="_blank" rel="nofollow">Teyes</a> (раздел <code>Support → SPRO Series</code>). Кастомные сборки ищите на форумах <em>Drive2</em> или <em>4PDA</em> — но будьте осторожны: неофициальные прошивки могут содержать вирусы или некорректные настройки для <em>CC2</em>.</p>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>Перед скачиванием проверьте контрольную сумму (MD5) файла прошивки. Например, для версии <code>SPRO_2.10_EUR.zip</code> она должна быть <code>a1b2c3d4e5f6...</code> (уточните на форуме). Это защитит от поддельных или повреждённых файлов.</p></div>
+
+<h2 id="подготовка-к-прошивке-что-нужно-сделать-до-начала">Подготовка к прошивке: что нужно сделать до начала</h2>
+
+<p>Неподготовленное обновление — главная причина сбоев. Следуйте этому чек-листу, чтобы избежать ошибок:</p>
+
+
+<p>Скачать прошивку для вашей модели (проверьте версию CAN)</p>
+<p>Отформатировать USB-накопитель в FAT32 (размер до 32 ГБ)</p>
+<p>Создать папку <code>TEYES</code> в корне флешки</p>
+<p>Поместить файл прошивки (<code>.upg</code> или <code>.bin</code>) в папку</p>
+<p>Отключить все устройства от магнитолы (Bluetooth, USB)</p>
+<p>Записать текущие настройки (радиостанции, эквалайзер) на бумагу--></p>
+
+<p>Особое внимание уделите <strong>USB-накопителю</strong>:</p>
+<ul>
+  <li>🚫 Не используйте флешки с <code>NTFS</code> или <code>exFAT</code> — <em>Teyes SPRO</em> их не распознаёт.</li>
+  <li>🔋 Флешка должна быть отформатирована с размером кластера <code>4096 байт</code> (по умолчанию в Windows).</li>
+  <li>📁 Имя папки <code>TEYES</code> должно быть в <strong>верхнем регистре</strong>, без пробелов или символов.</li>
+</ul>
+
+<blockquote>⚠️ <strong>Внимание:</strong> Если ваша магнитола ранее прошивалась кастомной версией, официальное ПО может не встать. В этом случае требуется полный сброс через сервисное меню (<code>Menu → Settings → Factory Reset</code>).</blockquote>
+
+<h2 id="пошаговая-инструкция-по-прошивке-teyes-spro">Пошаговая инструкция по прошивке Teyes SPRO</h2>
+
+<p>Процесс обновления занимает 10–15 минут. Прерывать его нельзя — это приведёт к повреждению загрузчика. Следуйте инструкции:</p>
+
+<ol>
+  <li><p>Вставьте подготовленную флешку в USB-порт магнитолы (лучше использовать задний порт, если он есть).</p></li>
+  <li><p>Включите зажигание (двигатель заводить не нужно). Магнитола запустится автоматически.</p></li>
+  <li><p>Перейдите в меню обновления:
+  <code>Настройки → Система → Обновление ПО → Локальное обновление</code>.</p></li>
+  <li><p>Выберите файл прошивки (например, <code>SPRO_2.10_EUR.upg</code>) и подтвердите начало процесса.</p></li>
+  <li><p>Дождитесь завершения (на экране будет прогресс-бар). Магнитола перезагрузится 2–3 раза.</p></li>
+  <li><p>После успешного обновления выполните сброс настроек (<code>Factory Reset</code>).</p></li>
+</ol>
+
+<p>Если процесс завис на этапе <code>Erasing...</code> или <code>Writing...</code> более 10 минут:</p>
+<ol>
+  <li>Выключите зажигание, подождите 30 секунд.</li>
+  <li>Извлеките флешку, включите зажигание снова.</li>
+  <li>Если магнитола не запускается — используйте <strong>аварийный режим</strong> (зажмите кнопку <code>Power</code> на 10 секунд).</li>
+</ol>
+
+<details class="faq-item"><summary>Что делать если прошивка прервалась?</summary><div class="faq-answer"><p>
+<p>Если обновление прервалось на этапе записи (например, из-за отключения питания), магнитола может перестать реагировать на кнопки. В этом случае:</p>
+<p>1. Скачайте <strong>рекавери-прошивку</strong> (файл с пометкой <code>recovery</code> или <code>emergency</code>).</p>
+<p>2. Переименуйте её в <code>update.img</code> и поместите на флешку в папку <code>TEYES</code>.</p>
+<p>3. Вставьте флешку, зажмите кнопку <code>Power</code> на 15 секунд — должен запуститься режим восстановления.</p>
+<p>4. Дождитесь завершения процесса (до 20 минут).</p>
+<p>Если это не помогло — обратитесь в сервис для перепрошивки через <code>UART</code> или <code>JTAG</code>.</p></div></details></p>
+
+<h2 id="распространённые-ошибки-и-их-решения">Распространённые ошибки и их решения</h2>
+
+<p>Даже при правильной подготовке могут возникнуть сбои. Разберём типичные ошибки и способы их устранения:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Код ошибки</th>
+      <th>Причина</th>
+      <th>Решение</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>ERR 03</code></td>
+      <td>Несовпадение версии CAN-адаптера</td>
+      <td>Обновите адаптер или скачайте прошивку с поддержкой старого CAN</td>
+    </tr>
+    <tr>
+      <td><code>ERR 07</code></td>
+      <td>Повреждённый файл прошивки</td>
+      <td>Перекачайте файл, проверьте MD5-сумму</td>
+    </tr>
+    <tr>
+      <td><code>ERR 12</code></td>
+      <td>Недостаточно памяти</td>
+      <td>Удалите пользовательские данные (музыку, карты) перед обновлением</td>
+    </tr>
+    <tr>
+      <td>Зависание на логотипе</td>
+      <td>Конфликт с кастомными настройками</td>
+      <td>Выполните сброс через <code>Factory Reset</code> (зажмите <code>Power + Menu</code>)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Если после прошивки пропал звук или не работает <strong>CAN-шина</strong> (не отображаются данные с автомобиля):</p>
+<ul>
+  <li>🔊 Проверьте настройки аудиовыхода: перейдите в <code>Настройки → Звук → Выход</code> и выберите <code>Front/Rear</code> (не <code>Optical</code>).</li>
+  <li>🚗 Для CAN-шины обновите файл конфигурации <code>canbus.cfg</code> (скачайте актуальную версию для <em>CC2</em> на форуме <em>Drive2</em>).</li>
+</ul>
+
+<blockquote>⚠️ <strong>Внимание:</strong> Если после обновления до версии <code>2.12+</code> перестали работать кнопки на руле — требуется переназначить их в меню <code>Настройки → Рулевое управление → Обучение кнопок</code>. В некоторых случаях помогает откат на версию <code>2.10</code>.</blockquote>
+
+<h2 id="настройка-teyes-spro-после-прошивки">Настройка Teyes SPRO после прошивки</h2>
+
+<p>После успешного обновления магнитолу нужно настроить заново. Основные шаги:</p>
+
+<ol>
+  <li><p><strong>Язык и регион</strong>: выберите <code>Русский (Russia)</code> в <code>Настройки → Язык</code>. Для корректного отображения времени установите часовой пояс <code>UTC+3</code> (Москва).</p></li>
+  <li><p><strong>CAN-шина</strong>: перейдите в <code>Настройки → CAN-BUS → Модель автомобиля</code> и выберите <code>Volkswagen CC (2012–2017)</code>. Если вашей модели нет — выберите <code>Custom</code> и загрузите конфиг manually.</p></li>
+  <li><p><strong>Bluetooth и CarPlay</strong>:
+    <ul>
+      <li>Активируйте <code>Wireless CarPlay</code> в <code>Настройки → Подключения → Apple CarPlay</code>.</li>
+      <li>Для <em>Android Auto</em> включите отладку по USB на смартфоне.</li>
+    </ol>
+  </p></li>
+  <li><p><strong>Звук</strong>: в <code>Настройки → Звук → Эквалайзер</code> выберите пресет <code>Rock</code> или <code>Pop</code> (они оптимизированы для акустики <em>CC2</em>).</p></li>
+</ol>
+
+<p>Если после прошивки пропали радиостанции:</p>
+<ul>
+  <li>📻 Выполните автоматический поиск каналов в меню <code>Радио → Настройки → Автопоиск</code>.</li>
+  <li>🔍 Для <code>DAB+</code> может потребоваться внешняя антенна (в комплекте <em>Teyes SPRO</em> её нет).</li>
+</ul>
+
+<div class="attention-box attention-tip"><span class="attention-icon">💡</span><p>После обновления до версии 2.10+ рекомендуется откалибровать сенсорный экран: <code>Настройки → Экран → Калибровка</code>. Это устранит возможные смещения при касаниях.</p></div>
+
+<h2 id="откат-на-предыдущую-версию-прошивки">Откат на предыдущую версию прошивки</h2>
+
+<p>Если новая прошивка работает нестабильно (например, тормозит интерфейс или не корректно отображает данные с <code>CAN-шины</code>), можно вернуться на предыдущую версию. Однако есть нюансы:</p>
+
+<ul>
+  <li>⏳ <strong>Даунгрейд</strong> возможен только в пределах одной ветки (например, с <code>2.11</code> на <code>2.10</code>). Переход с <code>2.XX</code> на <code>1.XX</code> требует полной перепрошивки через сервисное меню.</li>
+  <li>🔄 Для отката скачайте <strong>полную прошивку</strong> (файл с пометкой <code>full</code>), а не патч.</li>
+  <li>🛑 Перед откатом выполните сброс настроек, иначе возможны конфликты конфигураций.</li>
+</ul>
+
+<p>Пошаговая инструкция:</p>
+<ol>
+  <li>Скачайте нужную версию прошивки (например, <code>SPRO_2.09_EUR_full.upg</code>).</li>
+  <li>Поместите её на флешку в папку <code>TEYES</code>.</li>
+  <li>Зажмите кнопку <code>Power</code> на 5 секунд, чтобы войти в режим восстановления.</li>
+  <li>Выберите файл прошивки и дождитесь завершения (процесс займёт до 20 минут).</li>
+</ol>
+
+<blockquote>⚠️ <strong>Внимание:</strong> После отката на версию ниже <code>2.05</code> может перестать работать <em>Android Auto</em>. В этом случае потребуется доустановить патч <code>AA_enabler.apk</code> через <code>ADB</code>.</blockquote>
+
+<h2 id="faq-ответы-на-частые-вопросы">FAQ: ответы на частые вопросы</h2>
+
+<details>
+  <summary>Можно ли прошить Teyes SPRO без флешки, по Wi-Fi?</summary>
+  <p>Нет, <em>Teyes SPRO</em> не поддерживает обновление по воздуху (OTA). Единственный официальный способ — через USB-накопитель. Некоторые кастомные прошивки позволяют устанавливать патчи по сети, но это рискованно и может привести к сбоям.</p>
+</details>
+
+<details>
+  <summary>После прошивки не работает камера заднего вида. Что делать?</summary>
+  <p>Проблема典型чна для прошивок <code>2.12+</code>. Решения:
+  <ol>
+    <li>Проверьте подключение камеры к разъёму <code>CAM_IN</code> (возможно, отошёл контакт).</li>
+    <li>В меню <code>Настройки → Камера</code> выберите тип камеры <code>NTSC</code> (если у вас аналоговая) или <code>AHD</code> (если цифровая).</li>
+    <li>Обновите файл конфигурации камеры <code>camera.cfg</code> (скачайте актуальную версию для вашей модели камеры).</li>
+  </ol>
+  </p>
+</details>
+
+<details>
+  <summary>Как проверить текущую версию прошивки и CAN-адаптера?</summary>
+  <p>Перейдите в <code>Настройки → Система → Информация</code>. Там будут строки:
+  <ul>
+    <li><code>MCU Version</code> — версия основного ПО (например, <code>2.10.567</code>).</li>
+    <li><code>CAN Version</code> — версия адаптера (например, <code>VW_CAN_2.1</code>).</li>
+  </ul>
+<p>Если меню <code>Информация</code> отсутствует — нажмите <code>Menu → Settings → All Settings → Version Info</code>.</p></p>
+</details>
+
+<details>
+  <summary>Можно ли прошить Teyes SPRO на CC2 самому, или лучше ехать в сервис?</summary>
+  <p>Самостоятельная прошивка возможна, если вы уверены в своих действиях и следите за инструкцией. Однако в следующих случаях лучше обратиться в сервис:
+  <ul>
+    <li>Магнитола не включается после неудачного обновления.</li>
+    <li>Требуется прошивка через <code>UART</code> (если повреждён загрузчик).</li>
+    <li>Нужно обновить <code>CAN-адаптер</code> отдельно от основного ПО.</li>
+  </ul>
+<p>Стоимость прошивки в сервисе — от 1500 до 3000 рублей (в зависимости от региона).</p></p>
+</details>
+
+<details>
+  <summary>Где скачать официальные и кастомные прошивки для Teyes SPRO?</summary>
+  <p>Официальные прошивки:
+  <ul>
+    <li>Сайт <a href="https://www.teyes.com" target="_blank" rel="nofollow">Teyes</a> (раздел <code>Support → SPRO Series</code>).</li>
+    <li>Облако <a href="https://drive.google.com" target="_blank" rel="nofollow">Google Drive</a> (папки с пометкой <code>Teyes Official</code>).</li>
+  </ul>
+<p>Кастомные прошивки:</p>
+  <ul>
+    <li>Форум <a href="https://4pda.to" target="_blank" rel="nofollow">4PDA</a> (тема <code>Teyes SPRO</code>).</li>
+    <li>Сообщество <a href="https://www.drive2.ru" target="_blank" rel="nofollow">Drive2</a> (поиск по модели <em>Volkswagen CC2</em>).</li>
+  </ul>
+  <blockquote>⚠️ <strong>Внимание:</strong> Кастомные прошивки могут содержать нелегальные модификации (например, взломанные карты или пиратское ПО). Используйте их на свой страх и риск.</blockquote>
+  </p>
+</details></div>
+                    <!--#include virtual="/ssi/article_after.html" -->
+
+                </article>
+                <aside class="article-sidebar"><!--#include virtual="/ssi/sidebar_top.html" --><nav class="sidebar-search"><div class="sidebar-search-box"><input type="text" id="globalSearchInput" placeholder="🔍 Поиск статей..." autocomplete="off"><div class="search-dropdown" id="globalSearchDropdown"></div></div></nav><!--#include virtual="/ssi/sidebar_before_toc.html" --><nav class="sidebar-toc" id="sidebarToc"><h3>Содержание</h3><ul><li><a href="#почему-нужно-обновлять-прошивку-teyes-spro-на-cc2">Почему нужно обновлять прошивку Teyes SPRO на CC2?</a></li><li><a href="#какие-версии-прошивок-совместимы-с-volkswagen-cc2">Какие версии прошивок совместимы с Volkswagen CC2?</a></li><li><a href="#подготовка-к-прошивке-что-нужно-сделать-до-начала">Подготовка к прошивке: что нужно сделать до начала</a></li><li><a href="#пошаговая-инструкция-по-прошивке-teyes-spro">Пошаговая инструкция по прошивке Teyes SPRO</a></li><li><a href="#распространённые-ошибки-и-их-решения">Распространённые ошибки и их решения</a></li><li><a href="#настройка-teyes-spro-после-прошивки">Настройка Teyes SPRO после прошивки</a></li><li><a href="#откат-на-предыдущую-версию-прошивки">Откат на предыдущую версию прошивки</a></li><li><a href="#faq-ответы-на-частые-вопросы">FAQ: ответы на частые вопросы</a></li></ul></nav><!--#include virtual="/ssi/sidebar_before_related.html" --><nav class="sidebar-related"><h3>Похожие статьи</h3><ul><li><a href="/articles/o/op/opornyj-podshipnik-passat-ss.html" class="related-card">Опорный подшипник Пассат СС: замена и признаки износа</a></li><li><a href="/articles/r/ra/razemy-teyes-cc3.html" class="related-card">Разъемы Teyes CC3: типы, подключение и совместимость с VW CC</a></li><li><a href="/articles/t/te/teyea-cc3-2k.html" class="related-card">Teyea CC3 2K: обзор, настройка и секреты оптимизации для авто</a></li><li><a href="/articles/m/mi/minusy-passat-ss.html" class="related-card">Минусы Passat CC: стоит ли покупать?</a></li><li><a href="/articles/t/te/teyes-cc3-skhema.html" class="related-card">Teyes CC3: схема подключения и разводка проводов (2026)</a></li></ul></nav><!--#include virtual="/ssi/sidebar_after_related.html" --></aside>
+            </div>
+        </div>
+    </main>
+
+    <!--#include virtual="/ssi/before_related_bottom.html" -->
+    <section class="related-bottom">
+        <div class="container">
+            <h2 class="related-bottom-heading">📖 Читайте также</h2>
+            <div class="related-bottom-grid"><a href="/articles/o/op/opornyj-podshipnik-passat-ss.html" class="related-bottom-card"><span class="related-bottom-title">Опорный подшипник Пассат СС: замена и признаки износа</span><span class="related-bottom-desc">Как определить неисправность опорного подшипника на Passat CC? Симптомы, артикулы оригинальных детал</span></a><a href="/articles/r/ra/razemy-teyes-cc3.html" class="related-bottom-card"><span class="related-bottom-title">Разъемы Teyes CC3: типы, подключение и совместимость с VW CC</span><span class="related-bottom-desc">Подробный гайд по разъемам мультимедийной системы Teyes CC3 для &lt;em&gt;Volkswagen CC&lt;/em&gt;: распиновка, </span></a><a href="/articles/t/te/teyea-cc3-2k.html" class="related-bottom-card"><span class="related-bottom-title">Teyea CC3 2K: обзор, настройка и секреты оптимизации для авто</span><span class="related-bottom-desc">Подробный гайд по &lt;em&gt;Teyea CC3 2K&lt;/em&gt;: как подключить, настроить разрешение, обновить прошивку и и</span></a><a href="/articles/m/mi/minusy-passat-ss.html" class="related-bottom-card"><span class="related-bottom-title">Минусы Passat CC: стоит ли покупать?</span><span class="related-bottom-desc">Полный обзор недостатков Passat CC. Расход топлива, проблемы с турбиной и электроникой. Стоит ли бра</span></a><a href="/articles/t/te/teyes-cc3-skhema.html" class="related-bottom-card"><span class="related-bottom-title">Teyes CC3: схема подключения и разводка проводов (2026)</span><span class="related-bottom-desc">Подробная схема подключения камеры Teyes CC3 с пояснениями по разводке, распиновке и типичным ошибка</span></a><a href="/articles/n/no/novyj-passat-cc.html" class="related-bottom-card"><span class="related-bottom-title">Новый Volkswagen Passat CC 2026: фото, цена, характеристики и дата выхода</span><span class="related-bottom-desc">Официальная информация о новом &lt;em&gt;Passat CC&lt;/em&gt; 2026: дизайн, технические характеристики, комплект</span></a></div>
+        </div>
+    </section>
+    <!--#include virtual="/ssi/after_related_bottom.html" -->
+
+    <footer class="site-footer-premium">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">🚘 VW-portal</div>
+                    <p class="footer-about">Всё о Volkswagen: обзоры моделей, технические характеристики, отзывы владельцев, советы по обслуживанию и ремонту. Актуальные новости, сравнения комплектаций и помощь в выборе автомобиля.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul><li><a href="/category/passat/">📁 Passat</a></li>
+<li><a href="/category/polo/">📁 Polo</a></li>
+<li><a href="/category/golf/">📁 Golf</a></li>
+<li><a href="/category/tiguan/">📁 Tiguan</a></li>
+<li><a href="/category/touareg/">📁 Touareg</a></li>
+<li><a href="/category/jetta/">📁 Jetta</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О проекте</a></li>
+                        <li><a href="/categories.html">Все разделы</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/privacy.html">Конфиденциальность</a></li>
+                        <li><a href="/sitemap.xml">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VW-portal. Все права защищены.</p>
+                <!--LiveInternet counter--><div style="margin-top:10px;"><a href="https://www.liveinternet.ru/click"
+                target="_blank"><img id="licnt06C4" width="88" height="15" style="border:0" 
+                title="LiveInternet: показано число посетителей за сегодня"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7"
+                alt=""/></a><script>(function(d,s){d.getElementById("licnt06C4").src=
+                "https://counter.yadro.ru/hit?t26.5;r"+escape(d.referrer)+
+                ((typeof(s)=="undefined")?"":";s"+s.width+"*"+s.height+"*"+
+                (s.colorDepth?s.colorDepth:s.pixelDepth))+";u"+escape(d.URL)+
+                ";h"+escape(d.title.substring(0,150))+";"+Math.random()})(document,screen)</script></div><!--/LiveInternet-->
+            </div>
+        </div>
+    </footer>
+    <div id="cookie-consent" class="cookie-popup">
+        <div class="cookie-inner">
+            <span>🍪 Мы используем файлы cookie для улучшения работы сайта.</span>
+            <button id="cookie-accept" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script>
+    (function() {
+        const popup = document.getElementById('cookie-consent');
+        const btn = document.getElementById('cookie-accept');
+        if (popup && btn && !localStorage.getItem('cookie-accepted')) {
+            popup.classList.add('visible');
+            btn.onclick = () => {
+                localStorage.setItem('cookie-accepted', 'true');
+                popup.classList.remove('visible');
+            };
+        }
+    })();
+    </script>
+    <!--#include virtual="/ssi/body_bottom.html" -->
+    <script src="/static/js/inject.js" defer></script>
+</body>
+</html>
