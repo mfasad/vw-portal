@@ -6,25 +6,95 @@ k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNo
 )(window,document,'script','https://mc.yandex.ru/metrika/tag.js','ym');
 ym(108589533,'init',{clickmap:true,trackLinks:true,accurateTrackBounce:true,webvisor:true});
 
+// Market-Place / MPSU ads for vw-portal.vercel.app
+// Articles only: horizontal after 1st and 5th paragraphs, sidebar vertical, corner sticker
+(function () {
+  var MPSU_SCRIPT_SRC = 'https://statika.mpsuadv.ru/scripts/11310.js';
 
-// VideoRoll — Под текстом статьи, перед похожими
-(function(){
-    var target = document.querySelector('.article-body');
-    if (!target) return;
+  function isArticlePage() {
+    if (!document.body) return false;
+    if (document.body.classList.contains('home')) return false;
+    if (document.body.classList.contains('category')) return false;
+    if (document.body.classList.contains('archive')) return false;
 
-    // Ad container
-    var wrap = document.createElement('div');
-    wrap.style.cssText = 'margin:20px 0;text-align:center';
-    wrap.innerHTML = '<div id="vid_vpaut_div" style="display:inline-block;width:600px;height:320px" vid_vpaut_pl="41309"></div>';
-    target.parentNode.insertBefore(wrap, target.nextSibling);
+    return !!document.querySelector('article, .article-body');
+  }
 
-    // External script
-    var s = document.createElement('script');
-    s.src = 'https://videoroll.net/js/vid_vpaut_script.js';
-    s.async = true;
-    document.body.appendChild(s);
+  function getArticleRoot() {
+    return document.querySelector('article') || document.querySelector('.article-body');
+  }
+
+  function loadMpsuScript() {
+    if (document.querySelector('script[src="' + MPSU_SCRIPT_SRC + '"]')) return;
+
+    var script = document.createElement('script');
+    script.async = true;
+    script.src = MPSU_SCRIPT_SRC;
+    document.head.appendChild(script);
+  }
+
+  function startWidget(widgetId) {
+    window.mpsuStart = window.mpsuStart || [];
+    window.mpsuStart.push(widgetId);
+  }
+
+  function createWidget(widgetId) {
+    if (document.getElementById('mp_custom_' + widgetId)) return null;
+
+    var block = document.createElement('div');
+    block.id = 'mp_custom_' + widgetId;
+    return block;
+  }
+
+  function insertAfterParagraph(widgetId, paragraphNumber) {
+    var article = getArticleRoot();
+    var paragraphs = article ? article.querySelectorAll('p') : [];
+
+    if (paragraphs.length < paragraphNumber) return;
+
+    var block = createWidget(widgetId);
+    if (!block) return;
+
+    paragraphs[paragraphNumber - 1].insertAdjacentElement('afterend', block);
+    startWidget(widgetId);
+  }
+
+  function insertSidebarWidget(widgetId) {
+    var sidebar = document.querySelector('aside, .sidebar, [class*="sidebar"], [id*="sidebar"]');
+    if (!sidebar) return;
+
+    var block = createWidget(widgetId);
+    if (!block) return;
+
+    sidebar.appendChild(block);
+    startWidget(widgetId);
+  }
+
+  function insertFloatingWidget(widgetId) {
+    var block = createWidget(widgetId);
+    if (!block) return;
+
+    document.body.appendChild(block);
+    startWidget(widgetId);
+  }
+
+  function initAds() {
+    if (!isArticlePage()) return;
+
+    loadMpsuScript();
+
+    insertAfterParagraph(38730, 1);
+    insertAfterParagraph(38731, 5);
+    insertSidebarWidget(38732);
+    insertFloatingWidget(38733);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAds);
+  } else {
+    initAds();
+  }
 })();
-
 
 // ============================================================
 //  HOTFIX: Fix search URL generation
